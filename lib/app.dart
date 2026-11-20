@@ -43,7 +43,7 @@ class _HuniKosAppState extends State<HuniKosApp> {
     _tenant = TenantProvider(TenantService(_api));
     _owner = OwnerProvider(OwnerService(_api));
     _admin = AdminProvider(AdminService(_api));
-    _router = buildRouter();
+    _router = buildRouter(_auth);
 
     // Auto-login: token tersimpan langsung dipakai saat aplikasi dibuka.
     _auth.bootstrap();

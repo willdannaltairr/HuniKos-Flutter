@@ -34,12 +34,19 @@ import '../screens/tenant/room_detail_screen.dart';
 import '../screens/tenant/tenant_shell.dart';
 import 'role_home.dart';
 
-/// Halaman yang boleh dibuka tanpa login, termasuk detail kos dan kamar.
-const _publicPrefixes = ['/explore', '/login', '/register', '/properties/', '/rooms/'];
+/// Halaman yang boleh dibuka tanpa login. Dicek per segmen agar
+/// `/rooms/<id>/book` tidak lolos hanya karena berawalan `/rooms/`.
+const _publicPaths = {'/explore', '/login', '/register'};
 
 bool _isPublic(String location) {
-  final path = Uri.parse(location).path;
-  return _publicPrefixes.any((prefix) => path == prefix || path.startsWith(prefix));
+  final segments = Uri.parse(location).pathSegments;
+  if (segments.isEmpty) return false;
+  final path = '/${segments.join('/')}';
+  if (_publicPaths.contains(path)) return true;
+  final isDetail =
+      segments.length == 2 &&
+      (segments.first == 'properties' || segments.first == 'rooms');
+  return isDetail;
 }
 
 /// Penjaga akses: satu tempat untuk login, peran, dan sesi kedaluwarsa.
@@ -71,9 +78,12 @@ String? _guard(BuildContext context, GoRouterState state) {
   return null;
 }
 
-GoRouter buildRouter() {
+GoRouter buildRouter(AuthProvider auth) {
   return GoRouter(
     initialLocation: '/explore',
+    // Tanpa ini, auto-logout (401) mengubah status login tanpa memindahkan
+    // layar, sehingga pengguna tetap melihat halaman yang butuh token.
+    refreshListenable: auth,
     redirect: (context, state) => _guard(context, state),
     routes: [
       GoRoute(
