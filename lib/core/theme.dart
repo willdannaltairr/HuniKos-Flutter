@@ -1,64 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Palet HuniKos: navy tua, krem hangat, dan emas sebagai aksen.
-/// Varian teks emas lebih gelap supaya kontrasnya cukup di atas krem.
+/// Palet HuniKos: malam biru-baja dengan aksen krem dan emas.
+/// Latar gelap dibuat berlapis (steel → steelDeep) supaya terasa seperti
+/// ruang yang disinari lampu hangat, bukan blok warna datar.
 class AppColors {
   const AppColors._();
 
+  static const steel = Color(0xFF2A3E54);
+  static const steelDeep = Color(0xFF16222F);
   static const navy = Color(0xFF14213D);
-  static const navySoft = Color(0xFF22314F);
+  static const navySoft = Color(0xFF1D3049);
+
   static const cream = Color(0xFFF4EDE0);
   static const ivory = Color(0xFFFFFBF3);
-  static const gold = Color(0xFFC8A951);
+  static const gold = Color(0xFFE4C27A);
   static const goldSoft = Color(0xFFF2E8CF);
-  static const goldDeep = Color(0xFF8A6A22);
+  static const goldDeep = Color(0xFFB99248);
 
-  // Nama lama dipertahankan agar layar lain tidak perlu diubah sekaligus.
-  static const primary = navy;
-  static const background = cream;
-  static const surface = ivory;
-  static const textPrimary = navy;
-  static const textSecondary = Color(0xFF5C6674);
-  static const blueTint = Color(0xFFE8E5DA);
-  static const border = Color(0xFFE3DAC9);
-  static const danger = Color(0xFFB3261E);
+  // Peran semantik: dipakai layar, jadi namanya menjelaskan fungsinya.
+  static const primary = gold;
+  static const background = Color(0xFF1B2A3A);
+  static const surface = Color(0xFF24374B);
+  static const surfaceHigh = Color(0xFF2C4159);
+  static const textPrimary = Color(0xFFF4EDE0);
+  static const textSecondary = Color(0xFFA7B7C6);
+  static const blueTint = Color(0xFF2C4159);
+  static const border = Color(0xFF354A60);
+  static const danger = Color(0xFFE0796E);
 
-  static const success = Color(0xFF2F7D4F);
-  static const successText = Color(0xFF1F6B41);
-  static const warning = Color(0xFFB7791F);
-  static const warningText = Color(0xFF8A5A12);
-  static const dangerText = Color(0xFF9B1C1C);
-  static const neutralText = Color(0xFF5C6674);
+  static const success = Color(0xFF7CC79A);
+  static const successText = Color(0xFF8FD9AE);
+  static const warning = Color(0xFFE4C27A);
+  static const warningText = Color(0xFFE4C27A);
+  static const dangerText = Color(0xFFF0A7A0);
+  static const neutralText = Color(0xFFA7B7C6);
 
-  /// Warna tipis untuk latar kartu di atas krem.
-  static const shim = Color(0x14000000);
+  /// Latar kartu yang sedikit lebih terang dari halaman.
+  static const shim = Color(0x14FFFFFF);
+
+  /// Pendaran cahaya di bagian atas layar, seperti sorot lampu.
+  static const glow = Color(0xFF6E8CAB);
 }
 
 class AppFonts {
   const AppFonts._();
 
-  /// Serif untuk judul besar agar terasa seperti majalah perjalanan.
-  static const display = 'Fraunces';
+  /// Sans geometris dengan ujung lembut untuk judul.
+  static const display = 'Outfit';
 
-  /// Sans geometris untuk isi dan tombol: lembut dibaca di ukuran kecil.
-  static const body = 'Manrope';
+  /// Sans netral yang tenang untuk teks isi dan form.
+  static const body = 'DM Sans';
 
-  static TextStyle title(double size, {FontWeight weight = FontWeight.w600, Color? color}) {
-    return GoogleFonts.fraunces(
+  static TextStyle title(
+    double size, {
+    FontWeight weight = FontWeight.w500,
+    Color? color,
+    double? height,
+  }) {
+    return GoogleFonts.outfit(
       fontSize: size,
       fontWeight: weight,
       color: color ?? AppColors.textPrimary,
-      height: 1.2,
-      letterSpacing: -0.4,
+      height: height ?? 1.22,
+      letterSpacing: -0.5,
     );
   }
 
-  static TextStyle label(double size, {FontWeight weight = FontWeight.w600, Color? color}) {
-    return GoogleFonts.manrope(
+  static TextStyle label(double size, {FontWeight weight = FontWeight.w400, Color? color}) {
+    return GoogleFonts.dmSans(
       fontSize: size,
       fontWeight: weight,
       color: color ?? AppColors.textPrimary,
+      letterSpacing: -0.1,
     );
   }
 }
@@ -67,34 +81,33 @@ class AppTheme {
   const AppTheme._();
 
   static ThemeData build() {
-    final body = GoogleFonts.manropeTextTheme(ThemeData.light().textTheme);
+    final base = GoogleFonts.dmSansTextTheme(ThemeData.dark().textTheme);
 
-    // Judul memakai serif; isi tetap sans agar form dan tabel mudah dibaca.
-    final textTheme = body.copyWith(
-      displayLarge: AppFonts.title(42, weight: FontWeight.w700),
-      displayMedium: AppFonts.title(36, weight: FontWeight.w700),
-      displaySmall: AppFonts.title(30, weight: FontWeight.w700),
-      headlineLarge: AppFonts.title(28, weight: FontWeight.w700),
-      headlineMedium: AppFonts.title(24, weight: FontWeight.w700),
-      headlineSmall: AppFonts.title(21, weight: FontWeight.w600),
-      titleLarge: AppFonts.title(19, weight: FontWeight.w600),
-      bodyLarge: AppFonts.label(15, weight: FontWeight.w500, color: AppColors.textPrimary),
-      bodyMedium: AppFonts.label(13.5, weight: FontWeight.w500, color: AppColors.textPrimary),
-      bodySmall: AppFonts.label(12, weight: FontWeight.w500, color: AppColors.textSecondary),
-      labelLarge: AppFonts.label(14, weight: FontWeight.w700),
-      labelMedium: AppFonts.label(12, weight: FontWeight.w600),
-      labelSmall: AppFonts.label(11, weight: FontWeight.w600, color: AppColors.textSecondary),
+    final textTheme = base.copyWith(
+      displayLarge: AppFonts.title(44, weight: FontWeight.w600),
+      displayMedium: AppFonts.title(38, weight: FontWeight.w600),
+      displaySmall: AppFonts.title(32, weight: FontWeight.w600),
+      headlineLarge: AppFonts.title(29, weight: FontWeight.w600),
+      headlineMedium: AppFonts.title(25, weight: FontWeight.w500),
+      headlineSmall: AppFonts.title(22, weight: FontWeight.w500),
+      titleLarge: AppFonts.title(19, weight: FontWeight.w500),
+      bodyLarge: AppFonts.label(15, color: AppColors.textPrimary),
+      bodyMedium: AppFonts.label(13.5, color: AppColors.textPrimary),
+      bodySmall: AppFonts.label(12, color: AppColors.textSecondary),
+      labelLarge: AppFonts.label(14, weight: FontWeight.w600),
+      labelMedium: AppFonts.label(12, weight: FontWeight.w500),
+      labelSmall: AppFonts.label(11, weight: FontWeight.w500, color: AppColors.textSecondary),
     );
 
     final colorScheme = ColorScheme.fromSeed(
-      seedColor: AppColors.navy,
-      brightness: Brightness.light,
+      seedColor: AppColors.gold,
+      brightness: Brightness.dark,
     ).copyWith(
-      primary: AppColors.navy,
-      onPrimary: AppColors.ivory,
-      secondary: AppColors.gold,
+      primary: AppColors.gold,
+      onPrimary: AppColors.navy,
+      secondary: AppColors.cream,
       onSecondary: AppColors.navy,
-      surface: AppColors.ivory,
+      surface: AppColors.surface,
       onSurface: AppColors.textPrimary,
       outlineVariant: AppColors.border,
       error: AppColors.danger,
@@ -102,18 +115,19 @@ class AppTheme {
 
     return ThemeData(
       useMaterial3: true,
+      brightness: Brightness.dark,
       colorScheme: colorScheme,
       fontFamily: AppFonts.body,
-      scaffoldBackgroundColor: AppColors.background,
+      scaffoldBackgroundColor: Colors.transparent,
       textTheme: textTheme,
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.cream,
+        backgroundColor: Colors.transparent,
         foregroundColor: AppColors.textPrimary,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
-        titleTextStyle: AppFonts.title(20, weight: FontWeight.w600),
+        titleTextStyle: AppFonts.title(21, weight: FontWeight.w500),
       ),
       cardTheme: CardThemeData(
         color: AppColors.surface,
@@ -134,97 +148,136 @@ class AppTheme {
         filled: true,
         fillColor: AppColors.surface,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        hintStyle: AppFonts.label(13.5, weight: FontWeight.w500, color: AppColors.textSecondary),
-        labelStyle: AppFonts.label(13.5, weight: FontWeight.w500, color: AppColors.textSecondary),
+        hintStyle: AppFonts.label(13.5, color: AppColors.textSecondary),
+        labelStyle: AppFonts.label(13.5, color: AppColors.textSecondary),
         border: _inputBorder(AppColors.border),
         enabledBorder: _inputBorder(AppColors.border),
-        focusedBorder: _inputBorder(AppColors.navy, width: 1.6),
+        focusedBorder: _inputBorder(AppColors.gold, width: 1.5),
         errorBorder: _inputBorder(AppColors.danger),
-        focusedErrorBorder: _inputBorder(AppColors.danger, width: 1.6),
+        focusedErrorBorder: _inputBorder(AppColors.danger, width: 1.5),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          backgroundColor: AppColors.navy,
-          foregroundColor: AppColors.ivory,
+          backgroundColor: AppColors.cream,
+          foregroundColor: AppColors.navy,
           minimumSize: const Size.fromHeight(52),
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-          textStyle: AppFonts.label(14.5, weight: FontWeight.w700),
+          padding: const EdgeInsets.symmetric(horizontal: 22),
+          shape: const StadiumBorder(),
+          textStyle: AppFonts.label(14.5, weight: FontWeight.w600),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.navy,
+          foregroundColor: AppColors.cream,
           minimumSize: const Size.fromHeight(52),
-          side: const BorderSide(color: AppColors.navy),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-          textStyle: AppFonts.label(14.5, weight: FontWeight.w700),
+          side: const BorderSide(color: AppColors.border),
+          shape: const StadiumBorder(),
+          textStyle: AppFonts.label(14.5, weight: FontWeight.w600),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: AppColors.navy,
-          textStyle: AppFonts.label(14, weight: FontWeight.w700),
+          foregroundColor: AppColors.gold,
+          textStyle: AppFonts.label(14, weight: FontWeight.w600),
         ),
       ),
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.surface,
-        selectedColor: AppColors.navy,
+        selectedColor: AppColors.gold,
         side: const BorderSide(color: AppColors.border),
-        labelStyle: AppFonts.label(13, weight: FontWeight.w600),
-        secondaryLabelStyle: AppFonts.label(13, weight: FontWeight.w600, color: AppColors.ivory),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
+        labelStyle: AppFonts.label(13, weight: FontWeight.w500),
+        secondaryLabelStyle: AppFonts.label(13, weight: FontWeight.w600, color: AppColors.navy),
+        shape: const StadiumBorder(),
         showCheckmark: false,
       ),
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: AppColors.ivory,
+        backgroundColor: AppColors.steelDeep.withValues(alpha: 0.94),
         surfaceTintColor: Colors.transparent,
-        indicatorColor: AppColors.goldSoft,
+        indicatorColor: AppColors.gold.withValues(alpha: 0.22),
         elevation: 0,
         height: 68,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         labelTextStyle: WidgetStateProperty.resolveWith(
           (states) => AppFonts.label(
             11.5,
-            weight: states.contains(WidgetState.selected) ? FontWeight.w700 : FontWeight.w500,
-            color: states.contains(WidgetState.selected) ? AppColors.navy : AppColors.textSecondary,
+            weight: states.contains(WidgetState.selected) ? FontWeight.w600 : FontWeight.w400,
+            color: states.contains(WidgetState.selected)
+                ? AppColors.gold
+                : AppColors.textSecondary,
           ),
         ),
         iconTheme: WidgetStateProperty.resolveWith(
           (states) => IconThemeData(
             size: 23,
-            color: states.contains(WidgetState.selected) ? AppColors.navy : AppColors.textSecondary,
+            color: states.contains(WidgetState.selected)
+                ? AppColors.gold
+                : AppColors.textSecondary,
           ),
         ),
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        backgroundColor: AppColors.navy,
-        contentTextStyle: AppFonts.label(13.5, weight: FontWeight.w500, color: AppColors.ivory),
+        shape: const StadiumBorder(),
+        backgroundColor: AppColors.surfaceHigh,
+        contentTextStyle: AppFonts.label(13.5, color: AppColors.textPrimary),
       ),
-      progressIndicatorTheme: const ProgressIndicatorThemeData(color: AppColors.navy),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(color: AppColors.gold),
       bottomSheetTheme: const BottomSheetThemeData(
-        backgroundColor: AppColors.ivory,
+        backgroundColor: AppColors.surface,
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(26)),
         ),
       ),
       dialogTheme: DialogThemeData(
-        backgroundColor: AppColors.ivory,
+        backgroundColor: AppColors.surface,
         surfaceTintColor: Colors.transparent,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
-        titleTextStyle: AppFonts.title(19, weight: FontWeight.w600),
-        contentTextStyle: AppFonts.label(14, weight: FontWeight.w500, color: AppColors.textSecondary),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        titleTextStyle: AppFonts.title(20, weight: FontWeight.w500),
+        contentTextStyle: AppFonts.label(14, color: AppColors.textSecondary),
       ),
-      listTileTheme: const ListTileThemeData(iconColor: AppColors.navy),
+      listTileTheme: const ListTileThemeData(iconColor: AppColors.gold),
+      iconTheme: const IconThemeData(color: AppColors.textSecondary),
+    );
+  }
+
+  /// Latar halaman: gradasi malam biru dengan pendaran lembut di tengah atas.
+  static Widget backdrop({required Widget child}) {
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [AppColors.steel, AppColors.steelDeep],
+          stops: [0.0, 0.75],
+        ),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            top: -220,
+            left: -120,
+            right: -120,
+            child: IgnorePointer(
+              child: Container(
+                height: 520,
+                decoration: const BoxDecoration(
+                  gradient: RadialGradient(
+                    colors: [Color(0x556E8CAB), Color(0x002A3E54)],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          child,
+        ],
+      ),
     );
   }
 
   static OutlineInputBorder _inputBorder(Color color, {double width = 1}) {
     return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(16),
       borderSide: BorderSide(color: color, width: width),
     );
   }
