@@ -11,7 +11,7 @@ import '../../widgets/room_card.dart';
 import '../../widgets/state_views.dart';
 
 /// Detail properti: galeri, deskripsi, aturan, info pemilik, dan daftar kamar.
-/// Halaman ini boleh dibuka tamu, tapi tombol pesan hanya muncul untuk tenant.
+/// Hanya untuk pengguna yang sudah login; tombol pesan muncul untuk tenant.
 class PropertyDetailScreen extends StatefulWidget {
   const PropertyDetailScreen({super.key, required this.propertyId});
 

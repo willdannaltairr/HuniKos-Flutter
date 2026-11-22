@@ -11,7 +11,8 @@ import 'auth_header.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, this.redirectTo});
 
-  /// Halaman yang ingin dibuka tamu sebelum dipaksa login (misal detail kos).
+  /// Halaman yang ingin dibuka pengguna sebelum diarahkan ke login
+  /// (misal detail kos yang dibuka lewat tautan).
   final String? redirectTo;
 
   @override
@@ -146,12 +147,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: const Text('Belum punya akun? Daftar'),
                     ),
                     const SizedBox(height: 4),
-                    TextButton.icon(
-                      onPressed: () => context.go('/explore'),
-                      icon: const Icon(Icons.search, size: 18),
-                      label: const Text('Lihat kos tanpa masuk'),
-                    ),
-                    const SizedBox(height: 12),
                     const _DemoAccounts(),
                   ],
                 ),

@@ -176,23 +176,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                   ],
                 ),
               ),
-              if (auth.user == null)
-                SafeArea(
-                  top: false,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-                    child: FilledButton.icon(
-                      // Tamu diarahkan login lalu kembali ke form booking.
-                      onPressed: () {
-                        final target = Uri.encodeComponent('/rooms/${room.id}/book');
-                        context.push('/login?redirect=$target');
-                      },
-                      icon: const Icon(Icons.login),
-                      label: const Text('Masuk untuk memesan'),
-                    ),
-                  ),
-                )
-              else if (auth.user!.isTenant)
+              if (auth.user?.isTenant ?? false)
                 SafeArea(
                   top: false,
                   child: Padding(
