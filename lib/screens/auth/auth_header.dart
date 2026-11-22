@@ -18,11 +18,9 @@ class AuthHeader extends StatelessWidget {
           width: 54,
           height: 54,
           decoration: BoxDecoration(
-            color: AppColors.navy,
+            color: AppColors.surfaceHigh,
             borderRadius: BorderRadius.circular(17),
-            boxShadow: const [
-              BoxShadow(color: Color(0x1F14213D), blurRadius: 16, offset: Offset(0, 6)),
-            ],
+            border: Border.all(color: AppColors.border),
           ),
           child: const Icon(Icons.home_work_rounded, color: AppColors.gold, size: 28),
         ),

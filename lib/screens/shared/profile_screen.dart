@@ -189,7 +189,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2.4,
-                            color: AppColors.ivory,
+                            color: AppColors.navy,
                           ),
                         )
                       : const Text('Simpan perubahan'),
