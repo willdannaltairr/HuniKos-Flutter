@@ -19,14 +19,14 @@ Butuh Flutter stable (Dart 3) dan backend HuniKos yang menyala.
 
 ```bash
 flutter pub get
-flutter run --dart-define=API_BASE_URL=http://10.0.2.2:3001
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2:3000
 ```
 
-- Emulator Android memakai `http://10.0.2.2:3001` untuk menjangkau komputer lokal.
-- Perangkat fisik memakai IP LAN komputer, misal `http://192.168.1.10:3001`.
-- Web / desktop boleh `http://localhost:3001`.
-- Bila `API_BASE_URL` tidak diisi, default di `lib/core/config.dart` dipakai (localhost:3001
-  atau 10.0.2.2:3001 untuk Android).
+- Emulator Android memakai `http://10.0.2.2:3000` untuk menjangkau komputer lokal.
+- Perangkat fisik memakai IP LAN komputer, misal `http://192.168.1.10:3000`.
+- Web / desktop boleh `http://localhost:3000`.
+- Bila `API_BASE_URL` tidak diisi, default di `lib/core/config.dart` dipakai (localhost:3000
+  atau 10.0.2.2:3000 untuk Android), sama dengan `PORT` bawaan backend.
 
 Backend dijalankan dari repo HuniKos-Backend:
 
@@ -38,7 +38,7 @@ npm start
 
 Catatan: `image_url` dibentuk backend dari variabel `BASE_URL` miliknya. Agar gambar tampil di
 emulator, jalankan backend dengan `BASE_URL` yang bisa dijangkau perangkat, misal
-`BASE_URL=http://10.0.2.2:3001`.
+`BASE_URL=http://10.0.2.2:3000`.
 
 ## Build APK rilis
 
