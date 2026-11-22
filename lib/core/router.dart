@@ -34,39 +34,26 @@ import '../screens/tenant/room_detail_screen.dart';
 import '../screens/tenant/tenant_shell.dart';
 import 'role_home.dart';
 
-/// Halaman yang boleh dibuka tanpa login. Dicek per segmen agar
-/// `/rooms/<id>/book` tidak lolos hanya karena berawalan `/rooms/`.
-const _publicPaths = {'/explore', '/login', '/register'};
-
-bool _isPublic(String location) {
-  final segments = Uri.parse(location).pathSegments;
-  if (segments.isEmpty) return false;
-  final path = '/${segments.join('/')}';
-  if (_publicPaths.contains(path)) return true;
-  final isDetail =
-      segments.length == 2 &&
-      (segments.first == 'properties' || segments.first == 'rooms');
-  return isDetail;
-}
-
 /// Penjaga akses: satu tempat untuk login, peran, dan sesi kedaluwarsa.
+/// Tidak ada mode tamu — hanya login dan register yang boleh dibuka tanpa akun.
 String? _guard(BuildContext context, GoRouterState state) {
   final auth = context.read<AuthProvider>();
   final location = state.matchedLocation;
 
   if (auth.status == AuthStatus.checking) return null;
 
+  final isAuthPage = location == '/login' || location == '/register';
+
   if (!auth.isLoggedIn) {
-    if (_isPublic(location)) return null;
+    if (isAuthPage) return null;
+    // Simpan tujuan awal supaya setelah login pengguna kembali ke sana.
     final target = Uri.encodeComponent(state.uri.toString());
     return '/login?redirect=$target';
   }
 
   final role = auth.user!.role;
 
-  if (location == '/login' || location == '/register') {
-    return homeForRole(role);
-  }
+  if (isAuthPage) return homeForRole(role);
 
   // Peran lain tidak boleh masuk ke area milik peran ini.
   if (location.startsWith('/owner') && role != 'owner') return homeForRole(role);
@@ -80,16 +67,12 @@ String? _guard(BuildContext context, GoRouterState state) {
 
 GoRouter buildRouter(AuthProvider auth) {
   return GoRouter(
-    initialLocation: '/explore',
+    initialLocation: '/login',
     // Tanpa ini, auto-logout (401) mengubah status login tanpa memindahkan
     // layar, sehingga pengguna tetap melihat halaman yang butuh token.
     refreshListenable: auth,
     redirect: (context, state) => _guard(context, state),
     routes: [
-      GoRoute(
-        path: '/explore',
-        builder: (context, state) => const ExploreScreen(),
-      ),
       GoRoute(
         path: '/login',
         builder: (context, state) => LoginScreen(
@@ -141,7 +124,7 @@ GoRouter buildRouter(AuthProvider auth) {
               GoRoute(
                 path: '/tenant',
                 builder: (context, state) =>
-                    const ExploreScreen(embedded: true),
+                    const ExploreScreen(),
               ),
             ],
           ),
