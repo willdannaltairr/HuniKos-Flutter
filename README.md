@@ -8,8 +8,8 @@ nama field, enum, endpoint, dan format response.
 
 | Peran | Layar |
 |---|---|
-| Publik / tamu | Explore (pencarian & filter), detail properti, detail kamar |
-| Penyewa | Login, register, explore, detail kamar, form booking, booking saya, detail booking (unggah bukti transfer, batalkan), laporan kerusakan, profil |
+| Tanpa akun | Hanya login dan register; halaman lain otomatis diarahkan ke login |
+| Penyewa | Explore (pencarian & filter), detail properti, detail kamar, form booking, booking saya, detail booking (unggah bukti transfer, batalkan), laporan kerusakan, profil |
 | Pemilik | Dashboard, properti (tambah/ubah/hapus, foto, cover), kamar (tambah/ubah/hapus, fasilitas, status), booking masuk (setujui/tolak/selesaikan), verifikasi pembayaran, laporan kerusakan, profil |
 | Admin | Dashboard statistik, verifikasi properti (setujui/tolak), kelola pengguna (aktif/nonaktif), profil |
 
