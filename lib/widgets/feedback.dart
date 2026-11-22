@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../core/theme.dart';
+
 /// Konfirmasi untuk semua aksi hapus dan aksi yang mengubah data penting.
 /// Tombol destruktif memakai warna bahaya agar tidak tertekan tanpa sadar.
 Future<bool> showConfirmDialog(
@@ -23,7 +25,8 @@ Future<bool> showConfirmDialog(
         FilledButton(
           style: destructive
               ? FilledButton.styleFrom(
-                  backgroundColor: const Color(0xFFDC2626),
+                  backgroundColor: AppColors.danger,
+                  foregroundColor: AppColors.ivory,
                   minimumSize: const Size(0, 40),
                 )
               : null,
@@ -80,7 +83,8 @@ Future<({bool confirmed, String note})> showDecisionDialog(
           FilledButton(
             style: destructive
                 ? FilledButton.styleFrom(
-                    backgroundColor: const Color(0xFFDC2626),
+                    backgroundColor: AppColors.danger,
+                    foregroundColor: AppColors.ivory,
                     minimumSize: const Size(0, 40),
                   )
                 : null,
@@ -104,11 +108,11 @@ Future<({bool confirmed, String note})> showDecisionDialog(
 
 /// SnackBar seragam supaya pesan sukses dan gagal selalu terlihat sama.
 void showSuccess(BuildContext context, String message) {
-  _show(context, message, const Color(0xFF15803D));
+  _show(context, message, AppColors.successText);
 }
 
 void showError(BuildContext context, String message) {
-  _show(context, message, const Color(0xFFB91C1C));
+  _show(context, message, AppColors.dangerText);
 }
 
 void _show(BuildContext context, String message, Color color) {

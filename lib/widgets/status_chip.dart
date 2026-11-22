@@ -18,30 +18,30 @@ class StatusStyle {
       case 'approved':
       case 'active':
       case 'AVAILABLE':
-        return const StatusStyle(Color(0xFFDCFCE7), AppColors.successText);
+        return const StatusStyle(Color(0xFFE1EEE0), AppColors.successText);
       case 'AWAITING_PAYMENT':
       case 'PENDING':
       case 'OPEN':
       case 'pending':
-        return const StatusStyle(Color(0xFFFEF3C7), AppColors.warningText);
+        return const StatusStyle(AppColors.goldSoft, AppColors.goldDeep);
       case 'REJECTED':
       case 'CANCELLED':
       case 'EXPIRED':
       case 'suspended':
       case 'rejected':
-        return const StatusStyle(Color(0xFFFEE2E2), AppColors.dangerText);
+        return const StatusStyle(Color(0xFFF6E3E0), AppColors.dangerText);
       case 'IN_PROGRESS':
       case 'RESERVED':
-        return const StatusStyle(Color(0xFFDBEAFE), Color(0xFF1D4ED8));
+        return const StatusStyle(Color(0xFFEADFC8), Color(0xFF6B5320));
       case 'OCCUPIED':
-        return const StatusStyle(Color(0xFFEDE9FE), Color(0xFF6D28D9));
+        return const StatusStyle(Color(0xFFE6E2D8), AppColors.navy);
       case 'MAINTENANCE':
-        return const StatusStyle(Color(0xFFFFEDD5), Color(0xFFC2410C));
+        return const StatusStyle(Color(0xFFF3E7D3), Color(0xFF7A5A18));
       case 'INACTIVE':
       case 'COMPLETED':
-        return const StatusStyle(Color(0xFFF1F5F9), AppColors.neutralText);
+        return const StatusStyle(Color(0xFFEFEBE2), AppColors.neutralText);
       default:
-        return const StatusStyle(Color(0xFFF1F5F9), AppColors.neutralText);
+        return const StatusStyle(Color(0xFFEFEBE2), AppColors.neutralText);
     }
   }
 }
@@ -69,10 +69,10 @@ class StatusChip extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: TextStyle(
+        style: AppFonts.label(
+          compact ? 11 : 12,
+          weight: FontWeight.w700,
           color: style.foreground,
-          fontSize: compact ? 11 : 12,
-          fontWeight: FontWeight.w700,
         ),
       ),
     );
