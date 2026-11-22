@@ -49,6 +49,12 @@ class _PropertyFormScreenState extends State<PropertyFormScreen> {
       _address.text = property.address;
       _city.text = property.city;
       _type = property.propertyType;
+      // Field tambahan wajib diisi ulang: backend menimpa seluruh kolom saat
+      // update, jadi nilai yang tidak dikirim akan terhapus.
+      _description.text = property.description ?? '';
+      _rules.text = property.rules ?? '';
+      _latitude.text = property.latitude?.toString() ?? '';
+      _longitude.text = property.longitude?.toString() ?? '';
       break;
     }
   }
