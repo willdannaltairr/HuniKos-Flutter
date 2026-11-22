@@ -136,12 +136,12 @@ class _OwnerPropertyDetailScreenState
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFEF2F2),
-                    borderRadius: BorderRadius.circular(10),
+                    color: AppColors.danger.withValues(alpha: 0.14),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     'Catatan penolakan admin: ${property.rejectionNote}',
-                    style: const TextStyle(fontSize: 12.5, color: AppColors.dangerText),
+                    style: AppFonts.label(12.5, color: AppColors.dangerText),
                   ),
                 ),
               ],

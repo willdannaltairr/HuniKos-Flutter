@@ -100,7 +100,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                               value: '${dashboard?.approvedProperties ?? 0}',
                               of: 'dari ${dashboard?.totalProperties ?? 0}',
                               icon: Icons.verified_outlined,
-                              color: AppColors.navy,
+                              color: AppColors.gold,
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -158,7 +158,7 @@ class _RevenueCard extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [AppColors.navy, AppColors.navySoft],
+          colors: [AppColors.surfaceHigh, AppColors.surface],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -169,12 +169,12 @@ class _RevenueCard extends StatelessWidget {
         children: [
           Text(
             'Pendapatan bulan ini',
-            style: AppFonts.label(12, weight: FontWeight.w500, color: AppColors.goldSoft),
+            style: AppFonts.label(12, color: AppColors.textSecondary),
           ),
           const SizedBox(height: 4),
           Text(
             Formatters.rupiah(revenue),
-            style: AppFonts.title(26, weight: FontWeight.w700, color: AppColors.ivory),
+            style: AppFonts.title(26, weight: FontWeight.w600, color: AppColors.gold),
           ),
           const SizedBox(height: 10),
           ClipRRect(
@@ -182,14 +182,14 @@ class _RevenueCard extends StatelessWidget {
             child: LinearProgressIndicator(
               value: (occupancy / 100).clamp(0, 1),
               minHeight: 6,
-              backgroundColor: AppColors.ivory.withValues(alpha: 0.16),
+              backgroundColor: AppColors.border,
               valueColor: const AlwaysStoppedAnimation(AppColors.gold),
             ),
           ),
           const SizedBox(height: 6),
           Text(
             'Hunian terisi ${occupancy.toStringAsFixed(1)}%',
-            style: AppFonts.label(11.5, weight: FontWeight.w500, color: AppColors.goldSoft),
+            style: AppFonts.label(11.5, color: AppColors.textSecondary),
           ),
         ],
       ),

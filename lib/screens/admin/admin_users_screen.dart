@@ -288,10 +288,10 @@ class _Avatar extends StatelessWidget {
     if (user.avatarUrl == null) {
       return CircleAvatar(
         radius: 20,
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.gold,
         child: Text(
           user.initials,
-          style: const TextStyle(color: Colors.white, fontSize: 13),
+          style: AppFonts.label(13, weight: FontWeight.w700, color: AppColors.navy),
         ),
       );
     }
