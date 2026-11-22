@@ -120,10 +120,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 customBorder: const CircleBorder(),
                                 onTap: auth.isSubmitting ? null : _changeAvatar,
                                 child: const Padding(
-                                  padding: EdgeInsets.all(7),
-                                  child: Icon(Icons.camera_alt_outlined,
-                                      size: 16, color: Colors.white),
-                                ),
+                                    padding: EdgeInsets.all(7),
+                                    child: Icon(Icons.camera_alt_outlined,
+                                        size: 16, color: AppColors.ivory),
+                                  ),
                               ),
                             ),
                           ),
@@ -132,7 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SizedBox(height: 10),
                       Text(
                         user.fullName,
-                        style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+                        style: AppFonts.title(20, weight: FontWeight.w600),
                       ),
                       Text(
                         user.email,
@@ -147,11 +147,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         child: Text(
                           user.roleLabel,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.primary,
-                          ),
+                          style: AppFonts.label(11, weight: FontWeight.w700, color: AppColors.goldDeep),
                         ),
                       ),
                     ],
@@ -193,7 +189,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2.4,
-                            color: Colors.white,
+                            color: AppColors.ivory,
                           ),
                         )
                       : const Text('Simpan perubahan'),
@@ -205,7 +201,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   label: const Text('Keluar'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.dangerText,
-                    side: const BorderSide(color: Color(0xFFFECACA)),
+                    side: const BorderSide(color: Color(0xFFE2C4BE)),
                   ),
                 ),
               ],
@@ -233,11 +229,7 @@ class _Avatar extends StatelessWidget {
         alignment: Alignment.center,
         child: Text(
           initials,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 28,
-            fontWeight: FontWeight.w700,
-          ),
+          style: AppFonts.title(28, weight: FontWeight.w700, color: AppColors.ivory),
         ),
       );
     }
