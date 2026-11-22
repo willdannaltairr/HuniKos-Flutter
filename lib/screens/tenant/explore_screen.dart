@@ -245,22 +245,25 @@ class _SearchPill extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.only(left: 16, right: 8),
             child: Icon(Icons.search_rounded, size: 21, color: AppColors.navy),
-          ),
-          Expanded(
+          ),          Expanded(
             child: TextField(
               controller: controller,
               onChanged: onChanged,
               onSubmitted: onSubmitted,
               textInputAction: TextInputAction.search,
-              style: AppFonts.label(14, weight: FontWeight.w500),
-              decoration: const InputDecoration(
+              style: AppFonts.label(14, weight: FontWeight.w500, color: AppColors.navy),
+              decoration: InputDecoration(
                 isDense: true,
                 filled: false,
                 border: InputBorder.none,
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(vertical: 15),
+                contentPadding: const EdgeInsets.symmetric(vertical: 15),
                 hintText: 'Cari kos, alamat, atau kota',
+                hintStyle: AppFonts.label(
+                  13.5,
+                  color: AppColors.navy.withValues(alpha: 0.55),
+                ),
               ),
             ),
           ),
@@ -268,7 +271,7 @@ class _SearchPill extends StatelessWidget {
             IconButton(
               onPressed: onClear,
               icon: const Icon(Icons.close_rounded, size: 18),
-              color: AppColors.textSecondary,
+              color: AppColors.navy.withValues(alpha: 0.6),
             ),
           Padding(
             padding: const EdgeInsets.only(right: 6),
@@ -293,7 +296,7 @@ class _FilterButton extends StatelessWidget {
       clipBehavior: Clip.none,
       children: [
         Material(
-          color: AppColors.navy,
+          color: AppColors.gold,
           shape: const CircleBorder(),
           child: InkWell(
             onTap: onTap,
@@ -301,7 +304,7 @@ class _FilterButton extends StatelessWidget {
             child: const SizedBox(
               width: 42,
               height: 42,
-              child: Icon(Icons.tune_rounded, size: 20, color: AppColors.ivory),
+              child: Icon(Icons.tune_rounded, size: 20, color: AppColors.navy),
             ),
           ),
         ),
@@ -344,10 +347,10 @@ class _TypeChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fg = selected ? AppColors.ivory : AppColors.navy;
+    final fg = selected ? AppColors.navy : AppColors.textPrimary;
 
     return Material(
-      color: selected ? AppColors.navy : AppColors.ivory,
+      color: selected ? AppColors.gold : AppColors.surface,
       borderRadius: BorderRadius.circular(999),
       child: InkWell(
         onTap: onTap,
@@ -357,13 +360,17 @@ class _TypeChip extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(999),
             border: Border.all(
-              color: selected ? AppColors.navy : AppColors.border,
+              color: selected ? AppColors.gold : AppColors.border,
             ),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, size: 16, color: selected ? AppColors.gold : AppColors.navy),
+              Icon(
+                icon,
+                size: 16,
+                color: selected ? AppColors.navy : AppColors.gold,
+              ),
               const SizedBox(width: 6),
               Text(label, style: AppFonts.label(12.5, weight: FontWeight.w600, color: fg)),
             ],

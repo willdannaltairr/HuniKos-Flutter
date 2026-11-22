@@ -371,7 +371,7 @@ class _NoteBox extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(11),
       decoration: BoxDecoration(
-        color: const Color(0xFFFBEAE8),
+        color: AppColors.danger.withValues(alpha: 0.14),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
