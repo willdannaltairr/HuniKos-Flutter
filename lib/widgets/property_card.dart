@@ -106,7 +106,7 @@ class PropertyCard extends StatelessWidget {
           const SizedBox(height: 6),
           PriceText(
             amount: property.minPrice,
-            style: AppFonts.label(15, weight: FontWeight.w800, color: AppColors.navy),
+            style: AppFonts.label(15, weight: FontWeight.w800, color: AppColors.gold),
           ),
           if (property.rejectionNote != null) ...[
             const SizedBox(height: 8),
@@ -114,7 +114,7 @@ class PropertyCard extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: const Color(0xFFFBEAE8),
+                color: const Color(0x33E0796E),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
@@ -171,8 +171,7 @@ class _Badge extends StatelessWidget {
       child: Text(
         text,
         style: AppFonts.label(11, weight: FontWeight.w700, color: AppColors.navy),
-      ),
-    );
+      ),    );
   }
 }
 

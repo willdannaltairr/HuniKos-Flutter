@@ -36,7 +36,7 @@ class NetworkImageView extends StatelessWidget {
         placeholder: (context, _) => Container(
           width: width,
           height: height,
-          color: const Color(0xFFF1F5F9),
+          color: AppColors.surfaceHigh,
           child: const Center(
             child: SizedBox(
               width: 20,
@@ -59,7 +59,7 @@ class NetworkImageView extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: const Center(
-        child: Icon(Icons.apartment_outlined, color: Color(0xFF94A3B8), size: 28),
+        child: Icon(Icons.apartment_outlined, color: AppColors.textSecondary, size: 28),
       ),
     );
   }

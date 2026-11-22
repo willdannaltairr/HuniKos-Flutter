@@ -18,30 +18,30 @@ class StatusStyle {
       case 'approved':
       case 'active':
       case 'AVAILABLE':
-        return const StatusStyle(Color(0xFFE1EEE0), AppColors.successText);
+        return const StatusStyle(Color(0x337CC79A), AppColors.successText);
       case 'AWAITING_PAYMENT':
       case 'PENDING':
       case 'OPEN':
       case 'pending':
-        return const StatusStyle(AppColors.goldSoft, AppColors.goldDeep);
+        return const StatusStyle(Color(0x2EE4C27A), AppColors.gold);
       case 'REJECTED':
       case 'CANCELLED':
       case 'EXPIRED':
       case 'suspended':
       case 'rejected':
-        return const StatusStyle(Color(0xFFF6E3E0), AppColors.dangerText);
+        return const StatusStyle(Color(0x33E0796E), AppColors.dangerText);
       case 'IN_PROGRESS':
       case 'RESERVED':
-        return const StatusStyle(Color(0xFFEADFC8), Color(0xFF6B5320));
+        return const StatusStyle(Color(0x3396B4D3), Color(0xFFC3D8EC));
       case 'OCCUPIED':
-        return const StatusStyle(Color(0xFFE6E2D8), AppColors.navy);
+        return const StatusStyle(Color(0x33B99248), Color(0xFFE4C27A));
       case 'MAINTENANCE':
-        return const StatusStyle(Color(0xFFF3E7D3), Color(0xFF7A5A18));
+        return const StatusStyle(Color(0x33D9A05B), Color(0xFFEBC08A));
       case 'INACTIVE':
       case 'COMPLETED':
-        return const StatusStyle(Color(0xFFEFEBE2), AppColors.neutralText);
+        return const StatusStyle(Color(0x26F4EDE0), AppColors.neutralText);
       default:
-        return const StatusStyle(Color(0xFFEFEBE2), AppColors.neutralText);
+        return const StatusStyle(Color(0x26F4EDE0), AppColors.neutralText);
     }
   }
 }

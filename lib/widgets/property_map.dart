@@ -71,7 +71,7 @@ class PropertyMap extends StatelessWidget {
                   style: AppFonts.label(
                     9,
                     weight: FontWeight.w500,
-                    color: AppColors.textSecondary,
+                    color: AppColors.navy,
                   ),
                 ),
               ),
