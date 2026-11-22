@@ -258,13 +258,30 @@ class _RoleOption extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, size: 21, color: selected ? AppColors.navy : AppColors.textSecondary),
+            Icon(
+              icon,
+              size: 21,
+              color: selected ? AppColors.navy : AppColors.textSecondary,
+            ),
             const SizedBox(height: 10),
-            Text(label, style: AppFonts.label(13.5, weight: FontWeight.w700)),
+            Text(
+              label,
+              style: AppFonts.label(
+                13.5,
+                weight: FontWeight.w700,
+                color: selected ? AppColors.navy : AppColors.textPrimary,
+              ),
+            ),
             const SizedBox(height: 2),
             Text(
               description,
-              style: AppFonts.label(11, weight: FontWeight.w500, color: AppColors.textSecondary),
+              style: AppFonts.label(
+                11,
+                weight: FontWeight.w500,
+                color: selected
+                    ? AppColors.navy.withValues(alpha: 0.72)
+                    : AppColors.textSecondary,
+              ),
             ),
           ],
         ),
