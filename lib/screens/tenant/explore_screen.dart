@@ -11,12 +11,9 @@ import '../../widgets/property_card.dart';
 import '../../widgets/state_views.dart';
 import 'explore_filter_sheet.dart';
 
-/// Beranda pencarian kos. Dipakai tamu (dengan AppBar sendiri) dan penyewa
-/// (di dalam shell).
+/// Beranda pencarian kos untuk penyewa, dipakai di dalam shell.
 class ExploreScreen extends StatefulWidget {
-  const ExploreScreen({super.key, this.embedded = false});
-
-  final bool embedded;
+  const ExploreScreen({super.key});
 
   @override
   State<ExploreScreen> createState() => _ExploreScreenState();
@@ -98,27 +95,14 @@ class _ExploreScreenState extends State<ExploreScreen> {
     final auth = context.watch<AuthProvider>();
 
     return Scaffold(
-      appBar: widget.embedded
-          ? null
-          : AppBar(
-              title: const Text('HuniKos'),
-              actions: [
-                TextButton(
-                  onPressed: () => context.go(
-                    auth.isLoggedIn ? '/tenant' : '/login',
-                  ),
-                  child: Text(auth.isLoggedIn ? 'Akun saya' : 'Masuk'),
-                ),
-              ],
-            ),
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(16, widget.embedded ? 12 : 8, 16, 8),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (widget.embedded) ...[
+                ...[
                   Text(
                     'Halo, ${auth.user?.fullName.split(' ').first ?? 'Pencari kos'}',
                     style: const TextStyle(
@@ -186,13 +170,13 @@ class _ExploreScreenState extends State<ExploreScreen> {
               ],
             ),
           ),
-          Expanded(child: _buildBody(catalog, auth)),
+          Expanded(child: _buildBody(catalog)),
         ],
       ),
     );
   }
 
-  Widget _buildBody(CatalogProvider catalog, AuthProvider auth) {
+  Widget _buildBody(CatalogProvider catalog) {
     if (catalog.loading && catalog.items.isEmpty) {
       return const LoadingView(message: 'Mencari kos terdekat untukmu…');
     }
