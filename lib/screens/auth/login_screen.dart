@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/role_home.dart';
+import '../../core/theme.dart';
 import '../../core/validators.dart';
 import '../../providers/auth_provider.dart';
 import '../../widgets/app_text_field.dart';
@@ -121,10 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 10),
                       Text(
                         auth.error!,
-                        style: const TextStyle(
-                          color: Color(0xFFB91C1C),
-                          fontSize: 12.5,
-                        ),
+                        style: AppFonts.label(12.5, weight: FontWeight.w600, color: AppColors.dangerText),
                       ),
                     ],
                     const SizedBox(height: 20),
@@ -136,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               height: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2.4,
-                                color: Colors.white,
+                                color: AppColors.ivory,
                               ),
                             )
                           : const Text('Masuk'),
@@ -167,24 +165,26 @@ class _DemoAccounts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F5F9),
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Akun uji',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 4),
+          Text('Akun uji', style: AppFonts.label(12, weight: FontWeight.w800)),
+          const SizedBox(height: 5),
           Text(
             'Penyewa: tenant1@hunikos.test / Tenant123!\n'
             'Pemilik: owner1@hunikos.test / Owner123!\n'
             'Admin: admin@hunikos.test / Admin123!',
-            style: const TextStyle(fontSize: 11.5, height: 1.5, color: Color(0xFF475569)),
+            style: AppFonts.label(
+              11.5,
+              weight: FontWeight.w500,
+              color: AppColors.textSecondary,
+            ).copyWith(height: 1.6),
           ),
         ],
       ),
@@ -203,18 +203,18 @@ class _InfoBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 10, 4, 10),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFBEB),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFFFDE68A)),
+        color: AppColors.goldSoft,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.gold.withValues(alpha: 0.5)),
       ),
       child: Row(
         children: [
-          const Icon(Icons.info_outline, size: 18, color: Color(0xFFB45309)),
+          const Icon(Icons.info_outline, size: 18, color: AppColors.goldDeep),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               message,
-              style: const TextStyle(fontSize: 12.5, color: Color(0xFFB45309)),
+              style: AppFonts.label(12.5, weight: FontWeight.w600, color: AppColors.goldDeep),
             ),
           ),
           IconButton(

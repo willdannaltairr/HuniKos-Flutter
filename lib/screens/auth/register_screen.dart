@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/role_home.dart';
+import '../../core/theme.dart';
 import '../../core/validators.dart';
 import '../../providers/auth_provider.dart';
 import '../../widgets/app_text_field.dart';
@@ -81,7 +82,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       const SizedBox(height: 6),
                       Text(
                         auth.fieldErrors['role']!,
-                        style: const TextStyle(color: Color(0xFFB91C1C), fontSize: 12),
+                        style: AppFonts.label(12, weight: FontWeight.w600, color: AppColors.dangerText),
                       ),
                     ],
                     const SizedBox(height: 16),
@@ -147,10 +148,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       const SizedBox(height: 10),
                       Text(
                         auth.error!,
-                        style: const TextStyle(
-                          color: Color(0xFFB91C1C),
-                          fontSize: 12.5,
-                        ),
+                        style: AppFonts.label(12.5, weight: FontWeight.w600, color: AppColors.dangerText),
                       ),
                     ],
                     const SizedBox(height: 20),
@@ -162,7 +160,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               height: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2.4,
-                                color: Colors.white,
+                                color: AppColors.ivory,
                               ),
                             )
                           : const Text('Daftar'),
@@ -194,9 +192,9 @@ class _RoleSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Saya mendaftar sebagai',
-          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+          style: AppFonts.label(13, weight: FontWeight.w700),
         ),
         const SizedBox(height: 8),
         Row(
@@ -246,27 +244,27 @@ class _RoleOption extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(16),
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: selected ? const Color(0xFFEAF2FF) : Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          color: selected ? AppColors.goldSoft : AppColors.surface,
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: selected ? const Color(0xFF172B4D) : const Color(0xFFE2E8F0),
+            color: selected ? AppColors.navy : AppColors.border,
             width: selected ? 1.6 : 1,
           ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, size: 20),
-            const SizedBox(height: 8),
-            Text(label, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+            Icon(icon, size: 21, color: selected ? AppColors.navy : AppColors.textSecondary),
+            const SizedBox(height: 10),
+            Text(label, style: AppFonts.label(13.5, weight: FontWeight.w700)),
             const SizedBox(height: 2),
             Text(
               description,
-              style: const TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+              style: AppFonts.label(11, weight: FontWeight.w500, color: AppColors.textSecondary),
             ),
           ],
         ),
