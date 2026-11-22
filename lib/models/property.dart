@@ -42,6 +42,10 @@ class PropertyItem {
     this.ownerId,
     this.ownerName,
     this.createdAt,
+    this.description,
+    this.rules,
+    this.latitude,
+    this.longitude,
   });
 
   final String id;
@@ -58,6 +62,13 @@ class PropertyItem {
   final String? ownerId;
   final String? ownerName;
   final DateTime? createdAt;
+
+  /// Hanya diisi endpoint yang mengirim detail (mis. daftar properti pemilik),
+  /// dipakai form ubah agar nilai lama tidak terhapus saat disimpan.
+  final String? description;
+  final String? rules;
+  final double? latitude;
+  final double? longitude;
 
   bool get isApproved => verificationStatus == 'approved';
 
@@ -89,6 +100,10 @@ class PropertyItem {
       ownerId: asString(owner?['id']),
       ownerName: asString(owner?['full_name']),
       createdAt: DateTime.tryParse(asString(json['created_at']) ?? ''),
+      description: asString(json['description']),
+      rules: asString(json['rules']),
+      latitude: asDouble(json['latitude']),
+      longitude: asDouble(json['longitude']),
     );
   }
 }

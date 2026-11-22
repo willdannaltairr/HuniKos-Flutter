@@ -11,14 +11,15 @@ class AppConfig {
   static const String _fromEnvironment = String.fromEnvironment('API_BASE_URL');
 
   /// Default hanya untuk pengembangan: emulator Android memakai 10.0.2.2,
-  /// sedangkan web dan desktop boleh langsung memakai localhost.
+  /// sedangkan web dan desktop boleh langsung memakai localhost. Port disamakan
+  /// dengan `PORT` bawaan backend HuniKos (3000).
   static String get baseUrl {
     if (_fromEnvironment.isNotEmpty) return _fromEnvironment;
-    if (kIsWeb) return 'http://localhost:3001';
+    if (kIsWeb) return 'http://localhost:3000';
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return 'http://10.0.2.2:3001';
+      return 'http://10.0.2.2:3000';
     }
-    return 'http://localhost:3001';
+    return 'http://localhost:3000';
   }
 
   /// Render free plan bisa tidur, jadi request pertama diberi waktu lebih lega.
