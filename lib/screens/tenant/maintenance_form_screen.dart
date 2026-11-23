@@ -170,7 +170,7 @@ class _MaintenanceFormScreenState extends State<MaintenanceFormScreen> {
                                 height: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2.4,
-                                  color: Colors.white,
+                                  color: AppColors.navy,
                                 ),
                               )
                             : const Text('Kirim laporan'),

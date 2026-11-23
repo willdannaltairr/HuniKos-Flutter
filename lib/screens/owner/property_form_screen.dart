@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme.dart';
 import '../../core/validators.dart';
 import '../../providers/owner_provider.dart';
 import '../../widgets/app_text_field.dart';
@@ -232,7 +233,7 @@ class _PropertyFormScreenState extends State<PropertyFormScreen> {
                       height: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 2.4,
-                        color: Colors.white,
+                        color: AppColors.navy,
                       ),
                     )
                   : Text(widget.isEdit ? 'Simpan perubahan' : 'Simpan properti'),

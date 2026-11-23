@@ -56,14 +56,11 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                     children: [
                       Text(
                         'Halo, ${auth.user?.fullName.split(' ').first ?? 'Pemilik'}',
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
-                        ),
+                        style: AppFonts.title(26),
                       ),
-                      const Text(
+                      Text(
                         'Ringkasan kos kamu hari ini.',
-                        style: TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
+                        style: AppFonts.label(13, weight: FontWeight.w500, color: AppColors.textSecondary),
                       ),
                       const SizedBox(height: 16),
                       _RevenueCard(
@@ -79,7 +76,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                               value: '${dashboard?.availableRooms ?? 0}',
                               of: '${dashboard?.totalRooms ?? 0} kamar',
                               icon: Icons.door_front_door_outlined,
-                              color: const Color(0xFF15803D),
+                              color: AppColors.successText,
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -89,7 +86,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                               value: '${dashboard?.occupiedRooms ?? 0}',
                               of: '${dashboard?.totalRooms ?? 0} kamar',
                               icon: Icons.person_pin_circle_outlined,
-                              color: const Color(0xFF6D28D9),
+                              color: AppColors.goldDeep,
                             ),
                           ),
                         ],
@@ -103,7 +100,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                               value: '${dashboard?.approvedProperties ?? 0}',
                               of: 'dari ${dashboard?.totalProperties ?? 0}',
                               icon: Icons.verified_outlined,
-                              color: const Color(0xFF1D4ED8),
+                              color: AppColors.gold,
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -113,15 +110,15 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                               value: '${(dashboard?.occupancyRate ?? 0).toStringAsFixed(1)}%',
                               of: 'semua kamar',
                               icon: Icons.percent,
-                              color: const Color(0xFFC2410C),
+                              color: AppColors.warningText,
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 20),
-                      const Text(
+                      Text(
                         'Perlu tindakan',
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+                        style: AppFonts.title(19, weight: FontWeight.w600),
                       ),
                       const SizedBox(height: 8),
                       _ActionTile(
@@ -161,27 +158,23 @@ class _RevenueCard extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF172B4D), Color(0xFF24406F)],
+          colors: [AppColors.surfaceHigh, AppColors.surface],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Pendapatan bulan ini',
-            style: TextStyle(fontSize: 12, color: Color(0xFFCBD5E1)),
+            style: AppFonts.label(12, color: AppColors.textSecondary),
           ),
           const SizedBox(height: 4),
           Text(
             Formatters.rupiah(revenue),
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w800,
-              color: Colors.white,
-            ),
+            style: AppFonts.title(26, weight: FontWeight.w600, color: AppColors.gold),
           ),
           const SizedBox(height: 10),
           ClipRRect(
@@ -189,14 +182,14 @@ class _RevenueCard extends StatelessWidget {
             child: LinearProgressIndicator(
               value: (occupancy / 100).clamp(0, 1),
               minHeight: 6,
-              backgroundColor: Colors.white.withValues(alpha: 0.18),
-              valueColor: const AlwaysStoppedAnimation(Color(0xFF86C97F)),
+              backgroundColor: AppColors.border,
+              valueColor: const AlwaysStoppedAnimation(AppColors.gold),
             ),
           ),
           const SizedBox(height: 6),
           Text(
             'Hunian terisi ${occupancy.toStringAsFixed(1)}%',
-            style: const TextStyle(fontSize: 11.5, color: Color(0xFFCBD5E1)),
+            style: AppFonts.label(11.5, color: AppColors.textSecondary),
           ),
         ],
       ),
@@ -231,15 +224,15 @@ class _StatCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               value,
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
+              style: AppFonts.title(24, weight: FontWeight.w700),
             ),
             Text(
               label,
-              style: const TextStyle(fontSize: 11.5, color: AppColors.textSecondary),
+              style: AppFonts.label(11.5, weight: FontWeight.w500, color: AppColors.textSecondary),
             ),
             Text(
               of,
-              style: const TextStyle(fontSize: 10.5, color: AppColors.textSecondary),
+              style: AppFonts.label(10.5, weight: FontWeight.w500, color: AppColors.textSecondary),
             ),
           ],
         ),
@@ -276,16 +269,12 @@ class _ActionTile extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFEF3C7),
+                  color: AppColors.goldSoft,
                   borderRadius: BorderRadius.circular(999),
                 ),
                 child: Text(
                   '$count',
-                  style: const TextStyle(
-                    fontSize: 11.5,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFFB45309),
-                  ),
+                  style: AppFonts.label(11.5, weight: FontWeight.w700, color: AppColors.goldDeep),
                 ),
               ),
             const SizedBox(width: 6),

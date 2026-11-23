@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme.dart';
 
-/// Kepala halaman auth: logo, judul, dan penjelasan singkat.
+/// Kepala halaman auth: lambang emas, judul serif, dan penjelasan singkat.
 class AuthHeader extends StatelessWidget {
   const AuthHeader({super.key, required this.title, required this.subtitle});
 
@@ -15,27 +15,21 @@ class AuthHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          width: 52,
-          height: 52,
+          width: 54,
+          height: 54,
           decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.circular(14),
+            color: AppColors.surfaceHigh,
+            borderRadius: BorderRadius.circular(17),
+            border: Border.all(color: AppColors.border),
           ),
-          child: const Icon(Icons.home_work_outlined, color: Colors.white, size: 28),
+          child: const Icon(Icons.home_work_rounded, color: AppColors.gold, size: 28),
         ),
-        const SizedBox(height: 16),
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w800,
-            letterSpacing: -0.4,
-          ),
-        ),
+        const SizedBox(height: 20),
+        Text(title, style: AppFonts.title(29)),
         const SizedBox(height: 6),
         Text(
           subtitle,
-          style: const TextStyle(fontSize: 13.5, color: AppColors.textSecondary),
+          style: AppFonts.label(13.5, weight: FontWeight.w500, color: AppColors.textSecondary),
         ),
       ],
     );

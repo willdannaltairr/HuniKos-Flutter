@@ -157,19 +157,19 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFFBEB),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: const Color(0xFFFDE68A)),
+                    color: AppColors.gold.withValues(alpha: 0.14),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.gold.withValues(alpha: 0.45)),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.timer_outlined, size: 18, color: Color(0xFFB45309)),
+                      const Icon(Icons.timer_outlined, size: 18, color: AppColors.gold),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           'Bayar sebelum ${Formatters.dateTime(booking.expiresAt!.toIso8601String())} '
                           '(sisa ${Formatters.countdown(booking.expiresAt)})',
-                          style: const TextStyle(fontSize: 12.5, color: Color(0xFFB45309)),
+                          style: AppFonts.label(12.5, color: AppColors.gold),
                         ),
                       ),
                     ],
@@ -304,7 +304,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                             height: 16,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: Colors.white,
+                              color: AppColors.navy,
                             ),
                           )
                         : const Icon(Icons.upload_file_outlined),
@@ -364,8 +364,8 @@ class _InfoCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.border),
       ),
       child: Column(
@@ -413,8 +413,8 @@ class _Note extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
-        borderRadius: BorderRadius.circular(10),
+        color: AppColors.blueTint,
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

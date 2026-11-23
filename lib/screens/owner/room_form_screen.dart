@@ -278,7 +278,7 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
                       height: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 2.4,
-                        color: Colors.white,
+                        color: AppColors.navy,
                       ),
                     )
                   : Text(widget.isEdit ? 'Simpan perubahan' : 'Simpan kamar'),

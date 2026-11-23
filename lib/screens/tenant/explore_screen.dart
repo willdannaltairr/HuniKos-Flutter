@@ -11,12 +11,9 @@ import '../../widgets/property_card.dart';
 import '../../widgets/state_views.dart';
 import 'explore_filter_sheet.dart';
 
-/// Beranda pencarian kos. Dipakai tamu (dengan AppBar sendiri) dan penyewa
-/// (di dalam shell).
+/// Beranda pencarian kos untuk penyewa, dipakai di dalam shell.
 class ExploreScreen extends StatefulWidget {
-  const ExploreScreen({super.key, this.embedded = false});
-
-  final bool embedded;
+  const ExploreScreen({super.key});
 
   @override
   State<ExploreScreen> createState() => _ExploreScreenState();
@@ -28,10 +25,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
   Timer? _debounce;
 
   static const _quickTypes = [
-    (value: null, label: 'Semua'),
-    (value: 'putra', label: 'Putra'),
-    (value: 'putri', label: 'Putri'),
-    (value: 'campur', label: 'Campur'),
+    (value: null, label: 'Semua', icon: Icons.auto_awesome_outlined),
+    (value: 'putra', label: 'Putra', icon: Icons.male_rounded),
+    (value: 'putri', label: 'Putri', icon: Icons.female_rounded),
+    (value: 'campur', label: 'Campur', icon: Icons.people_alt_outlined),
   ];
 
   @override
@@ -74,7 +71,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
     final result = await showModalBottomSheet<PropertyFilter>(
       context: context,
       isScrollControlled: true,
-      showDragHandle: false,
       builder: (_) => ChangeNotifierProvider.value(
         value: catalog,
         child: ExploreFilterSheet(current: catalog.filter),
@@ -96,103 +92,67 @@ class _ExploreScreenState extends State<ExploreScreen> {
   Widget build(BuildContext context) {
     final catalog = context.watch<CatalogProvider>();
     final auth = context.watch<AuthProvider>();
+    final firstName = auth.user?.fullName.split(' ').first ?? 'Pencari kos';
 
     return Scaffold(
-      appBar: widget.embedded
-          ? null
-          : AppBar(
-              title: const Text('HuniKos'),
-              actions: [
-                TextButton(
-                  onPressed: () => context.go(
-                    auth.isLoggedIn ? '/tenant' : '/login',
-                  ),
-                  child: Text(auth.isLoggedIn ? 'Akun saya' : 'Masuk'),
-                ),
-              ],
-            ),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(16, widget.embedded ? 12 : 8, 16, 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (widget.embedded) ...[
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 6),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Halo, $firstName', style: AppFonts.title(26)),
+                  const SizedBox(height: 2),
                   Text(
-                    'Halo, ${auth.user?.fullName.split(' ').first ?? 'Pencari kos'}',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -0.3,
-                    ),
+                    'Mau tinggal di mana bulan ini?',
+                    style: AppFonts.label(13, color: AppColors.textSecondary),
                   ),
-                  const Text(
-                    'Temukan kos yang pas untuk kamu.',
-                    style: TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
+                  const SizedBox(height: 14),
+                  _SearchPill(
+                    controller: _searchController,
+                    onChanged: _onQueryChanged,
+                    onSubmitted: (value) =>
+                        context.read<CatalogProvider>().search(query: value),
+                    onClear: () {
+                      _searchController.clear();
+                      setState(() {});
+                      context.read<CatalogProvider>().search(query: '');
+                    },
+                    onFilter: _openFilter,
+                    filterCount: catalog.filter.activeCount,
                   ),
                   const SizedBox(height: 12),
-                ],
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _searchController,
-                        onChanged: _onQueryChanged,
-                        textInputAction: TextInputAction.search,
-                        onSubmitted: (value) =>
-                            context.read<CatalogProvider>().search(query: value),
-                        decoration: InputDecoration(
-                          hintText: 'Cari nama kos, alamat, atau kota',
-                          prefixIcon: const Icon(Icons.search, size: 20),
-                          suffixIcon: _searchController.text.isEmpty
-                              ? null
-                              : IconButton(
-                                  onPressed: () {
-                                    _searchController.clear();
-                                    setState(() {});
-                                    context.read<CatalogProvider>().search(query: '');
-                                  },
-                                  icon: const Icon(Icons.close, size: 18),
-                                ),
-                        ),
-                      ),
+                  SizedBox(
+                    height: 40,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _quickTypes.length,
+                      separatorBuilder: (_, _) => const SizedBox(width: 8),
+                      itemBuilder: (context, index) {
+                        final item = _quickTypes[index];
+                        return _TypeChip(
+                          label: item.label,
+                          icon: item.icon,
+                          selected: catalog.filter.type == item.value,
+                          onTap: () => _selectType(item.value),
+                        );
+                      },
                     ),
-                    const SizedBox(width: 8),
-                    _FilterButton(
-                      count: catalog.filter.activeCount,
-                      onTap: _openFilter,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  height: 34,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: _quickTypes.map((item) {
-                      final selected = catalog.filter.type == item.value;
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: ChoiceChip(
-                          label: Text(item.label),
-                          selected: selected,
-                          onSelected: (_) => _selectType(item.value),
-                        ),
-                      );
-                    }).toList(),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Expanded(child: _buildBody(catalog, auth)),
-        ],
+            Expanded(child: _buildBody(catalog)),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildBody(CatalogProvider catalog, AuthProvider auth) {
+  Widget _buildBody(CatalogProvider catalog) {
     if (catalog.loading && catalog.items.isEmpty) {
       return const LoadingView(message: 'Mencari kos terdekat untukmu…');
     }
@@ -217,9 +177,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
       onRefresh: catalog.refresh,
       child: ListView.separated(
         controller: _scrollController,
-        padding: const EdgeInsets.fromLTRB(16, 4, 16, 20),
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
         itemCount: catalog.items.length + (catalog.hasMore ? 1 : 0),
-        separatorBuilder: (_, _) => const SizedBox(height: 12),
+        separatorBuilder: (_, _) => const SizedBox(height: 24),
         itemBuilder: (context, index) {
           if (index >= catalog.items.length) {
             return Padding(
@@ -250,6 +210,80 @@ class _ExploreScreenState extends State<ExploreScreen> {
   }
 }
 
+/// Kolom pencarian berbentuk pil dengan bayangan tipis, seperti bilah cari
+/// pada aplikasi perjalanan.
+class _SearchPill extends StatelessWidget {
+  const _SearchPill({
+    required this.controller,
+    required this.onChanged,
+    required this.onSubmitted,
+    required this.onClear,
+    required this.onFilter,
+    required this.filterCount,
+  });
+
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+  final ValueChanged<String> onSubmitted;
+  final VoidCallback onClear;
+  final VoidCallback onFilter;
+  final int filterCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.ivory,
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: AppColors.border),
+        boxShadow: const [
+          BoxShadow(color: Color(0x0F14213D), blurRadius: 18, offset: Offset(0, 6)),
+        ],
+      ),
+      child: Row(
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(left: 16, right: 8),
+            child: Icon(Icons.search_rounded, size: 21, color: AppColors.navy),
+          ),          Expanded(
+            child: TextField(
+              controller: controller,
+              onChanged: onChanged,
+              onSubmitted: onSubmitted,
+              textInputAction: TextInputAction.search,
+              style: AppFonts.label(14, weight: FontWeight.w500, color: AppColors.navy),
+              decoration: InputDecoration(
+                isDense: true,
+                filled: false,
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(vertical: 15),
+                hintText: 'Cari kos, alamat, atau kota',
+                hintStyle: AppFonts.label(
+                  13.5,
+                  color: AppColors.navy.withValues(alpha: 0.55),
+                ),
+              ),
+            ),
+          ),
+          if (controller.text.isNotEmpty)
+            IconButton(
+              onPressed: onClear,
+              icon: const Icon(Icons.close_rounded, size: 18),
+              color: AppColors.navy.withValues(alpha: 0.6),
+            ),
+          Padding(
+            padding: const EdgeInsets.only(right: 6),
+            child: _FilterButton(count: filterCount, onTap: onFilter),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Tombol filter bulat dengan penanda jumlah filter aktif.
 class _FilterButton extends StatelessWidget {
   const _FilterButton({required this.count, required this.onTap});
 
@@ -261,42 +295,88 @@ class _FilterButton extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        SizedBox(
-          width: 52,
-          height: 52,
-          child: OutlinedButton(
-            onPressed: onTap,
-            style: OutlinedButton.styleFrom(
-              padding: EdgeInsets.zero,
-              minimumSize: const Size(52, 52),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        Material(
+          color: AppColors.gold,
+          shape: const CircleBorder(),
+          child: InkWell(
+            onTap: onTap,
+            customBorder: const CircleBorder(),
+            child: const SizedBox(
+              width: 42,
+              height: 42,
+              child: Icon(Icons.tune_rounded, size: 20, color: AppColors.navy),
             ),
-            child: const Icon(Icons.tune, size: 22),
           ),
         ),
         if (count > 0)
           Positioned(
-            right: -4,
-            top: -4,
+            right: -2,
+            top: -2,
             child: Container(
               padding: const EdgeInsets.all(4),
               constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
               decoration: const BoxDecoration(
-                color: AppColors.primary,
+                color: AppColors.gold,
                 shape: BoxShape.circle,
               ),
               child: Text(
                 '$count',
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: AppFonts.label(10, weight: FontWeight.w800, color: AppColors.navy),
               ),
             ),
           ),
       ],
+    );
+  }
+}
+
+/// Chip kategori dengan ikon; versi terpilih berwarna navy penuh.
+class _TypeChip extends StatelessWidget {
+  const _TypeChip({
+    required this.label,
+    required this.icon,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final IconData icon;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final fg = selected ? AppColors.navy : AppColors.textPrimary;
+
+    return Material(
+      color: selected ? AppColors.gold : AppColors.surface,
+      borderRadius: BorderRadius.circular(999),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(999),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(999),
+            border: Border.all(
+              color: selected ? AppColors.gold : AppColors.border,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                size: 16,
+                color: selected ? AppColors.navy : AppColors.gold,
+              ),
+              const SizedBox(width: 6),
+              Text(label, style: AppFonts.label(12.5, weight: FontWeight.w600, color: fg)),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -18,30 +18,30 @@ class StatusStyle {
       case 'approved':
       case 'active':
       case 'AVAILABLE':
-        return const StatusStyle(Color(0xFFDCFCE7), AppColors.successText);
+        return const StatusStyle(Color(0x337CC79A), AppColors.successText);
       case 'AWAITING_PAYMENT':
       case 'PENDING':
       case 'OPEN':
       case 'pending':
-        return const StatusStyle(Color(0xFFFEF3C7), AppColors.warningText);
+        return const StatusStyle(Color(0x2EE4C27A), AppColors.gold);
       case 'REJECTED':
       case 'CANCELLED':
       case 'EXPIRED':
       case 'suspended':
       case 'rejected':
-        return const StatusStyle(Color(0xFFFEE2E2), AppColors.dangerText);
+        return const StatusStyle(Color(0x33E0796E), AppColors.dangerText);
       case 'IN_PROGRESS':
       case 'RESERVED':
-        return const StatusStyle(Color(0xFFDBEAFE), Color(0xFF1D4ED8));
+        return const StatusStyle(Color(0x3396B4D3), Color(0xFFC3D8EC));
       case 'OCCUPIED':
-        return const StatusStyle(Color(0xFFEDE9FE), Color(0xFF6D28D9));
+        return const StatusStyle(Color(0x33B99248), Color(0xFFE4C27A));
       case 'MAINTENANCE':
-        return const StatusStyle(Color(0xFFFFEDD5), Color(0xFFC2410C));
+        return const StatusStyle(Color(0x33D9A05B), Color(0xFFEBC08A));
       case 'INACTIVE':
       case 'COMPLETED':
-        return const StatusStyle(Color(0xFFF1F5F9), AppColors.neutralText);
+        return const StatusStyle(Color(0x26F4EDE0), AppColors.neutralText);
       default:
-        return const StatusStyle(Color(0xFFF1F5F9), AppColors.neutralText);
+        return const StatusStyle(Color(0x26F4EDE0), AppColors.neutralText);
     }
   }
 }
@@ -69,10 +69,10 @@ class StatusChip extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: TextStyle(
+        style: AppFonts.label(
+          compact ? 11 : 12,
+          weight: FontWeight.w700,
           color: style.foreground,
-          fontSize: compact ? 11 : 12,
-          fontWeight: FontWeight.w700,
         ),
       ),
     );

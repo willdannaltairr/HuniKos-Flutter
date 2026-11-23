@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../core/theme.dart';
+
 /// Tiga state daftar yang wajib ada di semua layar: memuat, kosong, error.
 class LoadingView extends StatelessWidget {
   const LoadingView({super.key, this.message});
@@ -21,7 +23,7 @@ class LoadingView extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               message!,
-              style: const TextStyle(color: Color(0xFF64748B), fontSize: 13),
+              style: AppFonts.label(13, color: AppColors.textSecondary),
               textAlign: TextAlign.center,
             ),
           ],
@@ -53,18 +55,18 @@ class EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 44, color: const Color(0xFF94A3B8)),
+            Icon(icon, size: 44, color: AppColors.border),
             const SizedBox(height: 12),
             Text(
               title,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+              style: AppFonts.title(17, weight: FontWeight.w500),
               textAlign: TextAlign.center,
             ),
             if (description != null) ...[
               const SizedBox(height: 6),
               Text(
                 description!,
-                style: const TextStyle(fontSize: 13, color: Color(0xFF64748B)),
+                style: AppFonts.label(13, color: AppColors.textSecondary),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -97,12 +99,12 @@ class ErrorState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.cloud_off_outlined, size: 44, color: Color(0xFF94A3B8)),
+            const Icon(Icons.cloud_off_outlined, size: 44, color: AppColors.border),
             const SizedBox(height: 12),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 14),
+              style: AppFonts.label(14, color: AppColors.textPrimary),
             ),
             const SizedBox(height: 16),
             FilledButton.tonalIcon(
