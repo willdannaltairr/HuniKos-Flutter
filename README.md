@@ -9,8 +9,8 @@ nama field, enum, endpoint, dan format response.
 | Peran | Layar |
 |---|---|
 | Tanpa akun | Hanya login dan register; halaman lain otomatis diarahkan ke login |
-| Penyewa | Explore (pencarian & filter), detail properti, detail kamar, form booking, booking saya, detail booking (unggah bukti transfer, batalkan), laporan kerusakan, profil |
-| Pemilik | Dashboard, properti (tambah/ubah/hapus, foto, cover), kamar (tambah/ubah/hapus, fasilitas, status), booking masuk (setujui/tolak/selesaikan), verifikasi pembayaran, laporan kerusakan, profil |
+| Penyewa | Explore (pencarian & filter), detail properti, detail kamar, form booking, booking saya, detail booking (bayar via Midtrans, batalkan), laporan kerusakan, profil |
+| Pemilik | Dashboard, properti (tambah/ubah/hapus, foto, cover), kamar (tambah/ubah/hapus, fasilitas, status), booking masuk (setujui/tolak/selesaikan), pantau status pembayaran Midtrans, laporan kerusakan, profil |
 | Admin | Dashboard statistik, verifikasi properti (setujui/tolak), kelola pengguna (aktif/nonaktif), profil |
 
 ## Menjalankan
@@ -19,34 +19,33 @@ Butuh Flutter stable (Dart 3) dan backend HuniKos yang menyala.
 
 ```bash
 flutter pub get
-flutter run --dart-define=API_BASE_URL=http://10.0.2.2:3001
+flutter run -d chrome --dart-define=API_BASE_URL=http://localhost:3000
 ```
 
-- Emulator Android memakai `http://10.0.2.2:3001` untuk menjangkau komputer lokal.
-- Perangkat fisik memakai IP LAN komputer, misal `http://192.168.1.10:3001`.
-- Web / desktop boleh `http://localhost:3001`.
-- Bila `API_BASE_URL` tidak diisi, default di `lib/core/config.dart` dipakai (localhost:3001
-  atau 10.0.2.2:3001 untuk Android).
+- Web / desktop memakai `http://localhost:3000`.
+- Emulator Android memakai `http://10.0.2.2:3000` untuk menjangkau komputer lokal.
+- Perangkat fisik memakai IP LAN komputer, misal `http://192.168.1.10:3000`.
+- Untuk backend yang sudah online, ganti dengan domain HTTPS backend.
+- Bila `API_BASE_URL` tidak diisi, default di `lib/core/config.dart` dipakai
+  (localhost:3000, atau 10.0.2.2:3000 untuk Android).
 
 Backend dijalankan dari repo HuniKos-Backend:
 
 ```bash
-cd api
 npm install
-npm start
+npm run dev
 ```
 
-Catatan: `image_url` dibentuk backend dari variabel `BASE_URL` miliknya. Agar gambar tampil di
-emulator, jalankan backend dengan `BASE_URL` yang bisa dijangkau perangkat, misal
-`BASE_URL=http://10.0.2.2:3001`.
+Catatan: semua gambar disimpan di Cloudinary, jadi `image_url` yang dikirim backend sudah
+berupa alamat HTTPS dan bisa langsung dimuat dari perangkat mana pun.
 
 ## Build APK rilis
 
 ```bash
-flutter build apk --release --dart-define=API_BASE_URL=https://<nama-app>.onrender.com
+flutter build apk --release --dart-define=API_BASE_URL=https://<nama-project>.vercel.app
 ```
 
-Build rilis tidak mengizinkan HTTP biasa; gunakan URL HTTPS (Render sudah menyediakannya).
+Build rilis tidak mengizinkan HTTP biasa; gunakan URL HTTPS (Vercel sudah menyediakannya).
 
 ## Akun uji
 
@@ -69,7 +68,8 @@ Build rilis tidak mengizinkan HTTP biasa; gunakan URL HTTPS (Render sudah menyed
 | Form booking | `POST /api/bookings` |
 | Booking saya | `GET /api/bookings` |
 | Detail booking | `GET /api/bookings/:id` |
-| Unggah bukti transfer | `POST /api/bookings/:id/payments` |
+| Bayar lewat Midtrans | `POST /api/bookings/:id/payments/midtrans` |
+| Cek status pembayaran | `GET /api/bookings/:id/payments/midtrans/status` |
 | Batalkan booking | `PATCH /api/bookings/:id/cancel` |
 | Riwayat pembayaran penyewa | `GET /api/payments` |
 | Buat laporan kerusakan | `POST /api/maintenance` (multipart) |
@@ -80,7 +80,7 @@ Build rilis tidak mengizinkan HTTP biasa; gunakan URL HTTPS (Render sudah menyed
 | Foto properti | `POST /api/owner/properties/:id/images`, `DELETE /api/owner/images/:imageId`, `PATCH /api/owner/images/:imageId/cover` |
 | Kamar pemilik | `GET/POST /api/owner/properties/:id/rooms`, `PUT/DELETE /api/owner/rooms/:id` |
 | Booking masuk | `GET /api/owner/bookings`, `PATCH /api/owner/bookings/:id/decision`, `PATCH /api/owner/bookings/:id/complete` |
-| Pembayaran pemilik | `GET /api/owner/payments`, `PATCH /api/owner/payments/:id/verify` |
+| Pembayaran pemilik | `GET /api/owner/payments` (status ditulis otomatis oleh webhook Midtrans) |
 | Laporan kerusakan pemilik | `GET /api/owner/maintenance`, `PATCH /api/owner/maintenance/:id` |
 | Dashboard admin | `GET /api/admin/dashboard` |
 | Verifikasi properti | `GET /api/admin/properties`, `PATCH /api/admin/properties/:id/verification` |
