@@ -6,6 +6,7 @@ import '../core/upload_utils.dart';
 import '../models/booking.dart';
 import '../models/booking_detail.dart';
 import '../models/maintenance.dart';
+import '../models/midtrans_checkout.dart';
 import '../models/payment.dart';
 
 /// Endpoint milik penyewa: booking, bukti pembayaran, dan laporan kerusakan.
@@ -51,6 +52,17 @@ class TenantService {
     final payload =
         await _api.postMultipart('/api/bookings/$bookingId/payments', formData);
     return Payment.fromJson(payload.asMap);
+  }
+
+  /// Membuat transaksi Snap. Nominal ditentukan backend dari booking.
+  Future<MidtransCheckout> createMidtransCheckout(String bookingId) async {
+    final payload = await _api.post('/api/bookings/$bookingId/payments/midtrans');
+    return MidtransCheckout.fromJson(payload.asMap);
+  }
+
+  /// Backend mengecek status asli ke Midtrans, lalu memperbarui booking.
+  Future<void> syncMidtransPayment(String bookingId) async {
+    await _api.get('/api/bookings/$bookingId/payments/midtrans/status');
   }
 
   Future<List<Payment>> myPayments() async {

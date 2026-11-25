@@ -5,6 +5,7 @@ import '../core/api_exception.dart';
 import '../models/booking.dart';
 import '../models/booking_detail.dart';
 import '../models/maintenance.dart';
+import '../models/midtrans_checkout.dart';
 import '../models/payment.dart';
 import '../services/tenant_service.dart';
 
@@ -122,6 +123,17 @@ class TenantProvider extends ChangeNotifier {
     } on ApiException catch (error) {
       return error.message;
     }
+  }
+
+  /// Membuat transaksi Snap. Nominal dan order id ditentukan backend.
+  Future<MidtransCheckout> createMidtransCheckout(String bookingId) {
+    return _service.createMidtransCheckout(bookingId);
+  }
+
+  /// Tanyakan status asli ke Midtrans lewat backend, lalu muat ulang detail.
+  Future<void> syncMidtransPayment(String bookingId) async {
+    await _service.syncMidtransPayment(bookingId);
+    await loadDetail(bookingId);
   }
 
   Future<void> loadMaintenance() async {
