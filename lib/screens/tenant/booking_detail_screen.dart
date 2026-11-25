@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/api_exception.dart';
 import '../../core/formatters.dart';
+import '../../core/midtrans_payment.dart';
 import '../../core/theme.dart';
 import '../../models/booking.dart';
 import '../../models/booking_detail.dart';
@@ -23,7 +24,7 @@ class BookingDetailScreen extends StatefulWidget {
 }
 
 class _BookingDetailScreenState extends State<BookingDetailScreen> {
-  bool _uploading = false;
+  bool _paying = false;
 
   @override
   void initState() {
@@ -33,31 +34,50 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
     });
   }
 
-  Future<void> _uploadProof() async {
+  Future<void> _bayar() async {
+    setState(() => _paying = true);
     final provider = context.read<TenantProvider>();
-    final picked = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 85,
-    );
-    if (picked == null) return;
+    try {
+      final checkout = await provider.createMidtransCheckout(widget.bookingId);
+      final hasil = await MidtransPayment().start(
+        snapToken: checkout.snapToken,
+        redirectUrl: checkout.redirectUrl,
+      );
 
-    if (await picked.length() > 2 * 1024 * 1024) {
       if (!mounted) return;
-      showError(context, 'Ukuran gambar maksimal 2 MB');
-      return;
-    }
-
-    setState(() => _uploading = true);
-    final error = await provider.uploadProof(
-          widget.bookingId,
-          picked,
+      if (hasil == PaymentOutcome.browserOpened) {
+        showSuccess(
+          context,
+          'Halaman pembayaran dibuka. Kembali ke aplikasi setelah selesai '
+          'untuk memeriksa statusnya.',
         );
-    if (!mounted) return;
-    setState(() => _uploading = false);
-    if (error == null) {
-      showSuccess(context, 'Bukti pembayaran terkirim, menunggu verifikasi pemilik');
-    } else {
-      showError(context, error);
+      } else if (hasil == PaymentOutcome.paid) {
+        showSuccess(context, 'Pembayaran berhasil, menunggu konfirmasi sistem');
+      } else if (hasil == PaymentOutcome.pending) {
+        showSuccess(context, 'Pembayaran belum selesai. Kamu bisa melanjutkannya nanti.');
+      }
+
+      // Status asli tetap diambil dari backend, bukan dari hasil di perangkat.
+      await provider.syncMidtransPayment(widget.bookingId);
+    } catch (error) {
+      if (!mounted) return;
+      showError(context, error is ApiException ? error.message : 'Pembayaran gagal dimulai');
+    } finally {
+      if (mounted) setState(() => _paying = false);
+    }
+  }
+
+  Future<void> _cekStatus() async {
+    setState(() => _paying = true);
+    try {
+      await context.read<TenantProvider>().syncMidtransPayment(widget.bookingId);
+      if (!mounted) return;
+      showSuccess(context, 'Status pembayaran sudah diperbarui');
+    } catch (error) {
+      if (!mounted) return;
+      showError(context, error is ApiException ? error.message : 'Gagal mengecek status');
+    } finally {
+      if (mounted) setState(() => _paying = false);
     }
   }
 
@@ -297,8 +317,8 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
               children: [
                 if (booking.canUploadProof && pendingPayment == null)
                   FilledButton.icon(
-                    onPressed: _uploading ? null : _uploadProof,
-                    icon: _uploading
+                    onPressed: _paying ? null : _bayar,
+                    icon: _paying
                         ? const SizedBox(
                             width: 16,
                             height: 16,
@@ -307,18 +327,37 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                               color: AppColors.navy,
                             ),
                           )
-                        : const Icon(Icons.upload_file_outlined),
-                    label: const Text('Upload bukti transfer'),
+                        : const Icon(Icons.payment_outlined),
+                    label: Text(
+                      _paying
+                          ? 'Membuka pembayaran…'
+                          : 'Bayar ${Formatters.rupiah(booking.totalAmount)}',
+                    ),
                   ),
-                if (pendingPayment != null)
+                if (booking.canUploadProof && pendingPayment != null) ...[
+                  if (pendingPayment.fromMidtrans)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: FilledButton.icon(
+                        onPressed: _paying ? null : _bayar,
+                        icon: const Icon(Icons.payment_outlined),
+                        label: const Text('Lanjutkan pembayaran'),
+                      ),
+                    ),
+                  OutlinedButton.icon(
+                    onPressed: _paying ? null : _cekStatus,
+                    icon: const Icon(Icons.refresh_outlined, size: 18),
+                    label: const Text('Cek status pembayaran'),
+                  ),
                   const Padding(
-                    padding: EdgeInsets.only(bottom: 8),
+                    padding: EdgeInsets.only(bottom: 4, top: 8),
                     child: Text(
-                      'Bukti pembayaran sedang menunggu verifikasi pemilik.',
+                      'Status diperbarui otomatis oleh notifikasi Midtrans.',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 12, color: AppColors.warningText),
                     ),
                   ),
+                ],
                 if (booking.canCancel)
                   OutlinedButton(
                     onPressed: _cancel,
