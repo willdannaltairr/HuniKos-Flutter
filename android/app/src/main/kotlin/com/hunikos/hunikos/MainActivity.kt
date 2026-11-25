@@ -1,5 +1,7 @@
 package com.hunikos.hunikos
 
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 
-class MainActivity : FlutterActivity()
+// Harus FlutterFragmentActivity, bukan FlutterActivity, agar SDK Midtrans
+// bisa menampilkan halaman pembayarannya di atas aplikasi.
+class MainActivity : FlutterFragmentActivity()
