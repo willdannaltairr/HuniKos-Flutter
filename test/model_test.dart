@@ -160,6 +160,17 @@ void main() {
       expect(Validators.phoneNumber('+6281200000004'), isNull);
     });
 
+    test('nomor telepon pendaftaran wajib diisi dan berawalan +62', () {
+      expect(Validators.phoneNumberRequired(''), contains('wajib diisi'));
+      expect(Validators.phoneNumberRequired('+62'), contains('wajib diisi'));
+      expect(Validators.phoneNumberRequired('081234567890'), contains('+62'));
+      expect(Validators.phoneNumberRequired('+628'), contains('tidak valid'));
+      expect(Validators.phoneNumberRequired('+6281234567890123'), contains('tidak valid'));
+      expect(Validators.phoneNumberRequired('+6281234567890'), isNull);
+      // Spasi dan tanda hubung yang diketik pengguna tidak membuatnya gagal.
+      expect(Validators.phoneNumberRequired('+62 812-3456-7890'), isNull);
+    });
+
     test('harga wajib lebih dari nol dan maksimal 100 juta', () {
       expect(Validators.price('0'), isNotNull);
       expect(Validators.price('100000001'), isNotNull);
