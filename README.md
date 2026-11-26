@@ -19,15 +19,21 @@ Butuh Flutter stable (Dart 3) dan backend HuniKos yang menyala.
 
 ```bash
 flutter pub get
+flutter run -d chrome
+```
+
+- Tanpa flag apa pun, aplikasi langsung memakai backend yang sudah online:
+  `https://hunikosbackend.vercel.app` (lihat `lib/core/config.dart`).
+- Ingin memakai backend lokal? Timpa alamatnya:
+
+```bash
 flutter run -d chrome --dart-define=API_BASE_URL=http://localhost:3000
 ```
 
-- Web / desktop memakai `http://localhost:3000`.
 - Emulator Android memakai `http://10.0.2.2:3000` untuk menjangkau komputer lokal.
 - Perangkat fisik memakai IP LAN komputer, misal `http://192.168.1.10:3000`.
-- Untuk backend yang sudah online, ganti dengan domain HTTPS backend.
-- Bila `API_BASE_URL` tidak diisi, default di `lib/core/config.dart` dipakai
-  (localhost:3000, atau 10.0.2.2:3000 untuk Android).
+- Backend menerima origin `localhost`/`127.0.0.1` berapa pun portnya, jadi
+  `flutter run -d chrome` yang memilih port acak tetap tersambung.
 
 Backend dijalankan dari repo HuniKos-Backend:
 

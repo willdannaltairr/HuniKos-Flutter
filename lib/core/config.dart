@@ -10,20 +10,23 @@ class AppConfig {
 
   static const String _fromEnvironment = String.fromEnvironment('API_BASE_URL');
 
-  /// Default hanya untuk pengembangan: emulator Android memakai 10.0.2.2,
-  /// sedangkan web dan desktop boleh langsung memakai localhost.
-  /// Untuk backend yang sudah online, isi lewat
-  /// `--dart-define=API_BASE_URL=https://domain-backend`.
+  /// Backend yang sudah online. Dipakai sebagai default supaya aplikasi
+  /// langsung tersambung tanpa perlu flag saat dijalankan.
+  ///
+  /// Saat mengembangkan backend di komputer sendiri, timpa lewat:
+  ///   flutter run -d chrome --dart-define=API_BASE_URL=http://localhost:3000
+  static const String _productionUrl = 'https://hunikosbackend.vercel.app';
+
   static const int _defaultPort = 3000;
 
   static String get baseUrl {
     if (_fromEnvironment.isNotEmpty) return _fromEnvironment;
-    if (kIsWeb) return 'http://localhost:$_defaultPort';
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      // 10.0.2.2 adalah localhost komputer dari dalam emulator Android.
+    // Emulator Android tidak bisa menjangkau localhost komputer; 10.0.2.2
+    // adalah aliasnya, jadi hanya dipakai bila backend lokal yang dipilih.
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
       return 'http://10.0.2.2:$_defaultPort';
     }
-    return 'http://localhost:$_defaultPort';
+    return _productionUrl;
   }
 
   /// Render free plan bisa tidur, jadi request pertama diberi waktu lebih lega.
