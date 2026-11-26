@@ -89,7 +89,7 @@ class _ExploreFilterSheetState extends State<ExploreFilterSheet> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFCBD5E1),
+                  color: AppColors.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -97,11 +97,8 @@ class _ExploreFilterSheetState extends State<ExploreFilterSheet> {
             const SizedBox(height: 16),
             Row(
               children: [
-                const Expanded(
-                  child: Text(
-                    'Filter pencarian',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
-                  ),
+                Expanded(
+                  child: Text('Filter pencarian', style: AppFonts.title(19, weight: FontWeight.w700)),
                 ),
                 TextButton(
                   onPressed: () {
@@ -127,8 +124,8 @@ class _ExploreFilterSheetState extends State<ExploreFilterSheet> {
               ),
             ),
             const SizedBox(height: 14),
-            const Text('Rentang harga per bulan',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+            Text('Rentang harga per bulan',
+                style: AppFonts.label(13, weight: FontWeight.w700)),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -153,13 +150,12 @@ class _ExploreFilterSheetState extends State<ExploreFilterSheet> {
               ],
             ),
             const SizedBox(height: 16),
-            const Text('Fasilitas kamar',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+            Text('Fasilitas kamar', style: AppFonts.label(13, weight: FontWeight.w700)),
             const SizedBox(height: 8),
             if (facilities.isEmpty)
-              const Text(
+              Text(
                 'Daftar fasilitas belum termuat.',
-                style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                style: AppFonts.label(12, color: AppColors.textSecondary),
               )
             else
               Wrap(
@@ -191,8 +187,7 @@ class _ExploreFilterSheetState extends State<ExploreFilterSheet> {
                   style: TextStyle(fontSize: 13.5)),
             ),
             const SizedBox(height: 6),
-            const Text('Urutkan',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+            Text('Urutkan', style: AppFonts.label(13, weight: FontWeight.w700)),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -208,7 +203,7 @@ class _ExploreFilterSheetState extends State<ExploreFilterSheet> {
             Center(
               child: Text(
                 'Harga mulai ${Formatters.rupiah(500000)}',
-                style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                style: AppFonts.label(11, color: AppColors.textSecondary),
               ),
             ),
           ],
