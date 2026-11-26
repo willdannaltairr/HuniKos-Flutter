@@ -13,6 +13,14 @@ nama field, enum, endpoint, dan format response.
 | Pemilik | Dashboard, properti (tambah/ubah/hapus, foto, cover), kamar (tambah/ubah/hapus, fasilitas, status), booking masuk (setujui/tolak/selesaikan), pantau status pembayaran Midtrans, laporan kerusakan, profil |
 | Admin | Dashboard statistik, verifikasi properti (setujui/tolak), kelola pengguna (aktif/nonaktif), profil |
 
+Halaman profil memuat ringkasan keuangan sesuai peran: penyewa melihat total pengeluaran dan
+sewa aktif, pemilik melihat pendapatan bulan ini dan jumlah pembayaran menunggu, admin melihat
+jumlah pengguna dan properti menunggu verifikasi. Di halaman yang sama tersedia tombol untuk
+mengganti mode gelap/terang dan bahasa Indonesia/Inggris; pilihannya tersimpan di perangkat.
+
+Bilah cari di beranda membuka halaman pencarian penuh dengan kolom cari, chip tipe kos, filter,
+dan hasil bertahap.
+
 ## Menjalankan
 
 Butuh Flutter stable (Dart 3) dan backend HuniKos yang menyala.
