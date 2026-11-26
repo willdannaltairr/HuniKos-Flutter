@@ -87,7 +87,7 @@ class _HuniKosAppState extends State<HuniKosApp> {
         debugShowCheckedModeBanner: false,
         theme: AppTheme.build(),
         routerConfig: _router,
-        // Gradasi malam dipasang sekali di sini agar semua layar konsisten.
+        // Kanvas putih dipasang sekali di sini agar semua layar konsisten.
         builder: (context, child) => AppTheme.backdrop(child: child!),
       ),
     );

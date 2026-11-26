@@ -83,7 +83,8 @@ class PropertyMap extends StatelessWidget {
   }
 }
 
-/// Pin lokasi: lingkaran navy dengan cincin emas.
+/// Pin lokasi: lingkaran hitam dengan cincin putih, seperti penanda peta
+/// pada aplikasi perjalanan.
 class _MapPin extends StatelessWidget {
   const _MapPin();
 
@@ -91,14 +92,14 @@ class _MapPin extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.navy,
+        color: AppColors.ink,
         shape: BoxShape.circle,
-        border: Border.all(color: AppColors.gold, width: 3),
+        border: Border.all(color: Colors.white, width: 3),
         boxShadow: const [
           BoxShadow(color: Color(0x33000000), blurRadius: 8, offset: Offset(0, 2)),
         ],
       ),
-      child: const Icon(Icons.home_rounded, color: AppColors.ivory, size: 20),
+      child: const Icon(Icons.home_rounded, color: Colors.white, size: 20),
     );
   }
 }

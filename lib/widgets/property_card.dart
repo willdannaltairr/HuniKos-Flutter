@@ -106,7 +106,7 @@ class PropertyCard extends StatelessWidget {
           const SizedBox(height: 6),
           PriceText(
             amount: property.minPrice,
-            style: AppFonts.label(15, weight: FontWeight.w800, color: AppColors.gold),
+            style: AppFonts.label(15, weight: FontWeight.w700, color: AppColors.ink),
           ),
           if (property.rejectionNote != null) ...[
             const SizedBox(height: 8),
@@ -114,7 +114,7 @@ class PropertyCard extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: const Color(0x33E0796E),
+                color: const Color(0xFFFFEBE9),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(

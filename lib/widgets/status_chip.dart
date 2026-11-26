@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../core/theme.dart';
 
-/// Warna latar dan warna teks untuk satu status. Teks memakai varian lebih
-/// gelap dari latar agar tetap terbaca.
+/// Warna latar dan warna teks untuk satu status. Pada tema terang, latar
+/// memakai pastel lembut dan teks memakai varian gelap agar kontrasnya cukup.
 class StatusStyle {
   const StatusStyle(this.background, this.foreground);
 
@@ -18,30 +18,30 @@ class StatusStyle {
       case 'approved':
       case 'active':
       case 'AVAILABLE':
-        return const StatusStyle(Color(0x337CC79A), AppColors.successText);
+        return const StatusStyle(Color(0xFFE7F5E8), AppColors.successText);
       case 'AWAITING_PAYMENT':
       case 'PENDING':
       case 'OPEN':
       case 'pending':
-        return const StatusStyle(Color(0x2EE4C27A), AppColors.gold);
+        return const StatusStyle(Color(0xFFFFF4E5), AppColors.warningText);
       case 'REJECTED':
       case 'CANCELLED':
       case 'EXPIRED':
       case 'suspended':
       case 'rejected':
-        return const StatusStyle(Color(0x33E0796E), AppColors.dangerText);
+        return const StatusStyle(Color(0xFFFFEBE9), AppColors.dangerText);
       case 'IN_PROGRESS':
       case 'RESERVED':
-        return const StatusStyle(Color(0x3396B4D3), Color(0xFFC3D8EC));
+        return const StatusStyle(Color(0xFFEBF3FF), Color(0xFF1D4ED8));
       case 'OCCUPIED':
-        return const StatusStyle(Color(0x33B99248), Color(0xFFE4C27A));
+        return const StatusStyle(Color(0xFFF3EDFF), Color(0xFF6B3FA0));
       case 'MAINTENANCE':
-        return const StatusStyle(Color(0x33D9A05B), Color(0xFFEBC08A));
+        return const StatusStyle(Color(0xFFFDF0E3), Color(0xFF9A5B1B));
       case 'INACTIVE':
       case 'COMPLETED':
-        return const StatusStyle(Color(0x26F4EDE0), AppColors.neutralText);
+        return const StatusStyle(Color(0xFFF2F2F2), AppColors.neutralText);
       default:
-        return const StatusStyle(Color(0x26F4EDE0), AppColors.neutralText);
+        return const StatusStyle(Color(0xFFF2F2F2), AppColors.neutralText);
     }
   }
 }

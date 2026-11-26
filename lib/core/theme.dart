@@ -1,46 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Palet HuniKos: malam biru-baja dengan aksen krem dan emas.
-/// Latar gelap dibuat berlapis (steel → steelDeep) supaya terasa seperti
-/// ruang yang disinari lampu hangat, bukan blok warna datar.
+/// Palet HuniKos bergaya Airbnb: kanvas putih, teks hampir hitam, dan abu
+/// lembut untuk keterangan. Warna aksen hanya dipakai untuk status dan
+/// penanda kecil supaya halaman terasa tenang.
 class AppColors {
   const AppColors._();
 
-  static const steel = Color(0xFF2A3E54);
-  static const steelDeep = Color(0xFF16222F);
-  static const navy = Color(0xFF14213D);
-  static const navySoft = Color(0xFF1D3049);
+  // Nama lama dipertahankan agar layar yang sudah ada tetap memakai token
+  // yang sama; nilainya sekarang mengikuti tema terang.
+  static const ink = Color(0xFF222222);
+  static const inkSoft = Color(0xFF484848);
+  static const paper = Color(0xFFFFFFFF);
+  static const paperSoft = Color(0xFFF7F7F7);
 
-  static const cream = Color(0xFFF4EDE0);
-  static const ivory = Color(0xFFFFFBF3);
-  static const gold = Color(0xFFE4C27A);
-  static const goldSoft = Color(0xFFF2E8CF);
-  static const goldDeep = Color(0xFFB99248);
+  static const navy = ink;
+  static const navySoft = inkSoft;
+  static const steel = paperSoft;
+  static const steelDeep = paper;
+  static const cream = paperSoft;
+  static const ivory = paper;
 
-  // Peran semantik: dipakai layar, jadi namanya menjelaskan fungsinya.
-  static const primary = gold;
-  static const background = Color(0xFF1B2A3A);
-  static const surface = Color(0xFF24374B);
-  static const surfaceHigh = Color(0xFF2C4159);
-  static const textPrimary = Color(0xFFF4EDE0);
-  static const textSecondary = Color(0xFFA7B7C6);
-  static const blueTint = Color(0xFF2C4159);
-  static const border = Color(0xFF354A60);
-  static const danger = Color(0xFFE0796E);
+  /// Aksen utama: hitam pekat seperti tombol pada aplikasi perjalanan.
+  static const gold = ink;
+  static const goldSoft = Color(0xFFF2F2F2);
+  static const goldDeep = ink;
 
-  static const success = Color(0xFF7CC79A);
-  static const successText = Color(0xFF8FD9AE);
-  static const warning = Color(0xFFE4C27A);
-  static const warningText = Color(0xFFE4C27A);
-  static const dangerText = Color(0xFFF0A7A0);
-  static const neutralText = Color(0xFFA7B7C6);
+  // Peran semantik.
+  static const primary = ink;
+  static const background = paper;
+  static const surface = paper;
+  static const surfaceHigh = paperSoft;
+  static const textPrimary = Color(0xFF222222);
+  static const textSecondary = Color(0xFF717171);
+  static const blueTint = paperSoft;
+  static const border = Color(0xFFDDDDDD);
+  static const danger = Color(0xFFC13515);
 
-  /// Latar kartu yang sedikit lebih terang dari halaman.
-  static const shim = Color(0x14FFFFFF);
+  static const success = Color(0xFF008A05);
+  static const successText = Color(0xFF008A05);
+  static const warning = Color(0xFFB45309);
+  static const warningText = Color(0xFFB45309);
+  static const dangerText = Color(0xFFC13515);
+  static const neutralText = Color(0xFF717171);
 
-  /// Pendaran cahaya di bagian atas layar, seperti sorot lampu.
-  static const glow = Color(0xFF6E8CAB);
+  /// Warna penanda favorit, satu-satunya aksen merah lembut di aplikasi.
+  static const rose = Color(0xFFFF385C);
+
+  static const shim = paperSoft;
+  static const glow = paper;
 }
 
 class AppFonts {
@@ -54,7 +62,7 @@ class AppFonts {
 
   static TextStyle title(
     double size, {
-    FontWeight weight = FontWeight.w500,
+    FontWeight weight = FontWeight.w600,
     Color? color,
     double? height,
   }) {
@@ -62,12 +70,16 @@ class AppFonts {
       fontSize: size,
       fontWeight: weight,
       color: color ?? AppColors.textPrimary,
-      height: height ?? 1.22,
-      letterSpacing: -0.5,
+      height: height ?? 1.2,
+      letterSpacing: -0.4,
     );
   }
 
-  static TextStyle label(double size, {FontWeight weight = FontWeight.w400, Color? color}) {
+  static TextStyle label(
+    double size, {
+    FontWeight weight = FontWeight.w400,
+    Color? color,
+  }) {
     return GoogleFonts.dmSans(
       fontSize: size,
       fontWeight: weight,
@@ -81,18 +93,18 @@ class AppTheme {
   const AppTheme._();
 
   static ThemeData build() {
-    final base = GoogleFonts.dmSansTextTheme(ThemeData.dark().textTheme);
+    final base = GoogleFonts.dmSansTextTheme(ThemeData.light().textTheme);
 
     final textTheme = base.copyWith(
-      displayLarge: AppFonts.title(44, weight: FontWeight.w600),
-      displayMedium: AppFonts.title(38, weight: FontWeight.w600),
-      displaySmall: AppFonts.title(32, weight: FontWeight.w600),
-      headlineLarge: AppFonts.title(29, weight: FontWeight.w600),
-      headlineMedium: AppFonts.title(25, weight: FontWeight.w500),
-      headlineSmall: AppFonts.title(22, weight: FontWeight.w500),
-      titleLarge: AppFonts.title(19, weight: FontWeight.w500),
-      bodyLarge: AppFonts.label(15, color: AppColors.textPrimary),
-      bodyMedium: AppFonts.label(13.5, color: AppColors.textPrimary),
+      displayLarge: AppFonts.title(44),
+      displayMedium: AppFonts.title(38),
+      displaySmall: AppFonts.title(32),
+      headlineLarge: AppFonts.title(29),
+      headlineMedium: AppFonts.title(25, weight: FontWeight.w600),
+      headlineSmall: AppFonts.title(22),
+      titleLarge: AppFonts.title(19),
+      bodyLarge: AppFonts.label(15),
+      bodyMedium: AppFonts.label(13.5),
       bodySmall: AppFonts.label(12, color: AppColors.textSecondary),
       labelLarge: AppFonts.label(14, weight: FontWeight.w600),
       labelMedium: AppFonts.label(12, weight: FontWeight.w500),
@@ -100,13 +112,13 @@ class AppTheme {
     );
 
     final colorScheme = ColorScheme.fromSeed(
-      seedColor: AppColors.gold,
-      brightness: Brightness.dark,
+      seedColor: AppColors.ink,
+      brightness: Brightness.light,
     ).copyWith(
-      primary: AppColors.gold,
-      onPrimary: AppColors.navy,
-      secondary: AppColors.cream,
-      onSecondary: AppColors.navy,
+      primary: AppColors.ink,
+      onPrimary: Colors.white,
+      secondary: AppColors.paperSoft,
+      onSecondary: AppColors.ink,
       surface: AppColors.surface,
       onSurface: AppColors.textPrimary,
       outlineVariant: AppColors.border,
@@ -115,19 +127,19 @@ class AppTheme {
 
     return ThemeData(
       useMaterial3: true,
-      brightness: Brightness.dark,
+      brightness: Brightness.light,
       colorScheme: colorScheme,
       fontFamily: AppFonts.body,
-      scaffoldBackgroundColor: Colors.transparent,
+      scaffoldBackgroundColor: AppColors.background,
       textTheme: textTheme,
       appBarTheme: AppBarTheme(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.paper,
         foregroundColor: AppColors.textPrimary,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
-        titleTextStyle: AppFonts.title(21, weight: FontWeight.w500),
+        titleTextStyle: AppFonts.title(21),
       ),
       cardTheme: CardThemeData(
         color: AppColors.surface,
@@ -146,20 +158,20 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.surface,
+        fillColor: AppColors.paper,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         hintStyle: AppFonts.label(13.5, color: AppColors.textSecondary),
         labelStyle: AppFonts.label(13.5, color: AppColors.textSecondary),
         border: _inputBorder(AppColors.border),
         enabledBorder: _inputBorder(AppColors.border),
-        focusedBorder: _inputBorder(AppColors.gold, width: 1.5),
+        focusedBorder: _inputBorder(AppColors.ink, width: 1.6),
         errorBorder: _inputBorder(AppColors.danger),
-        focusedErrorBorder: _inputBorder(AppColors.danger, width: 1.5),
+        focusedErrorBorder: _inputBorder(AppColors.danger, width: 1.6),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          backgroundColor: AppColors.cream,
-          foregroundColor: AppColors.navy,
+          backgroundColor: AppColors.ink,
+          foregroundColor: Colors.white,
           minimumSize: const Size.fromHeight(52),
           padding: const EdgeInsets.symmetric(horizontal: 22),
           shape: const StadiumBorder(),
@@ -168,116 +180,88 @@ class AppTheme {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.cream,
+          foregroundColor: AppColors.ink,
+          backgroundColor: AppColors.paper,
           minimumSize: const Size.fromHeight(52),
-          side: const BorderSide(color: AppColors.border),
+          side: const BorderSide(color: AppColors.ink, width: 1.2),
           shape: const StadiumBorder(),
           textStyle: AppFonts.label(14.5, weight: FontWeight.w600),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: AppColors.gold,
+          foregroundColor: AppColors.ink,
           textStyle: AppFonts.label(14, weight: FontWeight.w600),
         ),
       ),
       chipTheme: ChipThemeData(
-        backgroundColor: AppColors.surface,
-        selectedColor: AppColors.gold,
+        backgroundColor: AppColors.paper,
+        selectedColor: AppColors.ink,
         side: const BorderSide(color: AppColors.border),
         labelStyle: AppFonts.label(13, weight: FontWeight.w500),
-        secondaryLabelStyle: AppFonts.label(13, weight: FontWeight.w600, color: AppColors.navy),
+        secondaryLabelStyle: AppFonts.label(13, weight: FontWeight.w600, color: Colors.white),
         shape: const StadiumBorder(),
         showCheckmark: false,
       ),
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: AppColors.steelDeep.withValues(alpha: 0.94),
+        backgroundColor: AppColors.ink,
         surfaceTintColor: Colors.transparent,
-        indicatorColor: AppColors.gold.withValues(alpha: 0.22),
+        indicatorColor: Colors.white.withValues(alpha: 0.16),
         elevation: 0,
-        height: 68,
+        height: 64,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         labelTextStyle: WidgetStateProperty.resolveWith(
           (states) => AppFonts.label(
-            11.5,
-            weight: states.contains(WidgetState.selected) ? FontWeight.w600 : FontWeight.w400,
+            11,
+            weight: states.contains(WidgetState.selected) ? FontWeight.w700 : FontWeight.w500,
             color: states.contains(WidgetState.selected)
-                ? AppColors.gold
-                : AppColors.textSecondary,
+                ? Colors.white
+                : Colors.white.withValues(alpha: 0.62),
           ),
         ),
         iconTheme: WidgetStateProperty.resolveWith(
           (states) => IconThemeData(
-            size: 23,
+            size: 22,
             color: states.contains(WidgetState.selected)
-                ? AppColors.gold
-                : AppColors.textSecondary,
+                ? Colors.white
+                : Colors.white.withValues(alpha: 0.62),
           ),
         ),
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         shape: const StadiumBorder(),
-        backgroundColor: AppColors.surfaceHigh,
-        contentTextStyle: AppFonts.label(13.5, color: AppColors.textPrimary),
+        backgroundColor: AppColors.ink,
+        contentTextStyle: AppFonts.label(13.5, color: Colors.white),
       ),
-      progressIndicatorTheme: const ProgressIndicatorThemeData(color: AppColors.gold),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(color: AppColors.ink),
       bottomSheetTheme: const BottomSheetThemeData(
-        backgroundColor: AppColors.surface,
+        backgroundColor: AppColors.paper,
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(26)),
         ),
       ),
       dialogTheme: DialogThemeData(
-        backgroundColor: AppColors.surface,
+        backgroundColor: AppColors.paper,
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        titleTextStyle: AppFonts.title(20, weight: FontWeight.w500),
+        titleTextStyle: AppFonts.title(20),
         contentTextStyle: AppFonts.label(14, color: AppColors.textSecondary),
       ),
-      listTileTheme: const ListTileThemeData(iconColor: AppColors.gold),
-      iconTheme: const IconThemeData(color: AppColors.textSecondary),
+      listTileTheme: const ListTileThemeData(iconColor: AppColors.ink),
+      iconTheme: const IconThemeData(color: AppColors.ink),
     );
   }
 
-  /// Latar halaman: gradasi malam biru dengan pendaran lembut di tengah atas.
+  /// Latar halaman: kanvas putih polos, tanpa gradasi.
   static Widget backdrop({required Widget child}) {
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [AppColors.steel, AppColors.steelDeep],
-          stops: [0.0, 0.75],
-        ),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            top: -220,
-            left: -120,
-            right: -120,
-            child: IgnorePointer(
-              child: Container(
-                height: 520,
-                decoration: const BoxDecoration(
-                  gradient: RadialGradient(
-                    colors: [Color(0x556E8CAB), Color(0x002A3E54)],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          child,
-        ],
-      ),
-    );
+    return ColoredBox(color: AppColors.background, child: child);
   }
 
   static OutlineInputBorder _inputBorder(Color color, {double width = 1}) {
     return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(14),
       borderSide: BorderSide(color: color, width: width),
     );
   }
