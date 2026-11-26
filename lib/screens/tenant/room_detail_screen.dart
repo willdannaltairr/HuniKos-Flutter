@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../core/api_exception.dart';
 import '../../core/formatters.dart';
 import '../../core/theme.dart';
+import '../../models/facility.dart';
 import '../../models/property.dart';
 import '../../models/room_detail.dart';
 import '../../providers/auth_provider.dart';
@@ -13,8 +14,8 @@ import '../../widgets/network_image_view.dart';
 import '../../widgets/price_text.dart';
 import '../../widgets/state_views.dart';
 
-/// Detail kamar: foto, fasilitas, periode yang sudah dipesan, dan bilah
-/// pemesanan di bawah. Pemilik dan admin melihat tanpa tombol pesan.
+/// Detail kamar bergaya aplikasi perjalanan: foto besar di atas, lalu judul,
+/// info singkat, fasilitas, dan periode terisi. Bilah pesan menempel di bawah.
 class RoomDetailScreen extends StatefulWidget {
   const RoomDetailScreen({super.key, required this.roomId});
 
@@ -85,106 +86,64 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
           return Column(
             children: [
               Expanded(
-                child: CustomScrollView(
-                  slivers: [
-                    SliverAppBar(
-                      pinned: true,
-                      expandedHeight: 260,
-                      backgroundColor: AppColors.cream,
-                      surfaceTintColor: Colors.transparent,
-                      leading: const _CircleBackButton(),
-                      flexibleSpace: FlexibleSpaceBar(
-                        background: _Gallery(
-                          images: detail.images,
-                          controller: _pageController,
-                          page: _page,
-                          onPageChanged: (value) => setState(() => _page = value),
-                        ),
-                      ),
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    _Gallery(
+                      images: detail.images,
+                      controller: _pageController,
+                      page: _page,
+                      onPageChanged: (value) => setState(() => _page = value),
                     ),
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 18, 20, 26),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Kamar ${room.roomNumber}', style: AppFonts.title(26)),
-                            const SizedBox(height: 4),
-                            Text(
-                              '${detail.property.name} · ${detail.property.city}',
-                              style: AppFonts.label(
-                                13,
-                                weight: FontWeight.w500,
-                                color: AppColors.textSecondary,
-                              ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 18, 20, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Kamar ${room.roomNumber} · ${room.roomType}',
+                            style: AppFonts.title(23, weight: FontWeight.w700)
+                                .copyWith(height: 1.25),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '${detail.property.name} · ${detail.property.city}',
+                            style: AppFonts.label(
+                              13,
+                              weight: FontWeight.w500,
+                              color: AppColors.textSecondary,
                             ),
-                            const SizedBox(height: 12),
-                            PriceText(
-                              amount: room.monthlyPrice,
-                              style: AppFonts.label(20, weight: FontWeight.w800),
-                            ),
-                            const SizedBox(height: 18),
-                            _InfoGrid(room: room),
-                            const SizedBox(height: 22),
-                            Text('Fasilitas', style: AppFonts.title(19, weight: FontWeight.w600)),
-                            const SizedBox(height: 10),
-                            if (room.facilities.isEmpty)
-                              Text(
-                                'Belum ada fasilitas yang dicatat.',
-                                style: AppFonts.label(
-                                  13,
-                                  weight: FontWeight.w500,
-                                  color: AppColors.textSecondary,
-                                ),
-                              )
-                            else
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: room.facilities
-                                    .map((facility) => _FacilityChip(name: facility.name))
-                                    .toList(),
-                              ),
-                            const SizedBox(height: 22),
-                            Text(
-                              'Periode terisi',
-                              style: AppFonts.title(19, weight: FontWeight.w600),
-                            ),
-                            const SizedBox(height: 8),
-                            if (detail.unavailableRanges.isEmpty)
-                              Text(
-                                'Belum ada periode yang dipesan.',
-                                style: AppFonts.label(
-                                  13,
-                                  weight: FontWeight.w500,
-                                  color: AppColors.textSecondary,
-                                ),
-                              )
-                            else
-                              ...detail.unavailableRanges.map(
-                                (range) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 6),
-                                  child: Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.event_busy_outlined,
-                                        size: 16,
-                                        color: AppColors.goldDeep,
-                                      ),
-                                      const SizedBox(width: 7),
-                                      Expanded(
-                                        child: Text(
-                                          'Terisi ${Formatters.shortDate(range.startDate)} – '
-                                          '${Formatters.shortDate(range.endDate)}',
-                                          style: AppFonts.label(13, weight: FontWeight.w500),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(height: 8),
+                          _StatusRow(room: room),
+                          const SizedBox(height: 16),
+                          const Divider(color: AppColors.border, height: 1),
+                          const SizedBox(height: 16),
+                          _HostRow(room: room),
+                          const SizedBox(height: 18),
+                          _Amenities(facilities: room.facilities),
+                          const SizedBox(height: 18),
+                          _Highlight(
+                            icon: Icons.check_circle_outline,
+                            title: room.isAvailable ? 'Siap dihuni' : 'Sedang tidak tersedia',
+                            subtitle: room.isAvailable
+                                ? 'Kamar bisa dipesan hari ini.'
+                                : 'Tunggu sampai kamar kembali tersedia.',
+                          ),
+                          const SizedBox(height: 12),
+                          _Highlight(
+                            icon: Icons.calendar_month_outlined,
+                            title: 'Periode terisi',
+                            subtitle: detail.unavailableRanges.isEmpty
+                                ? 'Belum ada periode yang dipesan.'
+                                : detail.unavailableRanges
+                                    .map((range) =>
+                                        '${Formatters.shortDate(range.startDate)} – '
+                                        '${Formatters.shortDate(range.endDate)}')
+                                    .join(', '),
+                          ),
+                          const SizedBox(height: 24),
+                        ],
                       ),
                     ),
                   ],
@@ -199,7 +158,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
   }
 }
 
-/// Bilah bawah bergaya Airbnb: harga di kiri, tombol di kanan.
+/// Bilah bawah: harga di kiri, tombol pesan di kanan.
 class _BookingBar extends StatelessWidget {
   const _BookingBar({required this.room, required this.onBook});
 
@@ -210,7 +169,7 @@ class _BookingBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: AppColors.ivory,
+        color: AppColors.paper,
         border: Border(top: BorderSide(color: AppColors.border)),
       ),
       child: SafeArea(
@@ -241,10 +200,7 @@ class _BookingBar extends StatelessWidget {
               ),
               FilledButton(
                 onPressed: onBook,
-                style: FilledButton.styleFrom(
-                  minimumSize: const Size(148, 50),
-                  backgroundColor: AppColors.navy,
-                ),
+                style: FilledButton.styleFrom(minimumSize: const Size(140, 50)),
                 child: const Text('Pesan sekarang'),
               ),
             ],
@@ -255,6 +211,7 @@ class _BookingBar extends StatelessWidget {
   }
 }
 
+/// Galeri foto dengan tombol tutup, bagikan, dan penanda halaman.
 class _Gallery extends StatelessWidget {
   const _Gallery({
     required this.images,
@@ -270,35 +227,194 @@ class _Gallery extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (images.isEmpty) {
-      return const NetworkImageView(url: null, borderRadius: 0);
-    }
+    return SizedBox(
+      height: 300,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(26)),
+              child: images.isEmpty
+                  ? const NetworkImageView(url: null, borderRadius: 0)
+                  : PageView.builder(
+                      controller: controller,
+                      onPageChanged: onPageChanged,
+                      itemCount: images.length,
+                      itemBuilder: (context, index) => NetworkImageView(
+                        url: images[index].imageUrl,
+                        borderRadius: 0,
+                      ),
+                    ),
+            ),
+          ),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(14, 8, 14, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _GlassButton(
+                    icon: Icons.close_rounded,
+                    tooltip: 'Tutup',
+                    onTap: () => context.canPop() ? context.pop() : context.go('/tenant'),
+                  ),
+                  _GlassButton(
+                    icon: Icons.ios_share_rounded,
+                    tooltip: 'Bagikan',
+                    onTap: () => _share(context),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (images.length > 1)
+            Positioned(
+              right: 16,
+              bottom: 16,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppColors.ink.withValues(alpha: 0.72),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  '${page + 1}/${images.length}',
+                  style: AppFonts.label(11, weight: FontWeight.w600, color: Colors.white),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
 
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        PageView.builder(
-          controller: controller,
-          onPageChanged: onPageChanged,
-          itemCount: images.length,
-          itemBuilder: (context, index) => NetworkImageView(
-            url: images[index].imageUrl,
-            borderRadius: 0,
+  /// Tombol ini mengikuti rujukan visual, tetapi belum ada layanan bagikan
+  /// yang dipasang, jadi beri tahu terus terang daripada mengaku berhasil.
+  void _share(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Fitur bagikan belum tersedia')),
+    );
+  }
+}
+
+class _GlassButton extends StatelessWidget {
+  const _GlassButton({required this.icon, required this.tooltip, required this.onTap});
+
+  final IconData icon;
+  final String tooltip;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: Material(
+        color: Colors.white.withValues(alpha: 0.92),
+        shape: const CircleBorder(),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: onTap,
+          child: SizedBox(
+            width: 38,
+            height: 38,
+            child: Icon(icon, size: 18, color: AppColors.ink),
           ),
         ),
-        Positioned(
-          right: 16,
-          bottom: 16,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: AppColors.navy.withValues(alpha: 0.75),
-              borderRadius: BorderRadius.circular(999),
-            ),
-            child: Text(
-              '${page + 1}/${images.length}',
-              style: AppFonts.label(11, weight: FontWeight.w600, color: AppColors.ivory),
-            ),
+      ),
+    );
+  }
+}
+
+/// Baris status kamar dan jumlah penghuni.
+class _StatusRow extends StatelessWidget {
+  const _StatusRow({required this.room});
+
+  final RoomItem room;
+
+  static String _statusLabel(String status) {
+    switch (status) {
+      case 'AVAILABLE':
+        return 'Tersedia';
+      case 'RESERVED':
+        return 'Dipesan';
+      case 'OCCUPIED':
+        return 'Terisi';
+      case 'MAINTENANCE':
+        return 'Perbaikan';
+      case 'INACTIVE':
+        return 'Nonaktif';
+      default:
+        return status;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          room.isAvailable ? Icons.bolt_rounded : Icons.lock_clock_outlined,
+          size: 17,
+          color: room.isAvailable ? AppColors.successText : AppColors.textSecondary,
+        ),
+        const SizedBox(width: 4),
+        Text(
+          _statusLabel(room.status),
+          style: AppFonts.label(
+            12.5,
+            weight: FontWeight.w600,
+            color: room.isAvailable ? AppColors.successText : AppColors.textSecondary,
+          ),
+        ),
+        const SizedBox(width: 12),
+        const Icon(Icons.people_outline, size: 16, color: AppColors.textSecondary),
+        const SizedBox(width: 4),
+        Text(
+          '${room.maxOccupants} orang',
+          style: AppFonts.label(12.5, weight: FontWeight.w500, color: AppColors.textSecondary),
+        ),
+      ],
+    );
+  }
+}
+
+/// Tempat tinggal: tipe, lantai, ukuran.
+class _HostRow extends StatelessWidget {
+  const _HostRow({required this.room});
+
+  final RoomItem room;
+
+  @override
+  Widget build(BuildContext context) {
+    final parts = [
+      room.bathroomLabel,
+      'Lantai ${room.floorNumber}',
+      if (room.dimensions != null) room.dimensions!,
+    ];
+
+    return Row(
+      children: [
+        Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: AppColors.paperSoft,
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: const Icon(Icons.meeting_room_outlined, color: AppColors.ink),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Kamar ${room.roomNumber}', style: AppFonts.label(14, weight: FontWeight.w700)),
+              const SizedBox(height: 1),
+              Text(
+                parts.join(' · '),
+                style: AppFonts.label(12.5, weight: FontWeight.w500, color: AppColors.textSecondary),
+              ),
+            ],
           ),
         ),
       ],
@@ -306,99 +422,88 @@ class _Gallery extends StatelessWidget {
   }
 }
 
-class _CircleBackButton extends StatelessWidget {
-  const _CircleBackButton();
+/// Daftar fasilitas dalam dua kolom seperti bagian "Amenities".
+class _Amenities extends StatelessWidget {
+  const _Amenities({required this.facilities});
+
+  final List<Facility> facilities;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Material(
-        color: AppColors.ivory.withValues(alpha: 0.92),
-        shape: const CircleBorder(),
-        child: IconButton(
-          onPressed: () => context.canPop() ? context.pop() : context.go('/tenant'),
-          icon: const Icon(Icons.arrow_back_rounded, size: 20),
-          color: AppColors.navy,
-          tooltip: 'Kembali',
-        ),
-      ),
-    );
-  }
-}
-
-class _FacilityChip extends StatelessWidget {
-  const _FacilityChip({required this.name});
-
-  final String name;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.check_rounded, size: 14, color: AppColors.goldDeep),
-          const SizedBox(width: 5),
-          Text(name, style: AppFonts.label(12, weight: FontWeight.w600)),
-        ],
-      ),
-    );
-  }
-}
-
-/// Ringkasan atribut kamar dalam kotak krem dengan garis tepi tipis.
-class _InfoGrid extends StatelessWidget {
-  const _InfoGrid({required this.room});
-
-  final RoomItem room;
-
-  @override
-  Widget build(BuildContext context) {
-    final items = [
-      ('Tipe', room.roomType),
-      ('Lantai', '${room.floorNumber}'),
-      ('Kapasitas', '${room.maxOccupants} orang'),
-      ('Kamar mandi', room.bathroomLabel),
-      if (room.dimensions != null) ('Ukuran', room.dimensions!),
-    ];
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Wrap(
-        spacing: 28,
-        runSpacing: 14,
-        children: items
-            .map(
-              (item) => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Fasilitas', style: AppFonts.title(18, weight: FontWeight.w700)),
+        const SizedBox(height: 10),
+        if (facilities.isEmpty)
+          Text(
+            'Belum ada fasilitas yang dicatat.',
+            style: AppFonts.label(13, weight: FontWeight.w500, color: AppColors.textSecondary),
+          )
+        else
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final columnWidth = (constraints.maxWidth - 12) / 2;
+              return Wrap(
+                spacing: 12,
+                runSpacing: 10,
                 children: [
-                  Text(
-                    item.$1,
-                    style: AppFonts.label(
-                      11,
-                      weight: FontWeight.w500,
-                      color: AppColors.textSecondary,
+                  for (final facility in facilities)
+                    SizedBox(
+                      width: columnWidth,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.check_rounded, size: 16, color: AppColors.ink),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              facility.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppFonts.label(13, weight: FontWeight.w500),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 1),
-                  Text(item.$2, style: AppFonts.label(13.5, weight: FontWeight.w700)),
                 ],
+              );
+            },
+          ),
+      ],
+    );
+  }
+}
+
+/// Blok sorotan dengan ikon, judul, dan keterangan kecil.
+class _Highlight extends StatelessWidget {
+  const _Highlight({required this.icon, required this.title, required this.subtitle});
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 20, color: AppColors.ink),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: AppFonts.label(13.5, weight: FontWeight.w700)),
+              const SizedBox(height: 1),
+              Text(
+                subtitle,
+                style: AppFonts.label(12.5, weight: FontWeight.w500, color: AppColors.textSecondary),
               ),
-            )
-            .toList(),
-      ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
