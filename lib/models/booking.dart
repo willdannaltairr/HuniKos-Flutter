@@ -99,6 +99,8 @@ class Booking {
     required this.room,
     required this.property,
     required this.tenant,
+    this.tenantFee = 0,
+    this.totalTenantPayment = 0,
     this.note,
     this.ownerNote,
     this.expiresAt,
@@ -117,6 +119,8 @@ class Booking {
   final BookingRoom room;
   final BookingProperty property;
   final BookingTenant tenant;
+  final double tenantFee;
+  final double totalTenantPayment;
   final String? note;
   final String? ownerNote;
   final DateTime? expiresAt;
@@ -141,6 +145,8 @@ class Booking {
       room: BookingRoom.fromJson(asMap(json['room']) ?? const {}),
       property: BookingProperty.fromJson(asMap(json['property']) ?? const {}),
       tenant: BookingTenant.fromJson(asMap(json['tenant']) ?? const {}),
+      tenantFee: asDouble(json['tenant_fee']) ?? 0,
+      totalTenantPayment: asDouble(json['total_tenant_payment']) ?? 0,
       note: asString(json['note']),
       ownerNote: asString(json['owner_note']),
       expiresAt: DateTime.tryParse(asString(json['expires_at']) ?? ''),

@@ -12,6 +12,9 @@ class OwnerDashboard {
     required this.openMaintenance,
     required this.revenueThisMonth,
     required this.occupancyRate,
+    this.grossRentalThisMonth = 0,
+    this.platformFeeThisMonth = 0,
+    this.netPayoutThisMonth = 0,
   });
 
   final int totalProperties;
@@ -24,6 +27,9 @@ class OwnerDashboard {
   final int openMaintenance;
   final double revenueThisMonth;
   final double occupancyRate;
+  final double grossRentalThisMonth;
+  final double platformFeeThisMonth;
+  final double netPayoutThisMonth;
 
   factory OwnerDashboard.fromJson(Map<String, dynamic> json) {
     return OwnerDashboard(
@@ -37,6 +43,9 @@ class OwnerDashboard {
       openMaintenance: asInt(json['open_maintenance']) ?? 0,
       revenueThisMonth: asDouble(json['revenue_this_month']) ?? 0,
       occupancyRate: asDouble(json['occupancy_rate']) ?? 0,
+      grossRentalThisMonth: asDouble(json['gross_rental_this_month']) ?? 0,
+      platformFeeThisMonth: asDouble(json['platform_fee_this_month']) ?? 0,
+      netPayoutThisMonth: asDouble(json['net_payout_this_month']) ?? 0,
     );
   }
 }
@@ -49,6 +58,7 @@ class AdminDashboard {
     required this.totalProperties,
     required this.pendingProperties,
     required this.activeBookings,
+    this.platformGrossRevenue = 0,
   });
 
   final int totalUsers;
@@ -57,6 +67,7 @@ class AdminDashboard {
   final int totalProperties;
   final int pendingProperties;
   final int activeBookings;
+  final double platformGrossRevenue;
 
   factory AdminDashboard.fromJson(Map<String, dynamic> json) {
     return AdminDashboard(
@@ -66,6 +77,7 @@ class AdminDashboard {
       totalProperties: asInt(json['total_properties']) ?? 0,
       pendingProperties: asInt(json['pending_properties']) ?? 0,
       activeBookings: asInt(json['active_bookings']) ?? 0,
+      platformGrossRevenue: asDouble(json['platform_gross_revenue']) ?? 0,
     );
   }
 }

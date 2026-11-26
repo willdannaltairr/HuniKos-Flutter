@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/formatters.dart';
 import '../../core/theme.dart';
 import '../../providers/admin_provider.dart';
 import '../../providers/auth_provider.dart';
@@ -60,6 +61,50 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                         style: AppFonts.label(13, weight: FontWeight.w500, color: AppColors.textSecondary),
                       ),
                       const SizedBox(height: 16),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [AppColors.goldDeep, AppColors.gold],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.account_balance_wallet_outlined,
+                                  size: 18,
+                                  color: Colors.white,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Pendapatan platform bulan ini',
+                                  style: AppFonts.label(
+                                    12,
+                                    color: Colors.white.withValues(alpha: 0.9),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              Formatters.rupiah(dashboard?.platformGrossRevenue ?? 0),
+                              style: AppFonts.title(
+                                26,
+                                weight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 12),
                       Row(
                         children: [
                           Expanded(

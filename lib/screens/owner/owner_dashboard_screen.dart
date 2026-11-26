@@ -66,6 +66,9 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                       _RevenueCard(
                         revenue: dashboard?.revenueThisMonth ?? 0,
                         occupancy: dashboard?.occupancyRate ?? 0,
+                        gross: dashboard?.grossRentalThisMonth ?? 0,
+                        fee: dashboard?.platformFeeThisMonth ?? 0,
+                        net: dashboard?.netPayoutThisMonth ?? 0,
                       ),
                       const SizedBox(height: 14),
                       Row(
@@ -147,10 +150,19 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
 }
 
 class _RevenueCard extends StatelessWidget {
-  const _RevenueCard({required this.revenue, required this.occupancy});
+  const _RevenueCard({
+    required this.revenue,
+    required this.occupancy,
+    this.gross = 0,
+    this.fee = 0,
+    this.net = 0,
+  });
 
   final double revenue;
   final double occupancy;
+  final double gross;
+  final double fee;
+  final double net;
 
   @override
   Widget build(BuildContext context) {
@@ -177,6 +189,13 @@ class _RevenueCard extends StatelessWidget {
             style: AppFonts.title(26, weight: FontWeight.w600, color: AppColors.gold),
           ),
           const SizedBox(height: 10),
+          _RevenueDetailRow('Pendapatan sewa', Formatters.rupiah(gross)),
+          _RevenueDetailRow(
+            'Biaya pengelolaan platform (2%)',
+            '-${Formatters.rupiah(fee)}',
+          ),
+          _RevenueDetailRow('Dana bersih siap cair', Formatters.rupiah(net)),
+          const SizedBox(height: 10),
           ClipRRect(
             borderRadius: BorderRadius.circular(999),
             child: LinearProgressIndicator(
@@ -190,6 +209,34 @@ class _RevenueCard extends StatelessWidget {
           Text(
             'Hunian terisi ${occupancy.toStringAsFixed(1)}%',
             style: AppFonts.label(11.5, color: AppColors.textSecondary),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RevenueDetailRow extends StatelessWidget {
+  const _RevenueDetailRow(this.label, this.value);
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: AppFonts.label(11.5, color: AppColors.textSecondary),
+            ),
+          ),
+          Text(
+            value,
+            style: AppFonts.label(11.5, weight: FontWeight.w600),
           ),
         ],
       ),

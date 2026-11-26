@@ -139,6 +139,10 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
   Widget _buildContent(BookingDetail detail) {
     final booking = detail.booking;
     final pendingPayment = context.read<TenantProvider>().latestPendingPayment(detail);
+    // Booking lama tidak punya biaya layanan: totalnya tetap total_amount.
+    final totalBayar = booking.totalTenantPayment > 0
+        ? booking.totalTenantPayment
+        : booking.totalAmount;
 
     return Column(
       children: [
@@ -181,7 +185,9 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                   ('Tanggal selesai', Formatters.date(booking.endDate)),
                   ('Durasi', '${booking.durationMonths} bulan'),
                   ('Harga per bulan', Formatters.rupiah(booking.rentalPriceSnapshot)),
-                  ('Total', Formatters.rupiah(booking.totalAmount)),
+                  if (booking.tenantFee > 0)
+                    ('Biaya layanan (2%)', Formatters.rupiah(booking.tenantFee)),
+                  ('Total pembayaran', Formatters.rupiah(totalBayar)),
                 ],
               ),
               if (booking.note != null) ...[
@@ -351,7 +357,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                     label: Text(
                       _paying
                           ? 'Membuka pembayaran…'
-                          : 'Bayar ${Formatters.rupiah(booking.totalAmount)}',
+                          : 'Bayar ${Formatters.rupiah(totalBayar)}',
                     ),
                   ),
                 if (booking.canUploadProof && pendingPayment == null)

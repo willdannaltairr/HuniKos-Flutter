@@ -191,6 +191,9 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
           final detail = snapshot.data!;
           final room = detail.room;
           final total = room.monthlyPrice * _duration;
+          // Booking baru selalu kena biaya layanan 2% dari total sewa.
+          final biayaLayanan = total > 0 ? (total * 0.02).round() : 0;
+          final totalBayar = total + biayaLayanan;
 
           return Column(
             children: [
@@ -333,9 +336,16 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                             Formatters.shortDate(Formatters.isoDate(_endDate)),
                           ),
                           const Divider(height: 20),
+                          if (biayaLayanan > 0) ...[
+                            _summaryRow(
+                              'Biaya layanan (2%)',
+                              Formatters.rupiah(biayaLayanan),
+                            ),
+                            const SizedBox(height: 6),
+                          ],
                           _summaryRow(
-                            'Total',
-                            Formatters.rupiah(total),
+                            'Total pembayaran',
+                            Formatters.rupiah(totalBayar),
                             bold: true,
                           ),
                         ],

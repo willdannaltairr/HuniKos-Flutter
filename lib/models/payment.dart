@@ -12,6 +12,12 @@ class Payment {
     required this.roomNumber,
     required this.propertyName,
     required this.tenantName,
+    this.baseAmount = 0,
+    this.tenantFee = 0,
+    this.totalTenantPayment = 0,
+    this.ownerFee = 0,
+    this.ownerNetPayout = 0,
+    this.platformGrossRevenue = 0,
     this.proofUrl,
     this.midtransOrderId,
     this.midtransTransactionStatus,
@@ -28,7 +34,14 @@ class Payment {
   final String bookingCode;
   final String roomNumber;
   final String propertyName;
-  final String tenantName;
+  final String? tenantName;
+
+  final double baseAmount;
+  final double tenantFee;
+  final double totalTenantPayment;
+  final double ownerFee;
+  final double ownerNetPayout;
+  final double platformGrossRevenue;
 
   /// Diisi hanya untuk data lama yang masih memakai bukti transfer.
   final String? proofUrl;
@@ -55,6 +68,12 @@ class Payment {
       roomNumber: asString(json['room_number']) ?? '-',
       propertyName: asString(json['property_name']) ?? '-',
       tenantName: asString(json['tenant_name']) ?? '-',
+      baseAmount: asDouble(json['base_amount']) ?? asDouble(json['amount']) ?? 0,
+      tenantFee: asDouble(json['tenant_fee']) ?? 0,
+      totalTenantPayment: asDouble(json['total_tenant_payment']) ?? 0,
+      ownerFee: asDouble(json['owner_fee']) ?? 0,
+      ownerNetPayout: asDouble(json['owner_net_payout']) ?? 0,
+      platformGrossRevenue: asDouble(json['platform_gross_revenue']) ?? 0,
       proofUrl: asString(json['proof_url']),
       midtransOrderId: asString(json['midtrans_order_id']),
       midtransTransactionStatus: asString(json['midtrans_transaction_status']),
