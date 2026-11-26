@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../widgets/floating_nav_bar.dart';
+
 /// Kerangka area penyewa: navigasi bawah tetap terlihat di semua tab.
 class TenantShell extends StatelessWidget {
   const TenantShell({super.key, required this.navigationShell});
@@ -11,31 +13,34 @@ class TenantShell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: (index) {
+      bottomNavigationBar: FloatingNavBar(
+        currentIndex: navigationShell.currentIndex,
+        onSelect: (index) {
           // goBranch mempertahankan tumpukan halaman tiap tab.
-          navigationShell.goBranch(index, initialLocation: index == navigationShell.currentIndex);
+          navigationShell.goBranch(
+            index,
+            initialLocation: index == navigationShell.currentIndex,
+          );
         },
         destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.explore_outlined),
-            selectedIcon: Icon(Icons.explore),
-            label: 'Explore',
+          FloatingNavItem(
+            icon: Icons.explore_outlined,
+            selectedIcon: Icons.explore,
+            label: 'Jelajah',
           ),
-          NavigationDestination(
-            icon: Icon(Icons.receipt_long_outlined),
-            selectedIcon: Icon(Icons.receipt_long),
+          FloatingNavItem(
+            icon: Icons.receipt_long_outlined,
+            selectedIcon: Icons.receipt_long,
             label: 'Booking',
           ),
-          NavigationDestination(
-            icon: Icon(Icons.build_outlined),
-            selectedIcon: Icon(Icons.build),
+          FloatingNavItem(
+            icon: Icons.build_outlined,
+            selectedIcon: Icons.build,
             label: 'Laporan',
           ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
+          FloatingNavItem(
+            icon: Icons.person_outline,
+            selectedIcon: Icons.person,
             label: 'Profil',
           ),
         ],

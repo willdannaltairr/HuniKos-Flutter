@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../widgets/floating_nav_bar.dart';
+
 /// Kerangka area admin dengan navigasi bawah.
 class AdminShell extends StatelessWidget {
   const AdminShell({super.key, required this.navigationShell});
@@ -11,33 +13,33 @@ class AdminShell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: (index) {
+      bottomNavigationBar: FloatingNavBar(
+        currentIndex: navigationShell.currentIndex,
+        onSelect: (index) {
           navigationShell.goBranch(
             index,
             initialLocation: index == navigationShell.currentIndex,
           );
         },
         destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.space_dashboard_outlined),
-            selectedIcon: Icon(Icons.space_dashboard),
-            label: 'Dashboard',
+          FloatingNavItem(
+            icon: Icons.space_dashboard_outlined,
+            selectedIcon: Icons.space_dashboard,
+            label: 'Dasbor',
           ),
-          NavigationDestination(
-            icon: Icon(Icons.verified_outlined),
-            selectedIcon: Icon(Icons.verified),
+          FloatingNavItem(
+            icon: Icons.verified_outlined,
+            selectedIcon: Icons.verified,
             label: 'Verifikasi',
           ),
-          NavigationDestination(
-            icon: Icon(Icons.people_outline),
-            selectedIcon: Icon(Icons.people),
+          FloatingNavItem(
+            icon: Icons.people_outline,
+            selectedIcon: Icons.people,
             label: 'Pengguna',
           ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
+          FloatingNavItem(
+            icon: Icons.person_outline,
+            selectedIcon: Icons.person,
             label: 'Profil',
           ),
         ],

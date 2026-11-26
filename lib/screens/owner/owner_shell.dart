@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../widgets/floating_nav_bar.dart';
+
 /// Kerangka area pemilik dengan navigasi bawah.
 class OwnerShell extends StatelessWidget {
   const OwnerShell({super.key, required this.navigationShell});
@@ -11,38 +13,38 @@ class OwnerShell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: (index) {
+      bottomNavigationBar: FloatingNavBar(
+        currentIndex: navigationShell.currentIndex,
+        onSelect: (index) {
           navigationShell.goBranch(
             index,
             initialLocation: index == navigationShell.currentIndex,
           );
         },
         destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.space_dashboard_outlined),
-            selectedIcon: Icon(Icons.space_dashboard),
-            label: 'Dashboard',
+          FloatingNavItem(
+            icon: Icons.space_dashboard_outlined,
+            selectedIcon: Icons.space_dashboard,
+            label: 'Dasbor',
           ),
-          NavigationDestination(
-            icon: Icon(Icons.apartment_outlined),
-            selectedIcon: Icon(Icons.apartment),
+          FloatingNavItem(
+            icon: Icons.apartment_outlined,
+            selectedIcon: Icons.apartment,
             label: 'Properti',
           ),
-          NavigationDestination(
-            icon: Icon(Icons.event_note_outlined),
-            selectedIcon: Icon(Icons.event_note),
+          FloatingNavItem(
+            icon: Icons.event_note_outlined,
+            selectedIcon: Icons.event_note,
             label: 'Booking',
           ),
-          NavigationDestination(
-            icon: Icon(Icons.payments_outlined),
-            selectedIcon: Icon(Icons.payments),
+          FloatingNavItem(
+            icon: Icons.payments_outlined,
+            selectedIcon: Icons.payments,
             label: 'Bayar',
           ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
+          FloatingNavItem(
+            icon: Icons.person_outline,
+            selectedIcon: Icons.person,
             label: 'Profil',
           ),
         ],
