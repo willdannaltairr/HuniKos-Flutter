@@ -42,9 +42,23 @@ class MidtransPayment {
   }
 
   Future<PaymentOutcome> _startAndroid(String snapToken) async {
+    // SDK menentukan lingkungan dari prefiks kunci client, bukan dari token.
+    // Kunci produksi (`Mid-client-`) tidak bisa membuka token sandbox, jadi
+    // kegagalannya dicegah di sini dengan pesan yang menyebut penyebabnya.
+    final clientKey = AppConfig.midtransClientKey;
+    final kunciProduksi = clientKey.startsWith('Mid-client-');
+    if (!AppConfig.midtransIsProduction && kunciProduksi) {
+      throw StateError(
+        'Kunci Midtrans di aplikasi masih kunci produksi, sedangkan transaksi '
+        'dibuat di sandbox. Isi MIDTRANS_CLIENT_KEY dengan kunci '
+        'SB-Mid-client-... saat build, atau jalankan dengan '
+        '--dart-define=MIDTRANS_IS_PRODUCTION=true bila memang produksi.',
+      );
+    }
+
     final sdk = await MidtransSDK.init(
       config: MidtransConfig(
-        clientKey: AppConfig.midtransClientKey,
+        clientKey: clientKey,
         merchantBaseUrl: AppConfig.baseUrl,
         enableLog: kDebugMode,
         colorTheme: ColorTheme(
