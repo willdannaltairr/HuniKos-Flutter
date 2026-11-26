@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/i18n.dart';
 import '../../core/role_home.dart';
 import '../../core/theme.dart';
 import '../../core/validators.dart';
@@ -68,8 +69,8 @@ class _LoginScreenState extends State<LoginScreen> {
     final auth = context.watch<AuthProvider>();
 
     return AuthShell(
-      title: 'Masuk dan lanjutkan\npencarian kosmu',
-      subtitle: 'Satu akun untuk menyewa, membayar, dan melapor.',
+      title: I18n.t('auth.loginTitle'),
+      subtitle: I18n.t('auth.loginSubtitle'),
       child: Form(
         key: _formKey,
         child: Column(
@@ -87,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 14),
             AuthField(
               controller: _email,
-              label: 'Alamat email',
+              label: I18n.t('auth.email'),
               hint: 'nama@email.com',
               icon: Icons.mail_outline,
               keyboardType: TextInputType.emailAddress,
@@ -98,13 +99,13 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 8),
             AuthField(
               controller: _password,
-              label: 'Password',
-              hint: 'Masukkan password',
+              label: I18n.t('auth.password'),
+              hint: I18n.t('auth.passwordHint'),
               icon: Icons.lock_outline,
               obscureText: _obscure,
               onToggleObscure: () => setState(() => _obscure = !_obscure),
               validator: (value) =>
-                  (value ?? '').isEmpty ? 'Password wajib diisi' : null,
+                  (value ?? '').isEmpty ? I18n.t('auth.passwordRequired') : null,
               serverError: auth.fieldErrors['password'],
               textInputAction: TextInputAction.done,
               onSubmitted: _submit,
@@ -126,10 +127,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 18,
                       child: CircularProgressIndicator(strokeWidth: 2.2, color: Colors.white),
                     )
-                  : const Text('Login'),
+                  : Text(I18n.t('auth.login')),
             ),
             const SizedBox(height: 12),
-            const _DividerLabel(text: 'Atau lanjutkan dengan'),
+            _DividerLabel(text: I18n.t('auth.orContinue')),
             const SizedBox(height: 12),
             AuthSocialButtons(onPressed: _social),
           ],
@@ -143,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void _social(String provider) {
     showError(
       context,
-      'Masuk dengan $provider belum tersedia. Gunakan email dan password.',
+      I18n.t('auth.socialUnavailable', {'provider': provider}),
     );
   }
 }

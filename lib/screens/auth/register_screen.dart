@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/i18n.dart';
 import '../../core/role_home.dart';
 import '../../core/theme.dart';
 import '../../core/validators.dart';
@@ -55,8 +56,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final auth = context.watch<AuthProvider>();
 
     return AuthShell(
-      title: 'Ayo siapkan\nakunmu',
-      subtitle: 'Daftar untuk mulai mencari atau mengelola kos.',
+      title: I18n.t('auth.registerTitle'),
+      subtitle: I18n.t('auth.registerSubtitle'),
       backTo: '/login',
       child: Form(
         key: _formKey,
@@ -83,8 +84,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const SizedBox(height: 10),
             AuthField(
               controller: _name,
-              label: 'Nama lengkap',
-              hint: 'Sesuai KTP',
+              label: I18n.t('auth.fullName'),
+              hint: I18n.t('auth.nameHint'),
               icon: Icons.person_outline,
               validator: Validators.fullName,
               serverError: auth.fieldErrors['full_name'],
@@ -93,7 +94,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const SizedBox(height: 8),
             AuthField(
               controller: _email,
-              label: 'Alamat email',
+              label: I18n.t('auth.email'),
               hint: 'nama@email.com',
               icon: Icons.mail_outline,
               keyboardType: TextInputType.emailAddress,
@@ -104,7 +105,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const SizedBox(height: 8),
             AuthField(
               controller: _phone,
-              label: 'Nomor telepon',
+              label: I18n.t('auth.phone'),
               hint: '+6281234567890',
               icon: Icons.phone_outlined,
               keyboardType: TextInputType.phone,
@@ -116,8 +117,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const SizedBox(height: 8),
             AuthField(
               controller: _password,
-              label: 'Password',
-              hint: 'Minimal 8 karakter, ada huruf dan angka',
+              label: I18n.t('auth.password'),
+              hint: I18n.t('auth.passwordLongHint'),
               icon: Icons.lock_outline,
               obscureText: _obscure,
               onToggleObscure: () => setState(() => _obscure = !_obscure),
@@ -143,7 +144,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       height: 18,
                       child: CircularProgressIndicator(strokeWidth: 2.2, color: Colors.white),
                     )
-                  : const Text('Daftar'),
+                  : Text(I18n.t('auth.tabRegister')),
             ),
           ],
         ),
@@ -166,7 +167,7 @@ class _RoleSelector extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 4),
           child: Text(
-            'Saya mendaftar sebagai',
+            I18n.t('auth.registerAs'),
             style: AppFonts.label(10.5, weight: FontWeight.w500, color: AppColors.textSecondary),
           ),
         ),
@@ -175,8 +176,8 @@ class _RoleSelector extends StatelessWidget {
           children: [
             Expanded(
               child: _RoleOption(
-                label: 'Penyewa',
-                description: 'Mencari kos',
+                label: I18n.t('auth.tenant'),
+                description: I18n.t('auth.tenantDesc'),
                 icon: Icons.person_outline,
                 selected: value == 'tenant',
                 onTap: () => onChanged('tenant'),
@@ -185,8 +186,8 @@ class _RoleSelector extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               child: _RoleOption(
-                label: 'Pemilik',
-                description: 'Mengelola kos',
+                label: I18n.t('auth.owner'),
+                description: I18n.t('auth.ownerDesc'),
                 icon: Icons.storefront_outlined,
                 selected: value == 'owner',
                 onTap: () => onChanged('owner'),

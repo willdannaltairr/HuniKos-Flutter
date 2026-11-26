@@ -1,51 +1,48 @@
+import 'i18n.dart';
+
 /// Aturan validasi form, cerminan kontrak bagian 7. Server tetap sumber akhir;
 /// validator ini hanya mencegah request yang jelas akan ditolak.
+/// Pesan memakai I18n supaya mengikuti bahasa yang dipilih pengguna.
 class Validators {
   const Validators._();
 
   static String? fullName(String? value) {
     final text = value?.trim() ?? '';
-    if (text.isEmpty) return 'Nama lengkap wajib diisi';
-    if (text.length < 2) return 'Nama lengkap minimal 2 karakter';
-    if (text.length > 100) return 'Nama lengkap maksimal 100 karakter';
+    if (text.isEmpty) return I18n.t('val.nameRequired');
+    if (text.length < 2) return I18n.t('val.nameMin');
+    if (text.length > 100) return I18n.t('val.nameMax');
     return null;
   }
 
   static String? email(String? value) {
     final text = value?.trim() ?? '';
-    if (text.isEmpty) return 'Email wajib diisi';
-    if (text.length > 150) return 'Email maksimal 150 karakter';
+    if (text.isEmpty) return I18n.t('val.emailRequired');
+    if (text.length > 150) return I18n.t('val.emailMax');
     final pattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
-    if (!pattern.hasMatch(text)) return 'Format email tidak valid';
+    if (!pattern.hasMatch(text)) return I18n.t('val.emailInvalid');
     return null;
   }
 
   static String? password(String? value) {
     final text = value ?? '';
-    if (text.isEmpty) return 'Password wajib diisi';
-    if (text.length < 8) return 'Password minimal 8 karakter';
-    if (text.length > 72) return 'Password maksimal 72 karakter';
-    if (!RegExp(r'[A-Za-z]').hasMatch(text)) {
-      return 'Password minimal mengandung 1 huruf';
-    }
-    if (!RegExp(r'[0-9]').hasMatch(text)) {
-      return 'Password minimal mengandung 1 angka';
-    }
+    if (text.isEmpty) return I18n.t('val.passwordRequired');
+    if (text.length < 8) return I18n.t('val.passwordMin');
+    if (text.length > 72) return I18n.t('val.passwordMax');
+    if (!RegExp(r'[A-Za-z]').hasMatch(text)) return I18n.t('val.passwordLetter');
+    if (!RegExp(r'[0-9]').hasMatch(text)) return I18n.t('val.passwordNumber');
     return null;
   }
 
   static String? passwordConfirmation(String? value, String original) {
-    if ((value ?? '').isEmpty) return 'Konfirmasi password wajib diisi';
-    if (value != original) return 'Konfirmasi password tidak sama';
+    if ((value ?? '').isEmpty) return I18n.t('val.confirmRequired');
+    if (value != original) return I18n.t('val.confirmMismatch');
     return null;
   }
 
   static String? phoneNumber(String? value) {
     final text = value?.trim() ?? '';
     if (text.isEmpty) return null;
-    if (!RegExp(r'^[0-9+]{8,20}$').hasMatch(text)) {
-      return 'Hanya angka dan tanda plus, 8-20 karakter';
-    }
+    if (!RegExp(r'^[0-9+]{8,20}$').hasMatch(text)) return I18n.t('val.phoneChars');
     return null;
   }
 
@@ -53,18 +50,16 @@ class Validators {
   /// lalu angka 8 dan 8-11 angka berikutnya (contoh +6281234567890).
   static String? phoneNumberRequired(String? value) {
     final text = (value ?? '').replaceAll(RegExp(r'[\s\-()]'), '');
-    if (text.isEmpty || text == '+62') return 'Nomor telepon wajib diisi';
-    if (!text.startsWith('+62')) {
-      return 'Awali dengan +62, contoh +6281234567890';
-    }
-    if (!RegExp(r'^\+628\d{8,11}$').hasMatch(text)) {
-      return 'Nomor tidak valid, contoh +6281234567890';
-    }
+    if (text.isEmpty || text == '+62') return I18n.t('val.phoneRequired');
+    if (!text.startsWith('+62')) return I18n.t('val.phonePrefix');
+    if (!RegExp(r'^\+628\d{8,11}$').hasMatch(text)) return I18n.t('val.phoneInvalid');
     return null;
   }
 
   static String? requiredText(String? value, String label) {
-    if ((value ?? '').trim().isEmpty) return '$label wajib diisi';
+    if ((value ?? '').trim().isEmpty) {
+      return I18n.t('val.required', {'label': label});
+    }
     return null;
   }
 
@@ -75,11 +70,13 @@ class Validators {
     required int max,
   }) {
     final text = value?.trim() ?? '';
-    if (text.isEmpty) return '$label wajib diisi';
+    if (text.isEmpty) return I18n.t('val.required', {'label': label});
     if (min != null && text.length < min) {
-      return '$label minimal $min karakter';
+      return I18n.t('val.min', {'label': label, 'min': '$min'});
     }
-    if (text.length > max) return '$label maksimal $max karakter';
+    if (text.length > max) {
+      return I18n.t('val.max', {'label': label, 'max': '$max'});
+    }
     return null;
   }
 
@@ -89,16 +86,18 @@ class Validators {
     required int max,
   }) {
     final text = value?.trim() ?? '';
-    if (text.length > max) return '$label maksimal $max karakter';
+    if (text.length > max) {
+      return I18n.t('val.max', {'label': label, 'max': '$max'});
+    }
     return null;
   }
 
   static String? price(String? value) {
     final text = (value ?? '').replaceAll(RegExp(r'[^0-9]'), '');
-    if (text.isEmpty) return 'Harga wajib diisi';
+    if (text.isEmpty) return I18n.t('val.priceRequired');
     final amount = int.tryParse(text);
-    if (amount == null || amount <= 0) return 'Harga harus lebih dari 0';
-    if (amount > 100000000) return 'Harga maksimal 100.000.000';
+    if (amount == null || amount <= 0) return I18n.t('val.pricePositive');
+    if (amount > 100000000) return I18n.t('val.priceMax');
     return null;
   }
 
@@ -109,9 +108,13 @@ class Validators {
     required int max,
   }) {
     final parsed = int.tryParse((value ?? '').trim());
-    if (parsed == null) return '$label wajib diisi';
-    if (parsed < min) return '$label minimal $min';
-    if (parsed > max) return '$label maksimal $max';
+    if (parsed == null) return I18n.t('val.required', {'label': label});
+    if (parsed < min) {
+      return I18n.t('val.minSimple', {'label': label, 'min': '$min'});
+    }
+    if (parsed > max) {
+      return I18n.t('val.maxSimple', {'label': label, 'max': '$max'});
+    }
     return null;
   }
 
@@ -121,9 +124,15 @@ class Validators {
     if (text.isEmpty) return null;
     final parsed = double.tryParse(text);
     final limit = isLatitude ? 90.0 : 180.0;
-    if (parsed == null) return '$label harus berupa angka';
+    if (parsed == null) {
+      return I18n.t('val.coordinateNumber', {'label': label});
+    }
     if (parsed < -limit || parsed > limit) {
-      return '$label harus di antara ${-limit.toInt()} dan ${limit.toInt()}';
+      return I18n.t('val.coordinateRange', {
+        'label': label,
+        'min': '${-limit.toInt()}',
+        'max': '${limit.toInt()}',
+      });
     }
     return null;
   }

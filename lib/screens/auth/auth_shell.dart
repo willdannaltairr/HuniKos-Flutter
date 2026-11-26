@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/i18n.dart';
 import '../../core/theme.dart';
 
 /// Kerangka dua halaman auth: foto kamar di kepala, lalu lembar putih
@@ -198,8 +199,16 @@ class AuthTabs extends StatelessWidget {
       ),
       child: Row(
         children: [
-          _Tab(label: 'Masuk', active: !isRegister, onTap: () => context.go('/login')),
-          _Tab(label: 'Daftar', active: isRegister, onTap: () => context.go('/register')),
+          _Tab(
+            label: I18n.t('auth.tabLogin'),
+            active: !isRegister,
+            onTap: () => context.go('/login'),
+          ),
+          _Tab(
+            label: I18n.t('auth.tabRegister'),
+            active: isRegister,
+            onTap: () => context.go('/register'),
+          ),
         ],
       ),
     );
