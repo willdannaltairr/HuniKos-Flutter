@@ -45,6 +45,11 @@ class TenantShell extends StatelessWidget {
             label: I18n.t('nav.reports'),
           ),
           FloatingNavItem(
+            icon: Icons.chat_bubble_outline,
+            selectedIcon: Icons.chat_bubble,
+            label: 'Chat',
+          ),
+          FloatingNavItem(
             icon: Icons.person_outline,
             selectedIcon: Icons.person,
             label: I18n.t('nav.profile'),

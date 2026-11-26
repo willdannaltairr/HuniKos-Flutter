@@ -172,7 +172,19 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                         ),
                       _Section(
                         title: 'Pemilik',
-                        child: _OwnerRow(owner: property.owner),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _OwnerRow(owner: property.owner),
+                            const SizedBox(height: 12),
+                            OutlinedButton.icon(
+                              onPressed: () =>
+                                  context.push('/chat', extra: property.id),
+                              icon: const Icon(Icons.chat_bubble_outline, size: 18),
+                              label: const Text('Tanya pemilik'),
+                            ),
+                          ],
+                        ),
                       ),
                       const _Divider(),
                       const SizedBox(height: 18),

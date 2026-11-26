@@ -22,6 +22,7 @@ import '../screens/owner/owner_shell.dart';
 import '../screens/owner/property_form_screen.dart';
 import '../screens/owner/room_form_screen.dart';
 import '../screens/shared/admin_property_detail_screen.dart';
+import '../screens/shared/chat_list_screen.dart';
 import '../screens/shared/profile_screen.dart';
 import '../screens/tenant/booking_detail_screen.dart';
 import '../screens/tenant/booking_form_screen.dart';
@@ -113,6 +114,12 @@ GoRouter buildRouter(AuthProvider auth) {
           initialBookingId: state.uri.queryParameters['bookingId'],
         ),
       ),
+      GoRoute(
+        path: '/chat',
+        builder: (context, state) => ChatListScreen(
+          propertyId: state.extra as String?,
+        ),
+      ),
 
       // --- Penyewa ---
       StatefulShellRoute.indexedStack(
@@ -143,6 +150,15 @@ GoRouter buildRouter(AuthProvider auth) {
                 path: '/tenant/maintenance',
                 builder: (context, state) =>
                     const MaintenanceListScreen(embedded: true),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/tenant/chat',
+                builder: (context, state) =>
+                    const ChatListScreen(embedded: true),
               ),
             ],
           ),
@@ -196,6 +212,15 @@ GoRouter buildRouter(AuthProvider auth) {
               GoRoute(
                 path: '/owner/payments',
                 builder: (context, state) => const OwnerPaymentsScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/owner/chat',
+                builder: (context, state) =>
+                    const ChatListScreen(embedded: true),
               ),
             ],
           ),
