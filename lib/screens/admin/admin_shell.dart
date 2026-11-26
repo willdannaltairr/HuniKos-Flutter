@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
+import '../../core/app_settings.dart';
 import '../../core/i18n.dart';
 import '../../widgets/floating_nav_bar.dart';
 
@@ -12,6 +14,8 @@ class AdminShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Dengarkan pengaturan supaya label nav ikut berganti saat bahasa diubah.
+    context.watch<AppSettings>();
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: FloatingNavBar(
