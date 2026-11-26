@@ -6,8 +6,8 @@ import '../../core/role_home.dart';
 import '../../core/theme.dart';
 import '../../core/validators.dart';
 import '../../providers/auth_provider.dart';
-import '../../widgets/app_text_field.dart';
-import 'auth_header.dart';
+import 'auth_field.dart';
+import 'auth_shell.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, this.redirectTo});
@@ -66,91 +66,89 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
 
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 420),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const AuthHeader(
-                      title: 'Masuk ke HuniKos',
-                      subtitle: 'Cari kos dan kelola sewa dalam satu tempat.',
-                    ),
-                    if (_sessionMessage != null) ...[
-                      const SizedBox(height: 16),
-                      _InfoBanner(
-                        message: _sessionMessage!,
-                        onDismiss: () => setState(() => _sessionMessage = null),
-                      ),
-                    ],
-                    const SizedBox(height: 20),
-                    AppTextField(
-                      controller: _email,
-                      label: 'Email',
-                      icon: Icons.mail_outline,
-                      keyboardType: TextInputType.emailAddress,
-                      validator: Validators.email,
-                      serverError: auth.fieldErrors['email'],
-                      textInputAction: TextInputAction.next,
-                    ),
-                    const SizedBox(height: 12),
-                    AppTextField(
-                      controller: _password,
-                      label: 'Password',
-                      icon: Icons.lock_outline,
-                      obscureText: _obscure,
-                      validator: (value) =>
-                          (value ?? '').isEmpty ? 'Password wajib diisi' : null,
-                      serverError: auth.fieldErrors['password'],
-                      textInputAction: TextInputAction.done,
-                      onSubmitted: _submit,
-                      suffix: IconButton(
-                        onPressed: () => setState(() => _obscure = !_obscure),
-                        icon: Icon(
-                          _obscure ? Icons.visibility_off : Icons.visibility,
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                    if (auth.error != null && auth.fieldErrors.isEmpty) ...[
-                      const SizedBox(height: 10),
-                      Text(
-                        auth.error!,
-                        style: AppFonts.label(12.5, weight: FontWeight.w600, color: AppColors.dangerText),
-                      ),
-                    ],
-                    const SizedBox(height: 20),
-                    FilledButton(
-                      onPressed: auth.isSubmitting ? null : _submit,
-                      child: auth.isSubmitting
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.4,
-                                color: Colors.white,
-                              ),
-                            )
-                          : const Text('Masuk'),
-                    ),
-                    const SizedBox(height: 10),
-                    TextButton(
-                      onPressed: () => context.go('/register'),
-                      child: const Text('Belum punya akun? Daftar'),
-                    ),
-                    const SizedBox(height: 4),
-                    const _DemoAccounts(),
-                  ],
-                ),
+    return AuthShell(
+      title: 'Masuk dan lanjutkan\npencarian kosmu',
+      subtitle: 'Satu akun untuk menyewa, membayar, dan melapor.',
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const AuthTabs(isRegister: false),
+            if (_sessionMessage != null) ...[
+              const SizedBox(height: 14),
+              _InfoBanner(
+                message: _sessionMessage!,
+                onDismiss: () => setState(() => _sessionMessage = null),
+              ),
+            ],
+            const SizedBox(height: 16),
+            AuthField(
+              controller: _email,
+              label: 'Alamat email',
+              hint: 'nama@email.com',
+              icon: Icons.mail_outline,
+              keyboardType: TextInputType.emailAddress,
+              validator: Validators.email,
+              serverError: auth.fieldErrors['email'],
+              textInputAction: TextInputAction.next,
+            ),
+            const SizedBox(height: 10),
+            AuthField(
+              controller: _password,
+              label: 'Password',
+              hint: 'Masukkan password',
+              icon: Icons.lock_outline,
+              obscureText: _obscure,
+              onToggleObscure: () => setState(() => _obscure = !_obscure),
+              validator: (value) =>
+                  (value ?? '').isEmpty ? 'Password wajib diisi' : null,
+              serverError: auth.fieldErrors['password'],
+              textInputAction: TextInputAction.done,
+              onSubmitted: _submit,
+            ),
+            if (auth.error != null && auth.fieldErrors.isEmpty) ...[
+              const SizedBox(height: 10),
+              Text(
+                auth.error!,
+                style: AppFonts.label(12.5, weight: FontWeight.w600, color: AppColors.dangerText),
+              ),
+            ],
+            const SizedBox(height: 18),
+            FilledButton(
+              onPressed: auth.isSubmitting ? null : _submit,
+              child: auth.isSubmitting
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white),
+                    )
+                  : const Text('Masuk'),
+            ),
+            const SizedBox(height: 14),
+            Center(
+              child: Text(
+                'Akun demo untuk pengujian',
+                style: AppFonts.label(11.5, weight: FontWeight.w600, color: AppColors.textSecondary),
               ),
             ),
-          ),
+            const SizedBox(height: 8),
+            const _DemoAccounts(),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Belum punya akun?',
+                  style: AppFonts.label(13, color: AppColors.textSecondary),
+                ),
+                TextButton(
+                  onPressed: () => context.go('/register'),
+                  child: const Text('Daftar'),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -165,28 +163,20 @@ class _DemoAccounts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
       decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
+        color: AppColors.paperSoft,
+        borderRadius: BorderRadius.circular(14),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Akun uji', style: AppFonts.label(12, weight: FontWeight.w800)),
-          const SizedBox(height: 5),
-          Text(
-            'Penyewa: tenant1@hunikos.test / Tenant123!\n'
-            'Pemilik: owner1@hunikos.test / Owner123!\n'
-            'Admin: admin@hunikos.test / Admin123!',
-            style: AppFonts.label(
-              11.5,
-              weight: FontWeight.w500,
-              color: AppColors.textSecondary,
-            ).copyWith(height: 1.6),
-          ),
-        ],
+      child: Text(
+        'Penyewa   tenant1@hunikos.test / Tenant123!\n'
+        'Pemilik     owner1@hunikos.test / Owner123!\n'
+        'Admin       admin@hunikos.test / Admin123!',
+        style: AppFonts.label(
+          11.5,
+          weight: FontWeight.w500,
+          color: AppColors.textSecondary,
+        ).copyWith(height: 1.7, fontFeatures: const [FontFeature.tabularFigures()]),
       ),
     );
   }
@@ -203,18 +193,18 @@ class _InfoBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 10, 4, 10),
       decoration: BoxDecoration(
-        color: AppColors.goldSoft,
+        color: AppColors.paperSoft,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.gold.withValues(alpha: 0.5)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Row(
         children: [
-          const Icon(Icons.info_outline, size: 18, color: AppColors.goldDeep),
+          const Icon(Icons.info_outline, size: 18, color: AppColors.inkSoft),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               message,
-              style: AppFonts.label(12.5, weight: FontWeight.w600, color: AppColors.goldDeep),
+              style: AppFonts.label(12.5, weight: FontWeight.w600, color: AppColors.inkSoft),
             ),
           ),
           IconButton(
@@ -227,5 +217,3 @@ class _InfoBanner extends StatelessWidget {
     );
   }
 }
-
-

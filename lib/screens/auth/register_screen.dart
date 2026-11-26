@@ -6,8 +6,8 @@ import '../../core/role_home.dart';
 import '../../core/theme.dart';
 import '../../core/validators.dart';
 import '../../providers/auth_provider.dart';
-import '../../widgets/app_text_field.dart';
-import 'auth_header.dart';
+import 'auth_field.dart';
+import 'auth_shell.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -56,125 +56,117 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Buat akun')),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 420),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const AuthHeader(
-                      title: 'Daftar HuniKos',
-                      subtitle: 'Pilih peran sesuai kebutuhan kamu.',
-                    ),
-                    const SizedBox(height: 20),
-                    _RoleSelector(
-                      value: _role,
-                      onChanged: (value) => setState(() => _role = value),
-                    ),
-                    if (auth.fieldErrors['role'] != null) ...[
-                      const SizedBox(height: 6),
-                      Text(
-                        auth.fieldErrors['role']!,
-                        style: AppFonts.label(12, weight: FontWeight.w600, color: AppColors.dangerText),
-                      ),
-                    ],
-                    const SizedBox(height: 16),
-                    AppTextField(
-                      controller: _name,
-                      label: 'Nama lengkap',
-                      icon: Icons.person_outline,
-                      validator: Validators.fullName,
-                      serverError: auth.fieldErrors['full_name'],
-                      textInputAction: TextInputAction.next,
-                    ),
-                    const SizedBox(height: 12),
-                    AppTextField(
-                      controller: _email,
-                      label: 'Email',
-                      icon: Icons.mail_outline,
-                      keyboardType: TextInputType.emailAddress,
-                      validator: Validators.email,
-                      serverError: auth.fieldErrors['email'],
-                      textInputAction: TextInputAction.next,
-                    ),
-                    const SizedBox(height: 12),
-                    AppTextField(
-                      controller: _phone,
-                      label: 'Nomor telepon (opsional)',
-                      hint: 'Contoh: 08123456789',
-                      icon: Icons.phone_outlined,
-                      keyboardType: TextInputType.phone,
-                      validator: Validators.phoneNumber,
-                      serverError: auth.fieldErrors['phone_number'],
-                      textInputAction: TextInputAction.next,
-                    ),
-                    const SizedBox(height: 12),
-                    AppTextField(
-                      controller: _password,
-                      label: 'Password',
-                      hint: 'Minimal 8 karakter, ada huruf dan angka',
-                      icon: Icons.lock_outline,
-                      obscureText: _obscure,
-                      validator: Validators.password,
-                      serverError: auth.fieldErrors['password'],
-                      textInputAction: TextInputAction.next,
-                      suffix: IconButton(
-                        onPressed: () => setState(() => _obscure = !_obscure),
-                        icon: Icon(
-                          _obscure ? Icons.visibility_off : Icons.visibility,
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    AppTextField(
-                      controller: _confirm,
-                      label: 'Ulangi password',
-                      icon: Icons.lock_outline,
-                      obscureText: _obscure,
-                      validator: (value) =>
-                          Validators.passwordConfirmation(value, _password.text),
-                      textInputAction: TextInputAction.done,
-                      onSubmitted: _submit,
-                    ),
-                    if (auth.error != null && auth.fieldErrors.isEmpty) ...[
-                      const SizedBox(height: 10),
-                      Text(
-                        auth.error!,
-                        style: AppFonts.label(12.5, weight: FontWeight.w600, color: AppColors.dangerText),
-                      ),
-                    ],
-                    const SizedBox(height: 20),
-                    FilledButton(
-                      onPressed: auth.isSubmitting ? null : _submit,
-                      child: auth.isSubmitting
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.4,
-                                color: Colors.white,
-                              ),
-                            )
-                          : const Text('Daftar'),
-                    ),
-                    const SizedBox(height: 8),
-                    TextButton(
-                      onPressed: () => context.go('/login'),
-                      child: const Text('Sudah punya akun? Masuk'),
-                    ),
-                  ],
-                ),
-              ),
+    return AuthShell(
+      title: 'Ayo siapkan\nakunmu',
+      subtitle: 'Daftar untuk mulai mencari atau mengelola kos.',
+      backTo: '/login',
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const AuthTabs(isRegister: true),
+            const SizedBox(height: 16),
+            _RoleSelector(
+              value: _role,
+              onChanged: (value) => setState(() => _role = value),
             ),
-          ),
+            if (auth.fieldErrors['role'] != null) ...[
+              const SizedBox(height: 6),
+              Text(
+                auth.fieldErrors['role']!,
+                style: AppFonts.label(12, weight: FontWeight.w600, color: AppColors.dangerText),
+              ),
+            ],
+            const SizedBox(height: 12),
+            AuthField(
+              controller: _name,
+              label: 'Nama lengkap',
+              hint: 'Sesuai KTP',
+              icon: Icons.person_outline,
+              validator: Validators.fullName,
+              serverError: auth.fieldErrors['full_name'],
+              textInputAction: TextInputAction.next,
+            ),
+            const SizedBox(height: 10),
+            AuthField(
+              controller: _email,
+              label: 'Alamat email',
+              hint: 'nama@email.com',
+              icon: Icons.mail_outline,
+              keyboardType: TextInputType.emailAddress,
+              validator: Validators.email,
+              serverError: auth.fieldErrors['email'],
+              textInputAction: TextInputAction.next,
+            ),
+            const SizedBox(height: 10),
+            AuthField(
+              controller: _phone,
+              label: 'Nomor telepon (opsional)',
+              hint: '08123456789',
+              icon: Icons.phone_outlined,
+              keyboardType: TextInputType.phone,
+              validator: Validators.phoneNumber,
+              serverError: auth.fieldErrors['phone_number'],
+              textInputAction: TextInputAction.next,
+            ),
+            const SizedBox(height: 10),
+            AuthField(
+              controller: _password,
+              label: 'Password',
+              hint: 'Minimal 8 karakter, ada huruf dan angka',
+              icon: Icons.lock_outline,
+              obscureText: _obscure,
+              onToggleObscure: () => setState(() => _obscure = !_obscure),
+              validator: Validators.password,
+              serverError: auth.fieldErrors['password'],
+              textInputAction: TextInputAction.next,
+            ),
+            const SizedBox(height: 10),
+            AuthField(
+              controller: _confirm,
+              label: 'Ulangi password',
+              hint: 'Ketik ulang password',
+              icon: Icons.lock_outline,
+              obscureText: _obscure,
+              validator: (value) =>
+                  Validators.passwordConfirmation(value, _password.text),
+              textInputAction: TextInputAction.done,
+              onSubmitted: _submit,
+            ),
+            if (auth.error != null && auth.fieldErrors.isEmpty) ...[
+              const SizedBox(height: 10),
+              Text(
+                auth.error!,
+                style: AppFonts.label(12.5, weight: FontWeight.w600, color: AppColors.dangerText),
+              ),
+            ],
+            const SizedBox(height: 18),
+            FilledButton(
+              onPressed: auth.isSubmitting ? null : _submit,
+              child: auth.isSubmitting
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white),
+                    )
+                  : const Text('Daftar'),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Sudah punya akun?',
+                  style: AppFonts.label(13, color: AppColors.textSecondary),
+                ),
+                TextButton(
+                  onPressed: () => context.go('/login'),
+                  child: const Text('Masuk'),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -194,7 +186,7 @@ class _RoleSelector extends StatelessWidget {
       children: [
         Text(
           'Saya mendaftar sebagai',
-          style: AppFonts.label(13, weight: FontWeight.w700),
+          style: AppFonts.label(11.5, weight: FontWeight.w500, color: AppColors.textSecondary),
         ),
         const SizedBox(height: 8),
         Row(
@@ -242,17 +234,19 @@ class _RoleOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      behavior: HitTestBehavior.opaque,
       child: Container(
-        padding: const EdgeInsets.all(14),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: selected ? AppColors.goldSoft : AppColors.surface,
+          color: selected ? AppColors.paperSoft : AppColors.paper,
           borderRadius: BorderRadius.circular(16),
+          // Kartu terpilih ditandai garis hitam tebal, bukan warna aksen,
+          // supaya tetap tenang seperti sisa aplikasi.
           border: Border.all(
-            color: selected ? AppColors.navy : AppColors.border,
-            width: selected ? 1.6 : 1,
+            color: selected ? AppColors.ink : AppColors.border,
+            width: selected ? 1.8 : 1,
           ),
         ),
         child: Column(
@@ -260,28 +254,22 @@ class _RoleOption extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: 21,
-              color: selected ? AppColors.navy : AppColors.textSecondary,
+              size: 20,
+              color: selected ? AppColors.ink : AppColors.textSecondary,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             Text(
               label,
               style: AppFonts.label(
                 13.5,
                 weight: FontWeight.w700,
-                color: selected ? AppColors.navy : AppColors.textPrimary,
+                color: AppColors.textPrimary,
               ),
             ),
             const SizedBox(height: 2),
             Text(
               description,
-              style: AppFonts.label(
-                11,
-                weight: FontWeight.w500,
-                color: selected
-                    ? AppColors.navy.withValues(alpha: 0.72)
-                    : AppColors.textSecondary,
-              ),
+              style: AppFonts.label(11, weight: FontWeight.w500, color: AppColors.textSecondary),
             ),
           ],
         ),
