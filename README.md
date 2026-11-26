@@ -111,3 +111,8 @@ lib/
 flutter analyze   # harus bersih
 flutter test      # model, validator, dan formatter
 ```
+
+## Kredit aset
+
+Foto latar halaman login dan register: Photo by Max Vakhtbovych on Pexels
+(`assets/images/auth_header.jpg`), dipakai sesuai lisensi Pexels.
