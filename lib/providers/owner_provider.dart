@@ -181,13 +181,18 @@ class OwnerProvider extends ChangeNotifier {
     }
   }
 
-  Future<String?> createRoom(String propertyId, Map<String, dynamic> body) async {
+  /// Mengembalikan kamar yang baru dibuat (untuk mengunggah fotonya), atau
+  /// pesan kesalahan bila gagal.
+  Future<({RoomItem? room, String? error})> createRoom(
+    String propertyId,
+    Map<String, dynamic> body,
+  ) async {
     try {
-      await _service.createRoom(propertyId, body);
+      final room = await _service.createRoom(propertyId, body);
       await loadRooms(propertyId);
-      return null;
+      return (room: room, error: null);
     } on ApiException catch (error) {
-      return error.message;
+      return (room: null, error: error.message);
     }
   }
 

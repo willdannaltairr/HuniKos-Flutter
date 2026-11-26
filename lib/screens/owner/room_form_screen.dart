@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/api_exception.dart';
 import '../../core/theme.dart';
 import '../../core/validators.dart';
 import '../../models/property.dart';
@@ -10,10 +11,11 @@ import '../../providers/catalog_provider.dart';
 import '../../providers/owner_provider.dart';
 import '../../widgets/app_text_field.dart';
 import '../../widgets/feedback.dart';
+import 'room_photo_field.dart';
 
 /// Form tambah dan ubah kamar. Status hanya bisa diubah manual ke
 /// AVAILABLE, MAINTENANCE, atau INACTIVE karena RESERVED/OCCUPIED diatur
-/// sistem.
+/// sistem. Setiap kamar wajib punya minimal satu foto.
 class RoomFormScreen extends StatefulWidget {
   const RoomFormScreen({super.key, required this.propertyId, this.room});
 
@@ -30,6 +32,7 @@ class RoomFormScreen extends StatefulWidget {
 
 class _RoomFormScreenState extends State<RoomFormScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _photoKey = GlobalKey<RoomPhotoFieldState>();
   final _number = TextEditingController();
   final _type = TextEditingController(text: 'standard');
   final _dimensions = TextEditingController();
@@ -40,6 +43,8 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
   String _bathroom = 'dalam';
   String _status = 'AVAILABLE';
   Set<String> _facilityIds = {};
+  List<PropertyImage> _existingPhotos = [];
+  bool _photoError = false;
   bool _submitting = false;
   String? _error;
 
@@ -60,7 +65,26 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<CatalogProvider>().loadFacilities();
+      if (room != null) _loadPhotos();
     });
+  }
+
+  /// Foto kamar diambil dari detail properti, karena endpoint itu yang
+  /// memuat semua gambar beserta room_id-nya.
+  Future<void> _loadPhotos() async {
+    try {
+      final detail =
+          await context.read<CatalogProvider>().propertyDetail(widget.propertyId);
+      if (!mounted) return;
+      setState(() {
+        _existingPhotos = detail.images
+            .where((image) => image.roomId == widget.room!.id)
+            .toList(growable: false);
+      });
+    } on ApiException {
+      // Foto hanya pelengkap form; kegagalan memuatnya tidak menghalangi
+      // pemilik menyimpan data kamar.
+    }
   }
 
   /// Status yang sedang diatur sistem tidak boleh dipilih ulang dari form;
@@ -83,8 +107,27 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
     super.dispose();
   }
 
+  Future<void> _removePhoto(String imageId) async {
+    final error = await context.read<OwnerProvider>().deleteImage(imageId);
+    if (!mounted) return;
+    if (error == null) {
+      setState(() {
+        _existingPhotos = _existingPhotos
+            .where((image) => image.id != imageId)
+            .toList(growable: false);
+      });
+    } else {
+      showError(context, error);
+    }
+  }
+
   Future<void> _submit() async {
-    if (!_formKey.currentState!.validate()) return;
+    final validForm = _formKey.currentState!.validate();
+    final photos = _photoKey.currentState!;
+    final hasPhoto = _existingPhotos.isNotEmpty || photos.files.isNotEmpty;
+
+    if (!hasPhoto) setState(() => _photoError = true);
+    if (!validForm || !hasPhoto) return;
 
     setState(() {
       _submitting = true;
@@ -106,9 +149,34 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
     body.removeWhere((_, value) => value == null);
 
     final provider = context.read<OwnerProvider>();
-    final error = widget.isEdit
-        ? await provider.updateRoom(widget.room!.id, widget.propertyId, body)
-        : await provider.createRoom(widget.propertyId, body);
+    String? error;
+    String? roomId = widget.room?.id;
+
+    if (widget.isEdit) {
+      error = await provider.updateRoom(roomId!, widget.propertyId, body);
+    } else {
+      final result = await provider.createRoom(widget.propertyId, body);
+      error = result.error;
+      roomId = result.room?.id;
+      // Kamar sudah terbuat tetapi id tidak terbaca: fotonya tidak bisa
+      // diunggah, jadi pemilik diberi tahu alih-alih diam saja.
+      if (error == null && roomId == null) {
+        error = 'Kamar tersimpan, tetapi foto gagal diunggah. Buka kamar ini '
+            'lalu tambahkan fotonya.';
+      }
+    }
+
+    if (!mounted) return;
+
+    if (error == null && roomId != null && photos.files.isNotEmpty) {
+      final uploadError = await provider.uploadImages(
+        widget.propertyId,
+        photos.files,
+        roomId: roomId,
+      );
+      if (!mounted) return;
+      error = uploadError;
+    }
 
     if (!mounted) return;
     setState(() => _submitting = false);
@@ -194,9 +262,16 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
               validator: (value) =>
                   Validators.optionalTextLength(value, 'Ukuran', max: 20),
             ),
-            const SizedBox(height: 16),
-            const Text('Kamar mandi',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+            const SizedBox(height: 18),
+            RoomPhotoField(
+              key: _photoKey,
+              existing: _existingPhotos,
+              showError: _photoError,
+              enabled: !_submitting,
+              onDeleteExisting: _removePhoto,
+            ),
+            const SizedBox(height: 18),
+            Text('Kamar mandi', style: AppFonts.label(13, weight: FontWeight.w700)),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -214,13 +289,12 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            const Text('Fasilitas',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+            Text('Fasilitas', style: AppFonts.label(13, weight: FontWeight.w700)),
             const SizedBox(height: 8),
             if (facilities.isEmpty)
-              const Text(
+              Text(
                 'Daftar fasilitas belum termuat.',
-                style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                style: AppFonts.label(12, color: AppColors.textSecondary),
               )
             else
               Wrap(
@@ -245,8 +319,7 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
               ),
             if (widget.isEdit) ...[
               const SizedBox(height: 16),
-              const Text('Status kamar',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+              Text('Status kamar', style: AppFonts.label(13, weight: FontWeight.w700)),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
@@ -257,16 +330,16 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
                 ],
               ),
               const SizedBox(height: 6),
-              const Text(
+              Text(
                 'Status Dipesan dan Terisi diatur otomatis oleh sistem.',
-                style: TextStyle(fontSize: 11.5, color: AppColors.textSecondary),
+                style: AppFonts.label(11.5, color: AppColors.textSecondary),
               ),
             ],
             if (_error != null) ...[
               const SizedBox(height: 12),
               Text(
                 _error!,
-                style: const TextStyle(fontSize: 12.5, color: AppColors.dangerText),
+                style: AppFonts.label(12.5, color: AppColors.dangerText),
               ),
             ],
             const SizedBox(height: 20),
