@@ -132,8 +132,6 @@ class _LoginScreenState extends State<LoginScreen> {
             const _DividerLabel(text: 'Atau lanjutkan dengan'),
             const SizedBox(height: 12),
             AuthSocialButtons(onPressed: _social),
-            const SizedBox(height: 12),
-            const _DemoAccounts(),
           ],
         ),
       ),
@@ -169,34 +167,6 @@ class _DividerLabel extends StatelessWidget {
         ),
         const Expanded(child: Divider(color: AppColors.border, height: 1)),
       ],
-    );
-  }
-}
-
-/// Akun uji dari kontrak bagian 10, supaya demo ke penguji tidak perlu
-/// menghafal email.
-class _DemoAccounts extends StatelessWidget {
-  const _DemoAccounts();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(12, 9, 12, 9),
-      decoration: BoxDecoration(
-        color: AppColors.paperSoft,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        'Akun uji\n'
-        'tenant1@hunikos.test · Tenant123!\n'
-        'owner1@hunikos.test · Owner123!\n'
-        'admin@hunikos.test · Admin123!',
-        style: AppFonts.label(
-          10.5,
-          weight: FontWeight.w500,
-          color: AppColors.textSecondary,
-        ).copyWith(height: 1.55),
-      ),
     );
   }
 }

@@ -6,8 +6,8 @@ import '../../core/theme.dart';
 /// Kerangka dua halaman auth: foto kamar di kepala, lalu lembar putih
 /// bersudut besar yang menampung form.
 ///
-/// Form sengaja tidak bisa digeser. Bila layar terlalu pendek, isinya
-/// diperkecil seperlunya supaya tetap utuh tanpa scroll.
+/// Form tidak pernah diperkecil. Saat papan ketik muncul, kepala disembunyikan
+/// dan isi form bisa digeser — bukan dikecilkan seperti sebelumnya.
 class AuthShell extends StatelessWidget {
   const AuthShell({
     super.key,
@@ -26,61 +26,29 @@ class AuthShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.sizeOf(context).height;
-    final headerHeight = (screenHeight * 0.30).clamp(170.0, 250.0);
+    final size = MediaQuery.sizeOf(context);
+    final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
+    final headerHeight = (size.height * 0.30).clamp(180.0, 260.0);
 
     return Scaffold(
       backgroundColor: AppColors.ink,
       body: Column(
         children: [
-          SizedBox(
-            height: headerHeight,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Image.asset(
-                  'assets/images/auth_header.jpg',
-                  fit: BoxFit.cover,
-                ),
-                // Lapisan gelap supaya judul putih tetap terbaca di foto apa pun.
-                const DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xCC1A1A1A), Color(0x991A1A1A)],
+          // Kepala hilang saat mengetik supaya kolom yang sedang diisi tetap
+          // terlihat tanpa mengecilkan seluruh form.
+          AnimatedSize(
+            duration: const Duration(milliseconds: 180),
+            curve: Curves.easeOut,
+            child: keyboardOpen
+                ? const SizedBox(width: double.infinity)
+                : SizedBox(
+                    height: headerHeight,
+                    child: _Header(
+                      title: title,
+                      subtitle: subtitle,
+                      backTo: backTo,
                     ),
                   ),
-                ),
-                SafeArea(
-                  bottom: false,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 8, 20, 18),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _Leading(backTo: backTo),
-                        const Spacer(),
-                        Text(
-                          title,
-                          style: AppFonts.title(25, weight: FontWeight.w700, color: Colors.white)
-                              .copyWith(height: 1.2),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          subtitle,
-                          style: AppFonts.label(
-                            12.5,
-                            weight: FontWeight.w500,
-                            color: Colors.white.withValues(alpha: 0.78),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
           Expanded(
             child: Container(
@@ -89,30 +57,83 @@ class AuthShell extends StatelessWidget {
                 color: AppColors.paper,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
               ),
-              child: Padding(
+              child: SingleChildScrollView(
                 padding: EdgeInsets.fromLTRB(
                   20,
-                  16,
+                  keyboardOpen ? 20 : 16,
                   20,
-                  12 + MediaQuery.of(context).viewPadding.bottom,
+                  16 + MediaQuery.of(context).viewPadding.bottom,
                 ),
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    return FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.topCenter,
-                      child: SizedBox(
-                        width: constraints.maxWidth.clamp(0, 420).toDouble(),
-                        child: child,
-                      ),
-                    );
-                  },
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 420),
+                    child: child,
+                  ),
                 ),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header({required this.title, required this.subtitle, this.backTo});
+
+  final String title;
+  final String subtitle;
+  final String? backTo;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Image.asset('assets/images/auth_header.jpg', fit: BoxFit.cover),
+        // Lapisan gelap supaya judul putih tetap terbaca di foto apa pun.
+        const DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xCC1A1A1A), Color(0x991A1A1A)],
+            ),
+          ),
+        ),
+        SafeArea(
+          bottom: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _Leading(backTo: backTo),
+                const Spacer(),
+                Text(
+                  title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppFonts.title(24, weight: FontWeight.w700, color: Colors.white)
+                      .copyWith(height: 1.2),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  subtitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppFonts.label(
+                    12,
+                    weight: FontWeight.w500,
+                    color: Colors.white.withValues(alpha: 0.78),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
