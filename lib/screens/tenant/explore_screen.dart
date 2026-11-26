@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../core/theme.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/catalog_provider.dart';
+import '../../widgets/network_image_view.dart';
 import '../../widgets/property_card.dart';
 import '../../widgets/state_views.dart';
 import 'explore_filter_sheet.dart';
@@ -23,6 +24,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
   final _searchController = TextEditingController();
   final _scrollController = ScrollController();
   Timer? _debounce;
+
+  /// Foto kepala beranda diambil sekali dari hasil pertama, lalu dibiarkan.
+  /// Kalau ikut hasil pencarian, gambarnya berganti setiap kali mengetik.
+  String? _heroCover;
 
   static const _quickTypes = [
     (value: null, label: 'Semua', icon: Icons.auto_awesome_outlined),
@@ -94,57 +99,56 @@ class _ExploreScreenState extends State<ExploreScreen> {
     final auth = context.watch<AuthProvider>();
     final firstName = auth.user?.fullName.split(' ').first ?? 'Pencari kos';
 
+    // Disimpan sekali supaya kepala beranda tidak ikut berubah tiap pencarian.
+    if (_heroCover == null && catalog.items.isNotEmpty) {
+      _heroCover = catalog.items.first.coverImageUrl;
+    }
+
     return Scaffold(
       body: SafeArea(
         bottom: false,
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 6),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Halo, $firstName', style: AppFonts.title(26)),
-                  const SizedBox(height: 2),
-                  Text(
-                    'Mau tinggal di mana bulan ini?',
-                    style: AppFonts.label(13, color: AppColors.textSecondary),
-                  ),
-                  const SizedBox(height: 14),
-                  _SearchPill(
-                    controller: _searchController,
-                    onChanged: _onQueryChanged,
-                    onSubmitted: (value) =>
-                        context.read<CatalogProvider>().search(query: value),
-                    onClear: () {
-                      _searchController.clear();
-                      setState(() {});
-                      context.read<CatalogProvider>().search(query: '');
-                    },
-                    onFilter: _openFilter,
-                    filterCount: catalog.filter.activeCount,
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    height: 40,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: _quickTypes.length,
-                      separatorBuilder: (_, _) => const SizedBox(width: 8),
-                      itemBuilder: (context, index) {
-                        final item = _quickTypes[index];
-                        return _TypeChip(
-                          label: item.label,
-                          icon: item.icon,
-                          selected: catalog.filter.type == item.value,
-                          onTap: () => _selectType(item.value),
-                        );
-                      },
-                    ),
-                  ),
-                ],
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+              child: _HeroHeader(
+                firstName: firstName,
+                coverUrl: _heroCover,
+                search: _SearchPill(
+                  controller: _searchController,
+                  onChanged: _onQueryChanged,
+                  onSubmitted: (value) =>
+                      context.read<CatalogProvider>().search(query: value),
+                  onClear: () {
+                    _searchController.clear();
+                    setState(() {});
+                    context.read<CatalogProvider>().search(query: '');
+                  },
+                  onFilter: _openFilter,
+                  filterCount: catalog.filter.activeCount,
+                ),
               ),
             ),
+            const SizedBox(height: 14),
+            SizedBox(
+              height: 40,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                itemCount: _quickTypes.length,
+                separatorBuilder: (_, _) => const SizedBox(width: 8),
+                itemBuilder: (context, index) {
+                  final item = _quickTypes[index];
+                  return _TypeChip(
+                    label: item.label,
+                    icon: item.icon,
+                    selected: catalog.filter.type == item.value,
+                    onTap: () => _selectType(item.value),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 6),
             Expanded(child: _buildBody(catalog)),
           ],
         ),
@@ -177,11 +181,29 @@ class _ExploreScreenState extends State<ExploreScreen> {
       onRefresh: catalog.refresh,
       child: ListView.separated(
         controller: _scrollController,
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
-        itemCount: catalog.items.length + (catalog.hasMore ? 1 : 0),
+        padding: const EdgeInsets.fromLTRB(20, 10, 20, 24),
+        // Satu baris tambahan di awal untuk judul bagian.
+        itemCount: catalog.items.length + 1 + (catalog.hasMore ? 1 : 0),
         separatorBuilder: (_, _) => const SizedBox(height: 24),
         itemBuilder: (context, index) {
-          if (index >= catalog.items.length) {
+          if (index == 0) {
+            return Row(
+              children: [
+                Expanded(
+                  child: Text('Paling relevan', style: AppFonts.title(19, weight: FontWeight.w700)),
+                ),
+                if (catalog.loading)
+                  const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+              ],
+            );
+          }
+
+          final itemIndex = index - 1;
+          if (itemIndex >= catalog.items.length) {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 14),
               child: Center(
@@ -199,7 +221,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
             );
           }
 
-          final property = catalog.items[index];
+          final property = catalog.items[itemIndex];
           return PropertyCard(
             property: property,
             onTap: () => context.push('/properties/${property.id}'),
@@ -233,19 +255,19 @@ class _SearchPill extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.ivory,
+        color: AppColors.paper,
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: AppColors.border),
         boxShadow: const [
-          BoxShadow(color: Color(0x0F14213D), blurRadius: 18, offset: Offset(0, 6)),
+          BoxShadow(color: Color(0x1F000000), blurRadius: 20, offset: Offset(0, 8)),
         ],
       ),
       child: Row(
         children: [
           const Padding(
             padding: EdgeInsets.only(left: 16, right: 8),
-            child: Icon(Icons.search_rounded, size: 21, color: AppColors.navy),
-          ),          Expanded(
+            child: Icon(Icons.search_rounded, size: 21, color: AppColors.ink),
+          ),
+          Expanded(
             child: TextField(
               controller: controller,
               onChanged: onChanged,
@@ -296,15 +318,15 @@ class _FilterButton extends StatelessWidget {
       clipBehavior: Clip.none,
       children: [
         Material(
-          color: AppColors.gold,
+          color: AppColors.ink,
           shape: const CircleBorder(),
           child: InkWell(
             onTap: onTap,
             customBorder: const CircleBorder(),
             child: const SizedBox(
-              width: 42,
-              height: 42,
-              child: Icon(Icons.tune_rounded, size: 20, color: AppColors.navy),
+              width: 40,
+              height: 40,
+              child: Icon(Icons.tune_rounded, size: 19, color: Colors.white),
             ),
           ),
         ),
@@ -315,14 +337,15 @@ class _FilterButton extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(4),
               constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
-              decoration: const BoxDecoration(
-                color: AppColors.gold,
+              decoration: BoxDecoration(
+                color: AppColors.rose,
                 shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 1.5),
               ),
               child: Text(
                 '$count',
                 textAlign: TextAlign.center,
-                style: AppFonts.label(10, weight: FontWeight.w800, color: AppColors.navy),
+                style: AppFonts.label(9.5, weight: FontWeight.w800, color: Colors.white),
               ),
             ),
           ),
@@ -347,10 +370,10 @@ class _TypeChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fg = selected ? AppColors.navy : AppColors.textPrimary;
+    final fg = selected ? Colors.white : AppColors.ink;
 
     return Material(
-      color: selected ? AppColors.gold : AppColors.surface,
+      color: selected ? AppColors.ink : AppColors.paper,
       borderRadius: BorderRadius.circular(999),
       child: InkWell(
         onTap: onTap,
@@ -360,23 +383,88 @@ class _TypeChip extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(999),
             border: Border.all(
-              color: selected ? AppColors.gold : AppColors.border,
+              color: selected ? AppColors.ink : AppColors.border,
             ),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                icon,
-                size: 16,
-                color: selected ? AppColors.navy : AppColors.gold,
-              ),
+              Icon(icon, size: 16, color: fg),
               const SizedBox(width: 6),
               Text(label, style: AppFonts.label(12.5, weight: FontWeight.w600, color: fg)),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Kepala beranda bergaya aplikasi perjalanan: foto besar bersudut bulat,
+/// sapaan putih di atasnya, dan bilah cari yang menempel di bawah foto.
+class _HeroHeader extends StatelessWidget {
+  const _HeroHeader({
+    required this.firstName,
+    required this.coverUrl,
+    required this.search,
+  });
+
+  final String firstName;
+  final String? coverUrl;
+  final Widget search;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: AspectRatio(
+            aspectRatio: 16 / 11,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                NetworkImageView(url: coverUrl, borderRadius: 0),
+                // Lapisan gelap supaya teks putih tetap terbaca di foto apa pun.
+                const DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Color(0x66000000), Color(0x00000000), Color(0x99000000)],
+                      stops: [0.0, 0.45, 1.0],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(18, 16, 18, 18),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Hai, $firstName 👋',
+                        style: AppFonts.label(
+                          12.5,
+                          weight: FontWeight.w600,
+                          color: Colors.white.withValues(alpha: 0.88),
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        'Mau tinggal di mana\nbulan ini?',
+                        style: AppFonts.title(24, weight: FontWeight.w700, color: Colors.white)
+                            .copyWith(height: 1.18),
+                      ),
+                      const Spacer(),
+                      search,
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
