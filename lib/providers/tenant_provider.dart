@@ -28,6 +28,10 @@ class TenantProvider extends ChangeNotifier {
   bool _loadingMaintenance = false;
   String? _maintenanceError;
 
+  final List<Payment> _payments = [];
+  bool _loadingPayments = false;
+  String? _paymentsError;
+
   List<Booking> get bookings => List.unmodifiable(_bookings);
   String? get statusFilter => _statusFilter;
   bool get loadingBookings => _loadingBookings;
@@ -40,6 +44,31 @@ class TenantProvider extends ChangeNotifier {
   List<Maintenance> get maintenance => List.unmodifiable(_maintenance);
   bool get loadingMaintenance => _loadingMaintenance;
   String? get maintenanceError => _maintenanceError;
+
+  List<Payment> get payments => List.unmodifiable(_payments);
+  bool get loadingPayments => _loadingPayments;
+  String? get paymentsError => _paymentsError;
+
+  /// Dipakai ringkasan keuangan di profil: total yang sudah lunas dan yang
+  /// dibayar bulan berjalan.
+  double get totalSpent => _payments
+      .where((payment) => payment.status == 'VERIFIED')
+      .fold(0, (sum, payment) => sum + payment.amount);
+
+  double get spentThisMonth {
+    final now = DateTime.now();
+    return _payments
+        .where((payment) =>
+            payment.status == 'VERIFIED' &&
+            payment.verifiedAt != null &&
+            payment.verifiedAt!.year == now.year &&
+            payment.verifiedAt!.month == now.month)
+        .fold(0, (sum, payment) => sum + payment.amount);
+  }
+
+  int get activeBookingCount => _bookings
+      .where((booking) => BookingStatus.active.contains(booking.status))
+      .length;
 
   /// Booking CONFIRMED dipakai sebagai pilihan pada form laporan kerusakan.
   List<Booking> get confirmedBookings =>
@@ -136,6 +165,24 @@ class TenantProvider extends ChangeNotifier {
     await loadDetail(bookingId);
   }
 
+  Future<void> loadPayments() async {
+    _loadingPayments = true;
+    _paymentsError = null;
+    notifyListeners();
+
+    try {
+      final result = await _service.myPayments();
+      _payments
+        ..clear()
+        ..addAll(result);
+    } on ApiException catch (error) {
+      _paymentsError = error.message;
+    } finally {
+      _loadingPayments = false;
+      notifyListeners();
+    }
+  }
+
   Future<void> loadMaintenance() async {
     _loadingMaintenance = true;
     _maintenanceError = null;
@@ -187,6 +234,9 @@ class TenantProvider extends ChangeNotifier {
     _maintenance.clear();
     _loadingMaintenance = false;
     _maintenanceError = null;
+    _payments.clear();
+    _loadingPayments = false;
+    _paymentsError = null;
     notifyListeners();
   }
 
