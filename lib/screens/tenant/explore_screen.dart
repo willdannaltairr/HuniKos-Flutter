@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/i18n.dart';
 import '../../core/theme.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/catalog_provider.dart';
@@ -27,10 +28,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
   String? _heroCover;
 
   static const _quickTypes = [
-    (value: null, label: 'Semua', icon: Icons.auto_awesome_outlined),
-    (value: 'putra', label: 'Putra', icon: Icons.male_rounded),
-    (value: 'putri', label: 'Putri', icon: Icons.female_rounded),
-    (value: 'campur', label: 'Campur', icon: Icons.people_alt_outlined),
+    (value: null, key: 'explore.all', icon: Icons.auto_awesome_outlined),
+    (value: 'putra', key: 'explore.male', icon: Icons.male_rounded),
+    (value: 'putri', key: 'explore.female', icon: Icons.female_rounded),
+    (value: 'campur', key: 'explore.mixed', icon: Icons.people_alt_outlined),
   ];
 
   @override
@@ -120,7 +121,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 itemBuilder: (context, index) {
                   final item = _quickTypes[index];
                   return _TypeChip(
-                    label: item.label,
+                    label: I18n.t(item.key),
                     icon: item.icon,
                     selected: catalog.filter.type == item.value,
                     onTap: () => _selectType(item.value),
@@ -138,20 +139,20 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   Widget _buildBody(CatalogProvider catalog) {
     if (catalog.loading && catalog.items.isEmpty) {
-      return const LoadingView(message: 'Mencari kos terdekat untukmu…');
+      return LoadingView(message: I18n.t('explore.loading'));
     }
     if (catalog.error != null && catalog.items.isEmpty) {
       return ErrorState(message: catalog.error!, onRetry: () => catalog.search());
     }
     if (catalog.items.isEmpty) {
       return EmptyState(
-        title: 'Belum ada kos yang cocok',
-        description: 'Coba ubah kata kunci atau hapus beberapa filter.',
+        title: I18n.t('explore.emptyTitle'),
+        description: I18n.t('explore.emptyDesc'),
         icon: Icons.search_off,
         action: catalog.filter.isActive
             ? OutlinedButton(
                 onPressed: catalog.resetFilter,
-                child: const Text('Hapus filter'),
+                child: Text(I18n.t('explore.clearFilter')),
               )
             : null,
       );
@@ -170,7 +171,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
             return Row(
               children: [
                 Expanded(
-                  child: Text('Paling relevan', style: AppFonts.title(19, weight: FontWeight.w700)),
+                  child: Text(I18n.t('explore.relevant'),
+                      style: AppFonts.title(19, weight: FontWeight.w700)),
                 ),
                 if (catalog.loading)
                   const SizedBox(
@@ -195,7 +197,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       )
                     : OutlinedButton(
                         onPressed: catalog.loadMore,
-                        child: const Text('Muat lebih banyak'),
+                        child: Text(I18n.t('explore.loadMore')),
                       ),
               ),
             );
@@ -254,7 +256,7 @@ class _SearchPill extends StatelessWidget {
                       const SizedBox(width: 10),
                       Expanded(
                         child: Text(
-                          query.isEmpty ? 'Cari kos, alamat, atau kota' : query,
+                          query.isEmpty ? I18n.t('search.hint') : query,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: AppFonts.label(
@@ -419,7 +421,7 @@ class _HeroHeader extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Hai, $firstName 👋',
+                        I18n.t('explore.greeting', {'name': firstName}),
                         style: AppFonts.label(
                           12.5,
                           weight: FontWeight.w600,
@@ -428,7 +430,7 @@ class _HeroHeader extends StatelessWidget {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        'Mau tinggal di mana\nbulan ini?',
+                        I18n.t('explore.heroTitle'),
                         style: AppFonts.title(24, weight: FontWeight.w700, color: Colors.white)
                             .copyWith(height: 1.18),
                       ),
