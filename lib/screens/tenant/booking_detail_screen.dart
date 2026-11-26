@@ -177,19 +177,19 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: AppColors.gold.withValues(alpha: 0.14),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColors.gold.withValues(alpha: 0.45)),
+                    color: const Color(0xFFFFF4E5),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: const Color(0xFFF3D8B0)),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.timer_outlined, size: 18, color: AppColors.gold),
+                      const Icon(Icons.timer_outlined, size: 18, color: AppColors.warningText),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           'Bayar sebelum ${Formatters.dateTime(booking.expiresAt!.toIso8601String())} '
                           '(sisa ${Formatters.countdown(booking.expiresAt)})',
-                          style: AppFonts.label(12.5, color: AppColors.gold),
+                          style: AppFonts.label(12.5, color: AppColors.warningText),
                         ),
                       ),
                     ],
@@ -324,7 +324,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                             height: 16,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: AppColors.navy,
+                              color: Colors.white,
                             ),
                           )
                         : const Icon(Icons.payment_outlined),

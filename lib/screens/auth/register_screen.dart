@@ -160,7 +160,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               height: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2.4,
-                                color: AppColors.navy,
+                                color: Colors.white,
                               ),
                             )
                           : const Text('Daftar'),

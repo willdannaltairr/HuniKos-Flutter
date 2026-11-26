@@ -170,7 +170,7 @@ class _MaintenanceFormScreenState extends State<MaintenanceFormScreen> {
                                 height: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2.4,
-                                  color: AppColors.navy,
+                                  color: Colors.white,
                                 ),
                               )
                             : const Text('Kirim laporan'),
@@ -191,7 +191,7 @@ class _NoBooking extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.info_outline, size: 40, color: Color(0xFF94A3B8)),
+            Icon(Icons.info_outline, size: 40, color: AppColors.border),
             SizedBox(height: 12),
             Text(
               'Belum ada booking aktif',
@@ -201,7 +201,7 @@ class _NoBooking extends StatelessWidget {
             Text(
               'Laporan kerusakan hanya bisa dibuat untuk booking yang sudah dikonfirmasi pemilik.',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
+              style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
             ),
           ],
         ),
