@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 /// Alamat backend diambil saat build supaya satu kode bisa dipakai untuk
 /// emulator, perangkat fisik, dan server produksi.
 ///
@@ -10,24 +8,21 @@ class AppConfig {
 
   static const String _fromEnvironment = String.fromEnvironment('API_BASE_URL');
 
-  /// Backend yang sudah online. Dipakai sebagai default supaya aplikasi
-  /// langsung tersambung tanpa perlu flag saat dijalankan.
+  /// Backend yang sudah online. Dipakai sebagai default di semua platform
+  /// supaya aplikasi langsung tersambung tanpa perlu flag saat dijalankan.
   ///
   /// Saat mengembangkan backend di komputer sendiri, timpa lewat:
-  ///   flutter run -d chrome --dart-define=API_BASE_URL=http://localhost:3000
+  ///   web/desktop : --dart-define=API_BASE_URL=http://localhost:3000
+  ///   emulator    : --dart-define=API_BASE_URL=http://10.0.2.2:3000
   static const String _productionUrl = 'https://hunikosbackend.vercel.app';
 
-  static const int _defaultPort = 3000;
-
-  static String get baseUrl {
-    if (_fromEnvironment.isNotEmpty) return _fromEnvironment;
-    // Emulator Android tidak bisa menjangkau localhost komputer; 10.0.2.2
-    // adalah aliasnya, jadi hanya dipakai bila backend lokal yang dipilih.
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-      return 'http://10.0.2.2:$_defaultPort';
-    }
-    return _productionUrl;
-  }
+  /// Tanpa flag, semua platform memakai backend production. Alamat lokal hanya
+  /// masuk lewat `--dart-define`, karena 10.0.2.2 adalah alias localhost
+  /// komputer dari dalam emulator Android — bukan alamat yang bisa dipakai
+  /// perangkat lain.
+  static String get baseUrl => _fromEnvironment.isNotEmpty
+      ? _fromEnvironment
+      : _productionUrl;
 
   /// Render free plan bisa tidur, jadi request pertama diberi waktu lebih lega.
   static const Duration connectTimeout = Duration(seconds: 30);
