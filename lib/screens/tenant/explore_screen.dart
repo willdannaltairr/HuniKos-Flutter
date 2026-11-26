@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +9,7 @@ import '../../widgets/network_image_view.dart';
 import '../../widgets/property_card.dart';
 import '../../widgets/state_views.dart';
 import 'explore_filter_sheet.dart';
+import 'search_sheet.dart';
 
 /// Beranda pencarian kos untuk penyewa, dipakai di dalam shell.
 class ExploreScreen extends StatefulWidget {
@@ -21,9 +20,7 @@ class ExploreScreen extends StatefulWidget {
 }
 
 class _ExploreScreenState extends State<ExploreScreen> {
-  final _searchController = TextEditingController();
   final _scrollController = ScrollController();
-  Timer? _debounce;
 
   /// Foto kepala beranda diambil sekali dari hasil pertama, lalu dibiarkan.
   /// Kalau ikut hasil pencarian, gambarnya berganti setiap kali mengetik.
@@ -49,9 +46,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   @override
   void dispose() {
-    _debounce?.cancel();
     _scrollController.dispose();
-    _searchController.dispose();
     super.dispose();
   }
 
@@ -61,14 +56,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
         _scrollController.position.maxScrollExtent - 240) {
       context.read<CatalogProvider>().loadMore();
     }
-  }
-
-  void _onQueryChanged(String value) {
-    _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 400), () {
-      if (!mounted) return;
-      context.read<CatalogProvider>().search(query: value);
-    });
   }
 
   Future<void> _openFilter() async {
@@ -115,15 +102,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 firstName: firstName,
                 coverUrl: _heroCover,
                 search: _SearchPill(
-                  controller: _searchController,
-                  onChanged: _onQueryChanged,
-                  onSubmitted: (value) =>
-                      context.read<CatalogProvider>().search(query: value),
-                  onClear: () {
-                    _searchController.clear();
-                    setState(() {});
-                    context.read<CatalogProvider>().search(query: '');
-                  },
+                  query: catalog.query,
+                  onTap: () => SearchSheet.open(context, catalog.query),
                   onFilter: _openFilter,
                   filterCount: catalog.filter.activeCount,
                 ),
@@ -236,18 +216,14 @@ class _ExploreScreenState extends State<ExploreScreen> {
 /// pada aplikasi perjalanan.
 class _SearchPill extends StatelessWidget {
   const _SearchPill({
-    required this.controller,
-    required this.onChanged,
-    required this.onSubmitted,
-    required this.onClear,
+    required this.query,
+    required this.onTap,
     required this.onFilter,
     required this.filterCount,
   });
 
-  final TextEditingController controller;
-  final ValueChanged<String> onChanged;
-  final ValueChanged<String> onSubmitted;
-  final VoidCallback onClear;
+  final String query;
+  final VoidCallback onTap;
   final VoidCallback onFilter;
   final int filterCount;
 
@@ -263,38 +239,39 @@ class _SearchPill extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 16, right: 8),
-            child: Icon(Icons.search_rounded, size: 21, color: AppColors.ink),
-          ),
           Expanded(
-            child: TextField(
-              controller: controller,
-              onChanged: onChanged,
-              onSubmitted: onSubmitted,
-              textInputAction: TextInputAction.search,
-              style: AppFonts.label(14, weight: FontWeight.w500, color: AppColors.navy),
-              decoration: InputDecoration(
-                isDense: true,
-                filled: false,
-                border: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(vertical: 15),
-                hintText: 'Cari kos, alamat, atau kota',
-                hintStyle: AppFonts.label(
-                  13.5,
-                  color: AppColors.navy.withValues(alpha: 0.55),
+            child: Material(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(999),
+              child: InkWell(
+                onTap: onTap,
+                borderRadius: BorderRadius.circular(999),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+                  child: Row(
+                    children: [
+                      Icon(Icons.search_rounded, size: 21, color: AppColors.ink),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          query.isEmpty ? 'Cari kos, alamat, atau kota' : query,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppFonts.label(
+                            14,
+                            weight: FontWeight.w500,
+                            color: query.isEmpty
+                                ? AppColors.navy.withValues(alpha: 0.55)
+                                : AppColors.navy,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-          if (controller.text.isNotEmpty)
-            IconButton(
-              onPressed: onClear,
-              icon: const Icon(Icons.close_rounded, size: 18),
-              color: AppColors.navy.withValues(alpha: 0.6),
-            ),
           Padding(
             padding: const EdgeInsets.only(right: 6),
             child: _FilterButton(count: filterCount, onTap: onFilter),
