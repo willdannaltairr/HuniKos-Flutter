@@ -10,6 +10,7 @@ import '../../models/booking.dart';
 import '../../models/booking_detail.dart';
 import '../../providers/tenant_provider.dart';
 import '../../widgets/feedback.dart';
+import '../../widgets/proof_upload_sheet.dart';
 import '../../widgets/state_views.dart';
 import '../../widgets/status_chip.dart';
 
@@ -64,6 +65,25 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
       showError(context, error is ApiException ? error.message : 'Pembayaran gagal dimulai');
     } finally {
       if (mounted) setState(() => _paying = false);
+    }
+  }
+
+  /// Jalur pembayaran tanpa gateway: bukti transfer diperiksa pemilik.
+  Future<void> _unggahBukti() async {
+    final file = await ProofUploadSheet.show(context);
+    if (file == null || !mounted) return;
+
+    setState(() => _paying = true);
+    final error = await context
+        .read<TenantProvider>()
+        .uploadProof(widget.bookingId, file);
+    if (!mounted) return;
+    setState(() => _paying = false);
+
+    if (error == null) {
+      showSuccess(context, 'Bukti transfer terkirim, menunggu verifikasi pemilik');
+    } else {
+      showError(context, error);
     }
   }
 
@@ -332,6 +352,15 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                       _paying
                           ? 'Membuka pembayaran…'
                           : 'Bayar ${Formatters.rupiah(booking.totalAmount)}',
+                    ),
+                  ),
+                if (booking.canUploadProof && pendingPayment == null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: OutlinedButton.icon(
+                      onPressed: _paying ? null : _unggahBukti,
+                      icon: const Icon(Icons.upload_file_outlined, size: 18),
+                      label: const Text('Unggah bukti transfer'),
                     ),
                   ),
                 if (booking.canUploadProof && pendingPayment != null) ...[

@@ -182,6 +182,8 @@ class ApiClient {
         return 'Data tidak valid';
       case 429:
         return 'Terlalu banyak percobaan, coba lagi nanti';
+      case 503:
+        return 'Layanan sedang tidak tersedia, coba lagi sebentar lagi';
       default:
         return 'Terjadi kesalahan pada server';
     }
