@@ -21,7 +21,7 @@ class PriceText extends StatelessWidget {
     return RichText(
       text: TextSpan(
         style: style ??
-            const TextStyle(
+            TextStyle(
               color: AppColors.primary,
               fontSize: 15,
               fontWeight: FontWeight.w800,
@@ -29,7 +29,7 @@ class PriceText extends StatelessWidget {
         children: [
           TextSpan(text: amount == null ? 'Belum ada kamar' : Formatters.rupiah(amount)),
           if (showSuffix && amount != null)
-            const TextSpan(
+            TextSpan(
               text: ' /bulan',
               style: TextStyle(
                 color: AppColors.textSecondary,

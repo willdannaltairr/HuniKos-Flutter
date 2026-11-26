@@ -211,7 +211,7 @@ class RoomPhotoFieldState extends State<RoomPhotoField> {
             padding: const EdgeInsets.fromLTRB(4, 5, 4, 0),
             child: Row(
               children: [
-                const Icon(Icons.error_outline, size: 13, color: AppColors.dangerText),
+                Icon(Icons.error_outline, size: 13, color: AppColors.dangerText),
                 const SizedBox(width: 4),
                 Expanded(
                   child: Text(

@@ -108,7 +108,7 @@ class _MaintenanceListScreenState extends State<MaintenanceListScreen> {
                         const SizedBox(height: 2),
                         Text(
                           '${item.propertyName} • Kamar ${item.roomNumber}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 11.5,
                             color: AppColors.textSecondary,
                           ),
@@ -123,7 +123,7 @@ class _MaintenanceListScreenState extends State<MaintenanceListScreen> {
                         const SizedBox(height: 6),
                         Text(
                           Formatters.dateTime(item.createdAt?.toIso8601String()),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 11,
                             color: AppColors.textSecondary,
                           ),
@@ -132,7 +132,7 @@ class _MaintenanceListScreenState extends State<MaintenanceListScreen> {
                           const SizedBox(height: 6),
                           Text(
                             'Catatan pemilik: ${item.ownerNote}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 11.5,
                               color: AppColors.primary,
                             ),

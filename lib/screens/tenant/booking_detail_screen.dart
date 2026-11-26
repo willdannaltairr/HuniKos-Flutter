@@ -151,7 +151,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                   Expanded(
                     child: Text(
                       booking.bookingCode,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12.5,
                         fontWeight: FontWeight.w700,
                         color: AppColors.textSecondary,
@@ -172,7 +172,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
               ),
               Text(
                 'Kamar ${booking.room.roomNumber} • ${booking.room.roomType}',
-                style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
               ),
               const SizedBox(height: 14),
               _InfoCard(
@@ -203,7 +203,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.timer_outlined, size: 18, color: AppColors.warningText),
+                      Icon(Icons.timer_outlined, size: 18, color: AppColors.warningText),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -223,7 +223,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
               ),
               const SizedBox(height: 8),
               if (detail.history.isEmpty)
-                const Text(
+                Text(
                   'Belum ada riwayat.',
                   style: TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
                 )
@@ -234,7 +234,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.only(top: 4),
                           child: Icon(Icons.circle, size: 7, color: AppColors.textSecondary),
                         ),
@@ -256,7 +256,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                               Text(
                                 '${Formatters.dateTime(entry.createdAt?.toIso8601String())}'
                                 '${entry.note == null ? '' : ' • ${entry.note}'}',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 11.5,
                                   color: AppColors.textSecondary,
                                 ),
@@ -275,7 +275,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
               ),
               const SizedBox(height: 8),
               if (detail.payments.isEmpty)
-                const Text(
+                Text(
                   'Belum ada bukti pembayaran.',
                   style: TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
                 )
@@ -300,7 +300,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                                 ),
                                 Text(
                                   Formatters.dateTime(payment.createdAt?.toIso8601String()),
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 11.5,
                                     color: AppColors.textSecondary,
                                   ),
@@ -308,7 +308,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                                 if (payment.note != null)
                                   Text(
                                     payment.note!,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 11.5,
                                       color: AppColors.dangerText,
                                     ),
@@ -378,7 +378,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                     icon: const Icon(Icons.refresh_outlined, size: 18),
                     label: const Text('Cek status pembayaran'),
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.only(bottom: 4, top: 8),
                     child: Text(
                       'Status diperbarui otomatis oleh notifikasi Midtrans.',
@@ -446,7 +446,7 @@ class _InfoCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         row.$1,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12.5,
                           color: AppColors.textSecondary,
                         ),
@@ -489,7 +489,7 @@ class _Note extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+            style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
           ),
           const SizedBox(height: 2),
           Text(text, style: const TextStyle(fontSize: 12.5)),

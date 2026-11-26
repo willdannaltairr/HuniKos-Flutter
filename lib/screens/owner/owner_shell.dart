@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/i18n.dart';
 import '../../widgets/floating_nav_bar.dart';
 
 /// Kerangka area pemilik dengan navigasi bawah.
@@ -21,31 +22,31 @@ class OwnerShell extends StatelessWidget {
             initialLocation: index == navigationShell.currentIndex,
           );
         },
-        destinations: const [
+        destinations: [
           FloatingNavItem(
             icon: Icons.space_dashboard_outlined,
             selectedIcon: Icons.space_dashboard,
-            label: 'Dasbor',
+            label: I18n.t('nav.dashboard'),
           ),
           FloatingNavItem(
             icon: Icons.apartment_outlined,
             selectedIcon: Icons.apartment,
-            label: 'Properti',
+            label: I18n.t('nav.properties'),
           ),
           FloatingNavItem(
             icon: Icons.event_note_outlined,
             selectedIcon: Icons.event_note,
-            label: 'Booking',
+            label: I18n.t('nav.bookings'),
           ),
           FloatingNavItem(
             icon: Icons.payments_outlined,
             selectedIcon: Icons.payments,
-            label: 'Bayar',
+            label: I18n.t('nav.payments'),
           ),
           FloatingNavItem(
             icon: Icons.person_outline,
             selectedIcon: Icons.person,
-            label: 'Profil',
+            label: I18n.t('nav.profile'),
           ),
         ],
       ),

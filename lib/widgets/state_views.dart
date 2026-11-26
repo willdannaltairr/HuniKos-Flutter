@@ -99,7 +99,7 @@ class ErrorState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.cloud_off_outlined, size: 44, color: AppColors.border),
+            Icon(Icons.cloud_off_outlined, size: 44, color: AppColors.border),
             const SizedBox(height: 12),
             Text(
               message,

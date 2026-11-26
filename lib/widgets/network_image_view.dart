@@ -58,7 +58,7 @@ class NetworkImageView extends StatelessWidget {
         color: AppColors.blueTint,
         borderRadius: BorderRadius.circular(borderRadius),
       ),
-      child: const Center(
+      child: Center(
         child: Icon(Icons.apartment_outlined, color: AppColors.textSecondary, size: 28),
       ),
     );

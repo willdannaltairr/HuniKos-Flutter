@@ -23,7 +23,7 @@ void main() {
   testWidgets('kartu properti tampil dengan harga', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        theme: AppTheme.build(),
+        theme: AppTheme.build(ThemeMode.light),
         home: Scaffold(
           body: SingleChildScrollView(child: PropertyCard(property: _property())),
         ),
@@ -43,7 +43,7 @@ void main() {
   testWidgets('peta lokasi terbangun tanpa error', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        theme: AppTheme.build(),
+        theme: AppTheme.build(ThemeMode.light),
         home: const Scaffold(
           body: PropertyMap(latitude: -7.7712, longitude: 110.4012),
         ),

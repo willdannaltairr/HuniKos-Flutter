@@ -130,7 +130,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
     return showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        icon: const Icon(Icons.check_circle_outline, color: AppColors.success, size: 36),
+        icon: Icon(Icons.check_circle_outline, color: AppColors.success, size: 36),
         title: const Text('Booking terkirim'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -214,7 +214,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                             const SizedBox(height: 2),
                             Text(
                               'Kamar ${room.roomNumber} • ${Formatters.rupiah(room.monthlyPrice)} /bulan',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 12.5,
                                 color: AppColors.textSecondary,
                               ),
@@ -345,14 +345,14 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                       const SizedBox(height: 12),
                       Text(
                         _formError!,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12.5,
                           color: AppColors.dangerText,
                         ),
                       ),
                     ],
                     const SizedBox(height: 8),
-                    const Text(
+                    Text(
                       'Booking masih perlu disetujui pemilik sebelum kamu membayar.',
                       style: TextStyle(fontSize: 11.5, color: AppColors.textSecondary),
                     ),

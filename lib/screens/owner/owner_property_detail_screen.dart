@@ -129,7 +129,7 @@ class _OwnerPropertyDetailScreenState
               const SizedBox(height: 4),
               Text(
                 '${property.address}, ${property.city} • Kos ${property.typeLabel}',
-                style: const TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
+                style: TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
               ),
               if (property.rejectionNote != null) ...[
                 const SizedBox(height: 10),
@@ -185,7 +185,7 @@ class _OwnerPropertyDetailScreenState
                 ],
               ),
               const SizedBox(height: 4),
-              const Text(
+              Text(
                 'Maksimal 5 foto per unggahan, 2 MB per foto.',
                 style: TextStyle(fontSize: 11.5, color: AppColors.textSecondary),
               ),
@@ -199,7 +199,7 @@ class _OwnerPropertyDetailScreenState
               ),
               const SizedBox(height: 12),
               if (property.images.isEmpty)
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(vertical: 12),
                   child: Text(
                     'Belum ada foto. Foto pertama otomatis menjadi cover.',
@@ -232,7 +232,7 @@ class _OwnerPropertyDetailScreenState
               ),
               const SizedBox(height: 8),
               if (property.rooms.isEmpty)
-                const Text(
+                Text(
                   'Belum ada kamar. Tambahkan dari menu Kamar.',
                   style: TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
                 )

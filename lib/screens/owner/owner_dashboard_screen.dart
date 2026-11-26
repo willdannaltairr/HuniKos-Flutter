@@ -157,7 +157,7 @@ class _RevenueCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           colors: [AppColors.surfaceHigh, AppColors.surface],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -183,7 +183,7 @@ class _RevenueCard extends StatelessWidget {
               value: (occupancy / 100).clamp(0, 1),
               minHeight: 6,
               backgroundColor: AppColors.border,
-              valueColor: const AlwaysStoppedAnimation(AppColors.gold),
+              valueColor: AlwaysStoppedAnimation(AppColors.gold),
             ),
           ),
           const SizedBox(height: 6),

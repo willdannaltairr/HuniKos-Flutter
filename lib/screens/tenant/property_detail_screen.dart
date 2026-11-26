@@ -111,7 +111,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                       const SizedBox(height: 6),
                       Row(
                         children: [
-                          const Icon(Icons.place_outlined, size: 16, color: AppColors.goldDeep),
+                          Icon(Icons.place_outlined, size: 16, color: AppColors.goldDeep),
                           const SizedBox(width: 5),
                           Expanded(
                             child: Text(
@@ -387,7 +387,7 @@ class _Divider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Divider(color: AppColors.border, height: 1);
+    return Divider(color: AppColors.border, height: 1);
   }
 }
 

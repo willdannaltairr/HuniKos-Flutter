@@ -53,7 +53,7 @@ class AuthShell extends StatelessWidget {
           Expanded(
             child: Container(
               width: double.infinity,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: AppColors.paper,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
               ),

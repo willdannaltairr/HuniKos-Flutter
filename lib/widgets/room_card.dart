@@ -54,7 +54,7 @@ class RoomCard extends StatelessWidget {
                   color: AppColors.blueTint,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.meeting_room_outlined, color: AppColors.primary),
+                child: Icon(Icons.meeting_room_outlined, color: AppColors.primary),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -82,7 +82,7 @@ class RoomCard extends StatelessWidget {
                       '${room.roomType} • Lantai ${room.floorNumber} • '
                       '${room.maxOccupants} orang • ${room.bathroomLabel}'
                       '${room.dimensions == null ? '' : ' • ${room.dimensions}'}',
-                      style: const TextStyle(fontSize: 11.5, color: AppColors.textSecondary),
+                      style: TextStyle(fontSize: 11.5, color: AppColors.textSecondary),
                     ),
                     if (room.facilities.isNotEmpty) ...[
                       const SizedBox(height: 4),
@@ -90,13 +90,13 @@ class RoomCard extends StatelessWidget {
                         room.facilities.map((facility) => facility.name).join(', '),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 11.5, color: AppColors.textSecondary),
+                        style: TextStyle(fontSize: 11.5, color: AppColors.textSecondary),
                       ),
                     ],
                     const SizedBox(height: 6),
                     PriceText(
                       amount: room.monthlyPrice,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.primary,
                         fontSize: 14,
                         fontWeight: FontWeight.w800,

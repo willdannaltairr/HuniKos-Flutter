@@ -140,7 +140,7 @@ class _BookingCard extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 'Kamar ${booking.room.roomNumber} • ${booking.bookingCode}',
-                style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
               ),
               const SizedBox(height: 8),
               Text(

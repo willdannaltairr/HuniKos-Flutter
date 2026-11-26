@@ -232,7 +232,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                         ),
                         Text(
                           user.email,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 11.5,
                             color: AppColors.textSecondary,
                           ),
@@ -240,7 +240,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                         Text(
                           '${user.roleLabel} • bergabung '
                           '${Formatters.shortDate(_date(user.createdAt))}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 11,
                             color: AppColors.textSecondary,
                           ),

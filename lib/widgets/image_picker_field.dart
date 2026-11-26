@@ -126,7 +126,7 @@ class _ImagePickerFieldState extends State<ImagePickerField> {
           const SizedBox(height: 6),
           Text(
             _error!,
-            style: const TextStyle(color: AppColors.dangerText, fontSize: 12),
+            style: TextStyle(color: AppColors.dangerText, fontSize: 12),
           ),
         ],
         if (_previews.isNotEmpty) ...[

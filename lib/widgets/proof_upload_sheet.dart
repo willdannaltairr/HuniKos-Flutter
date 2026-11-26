@@ -44,7 +44,7 @@ class _ProofUploadSheetState extends State<ProofUploadSheet> {
             style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 6),
-          const Text(
+          Text(
             'Pemilik akan memeriksa bukti ini. Maksimal 2 MB, '
             'format jpg, png, atau webp.',
             style: TextStyle(fontSize: 12.5, color: AppColors.textSecondary),

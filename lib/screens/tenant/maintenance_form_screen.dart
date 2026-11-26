@@ -155,7 +155,7 @@ class _MaintenanceFormScreenState extends State<MaintenanceFormScreen> {
                         const SizedBox(height: 12),
                         Text(
                           _error!,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12.5,
                             color: AppColors.dangerText,
                           ),
@@ -185,7 +185,7 @@ class _MaintenanceFormScreenState extends State<MaintenanceFormScreen> {
 class _NoBooking extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: Padding(
         padding: EdgeInsets.all(24),
         child: Column(

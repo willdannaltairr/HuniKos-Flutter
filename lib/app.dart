@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'core/api_client.dart';
+import 'core/app_settings.dart';
+import 'core/i18n.dart';
 import 'core/router.dart';
 import 'core/theme.dart';
 import 'core/token_storage.dart';
@@ -31,6 +33,7 @@ class _HuniKosAppState extends State<HuniKosApp> {
   late final TenantProvider _tenant;
   late final OwnerProvider _owner;
   late final AdminProvider _admin;
+  late final AppSettings _settings;
   late final GoRouter _router;
 
   @override
@@ -43,7 +46,13 @@ class _HuniKosAppState extends State<HuniKosApp> {
     _tenant = TenantProvider(TenantService(_api));
     _owner = OwnerProvider(OwnerService(_api));
     _admin = AdminProvider(AdminService(_api));
+    _settings = AppSettings();
     _router = buildRouter(_auth);
+
+    // Mode gelap dan bahasa dibaca dari penyimpanan sebelum layar pertama.
+    _settings.load();
+    _settings.addListener(_applySettings);
+    _applySettings();
 
     // Provider di bawah hidup selama aplikasi terbuka. Begitu sesi berakhir,
     // isinya dikosongkan supaya akun berikutnya tidak melihat data akun lama.
@@ -54,6 +63,11 @@ class _HuniKosAppState extends State<HuniKosApp> {
   }
 
   bool _sebelumnyaLogin = false;
+
+  /// Bahasa cukup diteruskan ke kamus; layar memakai I18n.t() saat dibangun.
+  void _applySettings() {
+    I18n.use(_settings.language);
+  }
 
   void _kosongkanStateAkunSaatLogout() {
     final login = _auth.isLoggedIn;
@@ -68,6 +82,7 @@ class _HuniKosAppState extends State<HuniKosApp> {
   @override
   void dispose() {
     _auth.removeListener(_kosongkanStateAkunSaatLogout);
+    _settings.removeListener(_applySettings);
     _router.dispose();
     super.dispose();
   }
@@ -82,13 +97,28 @@ class _HuniKosAppState extends State<HuniKosApp> {
         ChangeNotifierProvider.value(value: _owner),
         ChangeNotifierProvider.value(value: _admin),
       ],
-      child: MaterialApp.router(
-        title: 'HuniKos',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.build(),
-        routerConfig: _router,
-        // Kanvas putih dipasang sekali di sini agar semua layar konsisten.
-        builder: (context, child) => AppTheme.backdrop(child: child!),
+      child: ChangeNotifierProvider.value(
+        value: _settings,
+        child: Consumer<AppSettings>(
+          builder: (context, settings, _) {
+            // ThemeData disusun lebih dulu (masing-masing memakai paletnya),
+            // lalu palet global diarahkan ke mode yang sedang aktif supaya
+            // widget yang membaca AppColors tidak memakai palet tema gelap.
+            final light = AppTheme.build(ThemeMode.light);
+            final dark = AppTheme.build(ThemeMode.dark);
+            AppColors.useDark(settings.isDark);
+            return MaterialApp.router(
+              title: 'HuniKos',
+              debugShowCheckedModeBanner: false,
+              theme: light,
+              darkTheme: dark,
+              themeMode: settings.themeMode,
+              routerConfig: _router,
+              // Latar mengikuti mode yang sedang aktif.
+              builder: (context, child) => AppTheme.backdrop(child: child!),
+            );
+          },
+        ),
       ),
     );
   }

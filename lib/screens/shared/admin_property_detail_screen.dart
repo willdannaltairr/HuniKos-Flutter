@@ -108,7 +108,7 @@ class _AdminPropertyDetailScreenState extends State<AdminPropertyDetailScreen> {
                     const SizedBox(height: 4),
                     Text(
                       '${property.address}, ${property.city} • Kos ${property.typeLabel}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12.5,
                         color: AppColors.textSecondary,
                       ),
@@ -126,7 +126,7 @@ class _AdminPropertyDetailScreenState extends State<AdminPropertyDetailScreen> {
                       const SizedBox(height: 8),
                       Text(
                         'Catatan penolakan sebelumnya: ${property.rejectionNote}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
                           color: AppColors.dangerText,
                         ),
@@ -161,7 +161,7 @@ class _AdminPropertyDetailScreenState extends State<AdminPropertyDetailScreen> {
                     ),
                     const SizedBox(height: 8),
                     if (property.images.isEmpty)
-                      const Text(
+                      Text(
                         'Belum ada foto.',
                         style: TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
                       )
@@ -188,7 +188,7 @@ class _AdminPropertyDetailScreenState extends State<AdminPropertyDetailScreen> {
                     ),
                     const SizedBox(height: 6),
                     if (property.rooms.isEmpty)
-                      const Text(
+                      Text(
                         'Belum ada kamar.',
                         style: TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
                       )

@@ -167,7 +167,7 @@ class _OwnerBookingsScreenState extends State<OwnerBookingsScreen> {
                   const SizedBox(height: 2),
                   Text(
                     '${booking.property.name} • Kamar ${booking.room.roomNumber} • ${booking.bookingCode}',
-                    style: const TextStyle(fontSize: 11.5, color: AppColors.textSecondary),
+                    style: TextStyle(fontSize: 11.5, color: AppColors.textSecondary),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -182,7 +182,7 @@ class _OwnerBookingsScreenState extends State<OwnerBookingsScreen> {
                     const SizedBox(height: 6),
                     Text(
                       'Catatan penyewa: ${booking.note}',
-                      style: const TextStyle(fontSize: 11.5, color: AppColors.textSecondary),
+                      style: TextStyle(fontSize: 11.5, color: AppColors.textSecondary),
                     ),
                   ],
                   if (booking.canDecide) ...[

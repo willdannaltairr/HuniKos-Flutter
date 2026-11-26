@@ -116,7 +116,7 @@ class _OwnerMaintenanceScreenState extends State<OwnerMaintenanceScreen> {
                   const SizedBox(height: 2),
                   Text(
                     '${item.tenantName} • ${item.propertyName} • Kamar ${item.roomNumber}',
-                    style: const TextStyle(fontSize: 11.5, color: AppColors.textSecondary),
+                    style: TextStyle(fontSize: 11.5, color: AppColors.textSecondary),
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -137,13 +137,13 @@ class _OwnerMaintenanceScreenState extends State<OwnerMaintenanceScreen> {
                   const SizedBox(height: 6),
                   Text(
                     Formatters.dateTime(item.createdAt?.toIso8601String()),
-                    style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                    style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
                   ),
                   if (item.ownerNote != null) ...[
                     const SizedBox(height: 6),
                     Text(
                       'Catatanmu: ${item.ownerNote}',
-                      style: const TextStyle(fontSize: 11.5, color: AppColors.primary),
+                      style: TextStyle(fontSize: 11.5, color: AppColors.primary),
                     ),
                   ],
                   if (MaintenanceStatus.next(item.status) != null) ...[

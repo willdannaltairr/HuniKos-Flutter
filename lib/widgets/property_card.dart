@@ -74,7 +74,7 @@ class PropertyCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              const Icon(Icons.star_rounded, size: 16, color: AppColors.goldDeep),
+              Icon(Icons.star_rounded, size: 16, color: AppColors.goldDeep),
               const SizedBox(width: 2),
               Text(
                 property.availableRooms > 0 ? 'Tersedia' : 'Penuh',
@@ -181,14 +181,14 @@ class _CoverFallback extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [AppColors.goldSoft, AppColors.blueTint],
         ),
       ),
-      child: const Center(
+      child: Center(
         child: Icon(Icons.home_work_outlined, size: 36, color: AppColors.goldDeep),
       ),
     );

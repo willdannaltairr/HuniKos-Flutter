@@ -12,7 +12,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        theme: AppTheme.build(),
+        theme: AppTheme.build(ThemeMode.light),
         home: Scaffold(
           body: Form(
             child: AuthField(

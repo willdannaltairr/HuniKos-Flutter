@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/i18n.dart';
 import '../../widgets/floating_nav_bar.dart';
 
 /// Kerangka area penyewa: navigasi bawah tetap terlihat di semua tab.
@@ -22,26 +23,26 @@ class TenantShell extends StatelessWidget {
             initialLocation: index == navigationShell.currentIndex,
           );
         },
-        destinations: const [
+        destinations: [
           FloatingNavItem(
             icon: Icons.explore_outlined,
             selectedIcon: Icons.explore,
-            label: 'Jelajah',
+            label: I18n.t('nav.explore'),
           ),
           FloatingNavItem(
             icon: Icons.receipt_long_outlined,
             selectedIcon: Icons.receipt_long,
-            label: 'Booking',
+            label: I18n.t('nav.bookings'),
           ),
           FloatingNavItem(
             icon: Icons.build_outlined,
             selectedIcon: Icons.build,
-            label: 'Laporan',
+            label: I18n.t('nav.reports'),
           ),
           FloatingNavItem(
             icon: Icons.person_outline,
             selectedIcon: Icons.person,
-            label: 'Profil',
+            label: I18n.t('nav.profile'),
           ),
         ],
       ),

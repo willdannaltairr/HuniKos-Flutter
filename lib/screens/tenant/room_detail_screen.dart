@@ -117,7 +117,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                           const SizedBox(height: 8),
                           _StatusRow(room: room),
                           const SizedBox(height: 16),
-                          const Divider(color: AppColors.border, height: 1),
+                          Divider(color: AppColors.border, height: 1),
                           const SizedBox(height: 16),
                           _HostRow(room: room),
                           const SizedBox(height: 18),
@@ -168,7 +168,7 @@ class _BookingBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.paper,
         border: Border(top: BorderSide(color: AppColors.border)),
       ),
@@ -367,7 +367,7 @@ class _StatusRow extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 12),
-        const Icon(Icons.people_outline, size: 16, color: AppColors.textSecondary),
+        Icon(Icons.people_outline, size: 16, color: AppColors.textSecondary),
         const SizedBox(width: 4),
         Text(
           '${room.maxOccupants} orang',
@@ -401,7 +401,7 @@ class _HostRow extends StatelessWidget {
             color: AppColors.paperSoft,
             borderRadius: BorderRadius.circular(14),
           ),
-          child: const Icon(Icons.meeting_room_outlined, color: AppColors.ink),
+          child: Icon(Icons.meeting_room_outlined, color: AppColors.ink),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -453,7 +453,7 @@ class _Amenities extends StatelessWidget {
                       width: columnWidth,
                       child: Row(
                         children: [
-                          const Icon(Icons.check_rounded, size: 16, color: AppColors.ink),
+                          Icon(Icons.check_rounded, size: 16, color: AppColors.ink),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(

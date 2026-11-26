@@ -158,7 +158,7 @@ class _AuthFieldState extends State<AuthField> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.error_outline, size: 13, color: AppColors.dangerText),
+                    Icon(Icons.error_outline, size: 13, color: AppColors.dangerText),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(

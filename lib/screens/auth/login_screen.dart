@@ -157,7 +157,7 @@ class _DividerLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Expanded(child: Divider(color: AppColors.border, height: 1)),
+        Expanded(child: Divider(color: AppColors.border, height: 1)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Text(
@@ -165,7 +165,7 @@ class _DividerLabel extends StatelessWidget {
             style: AppFonts.label(11, weight: FontWeight.w500, color: AppColors.textSecondary),
           ),
         ),
-        const Expanded(child: Divider(color: AppColors.border, height: 1)),
+        Expanded(child: Divider(color: AppColors.border, height: 1)),
       ],
     );
   }
@@ -188,7 +188,7 @@ class _InfoBanner extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.info_outline, size: 17, color: AppColors.inkSoft),
+          Icon(Icons.info_outline, size: 17, color: AppColors.inkSoft),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
