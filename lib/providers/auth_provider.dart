@@ -62,11 +62,14 @@ class AuthProvider extends ChangeNotifier {
       _user = await _service.me();
       _status = AuthStatus.authenticated;
     } on ApiException catch (error) {
-      // 401 di sini berarti token sudah tidak berlaku; error jaringan jangan
+      // 401 berarti token sudah tidak berlaku; error jaringan jangan
       // menghapus token karena server mungkin hanya sedang tidur.
       if (error.statusCode == 401 || error.statusCode == 403) {
         await _tokens.clear();
         _status = AuthStatus.unauthenticated;
+        // 403 datang dari akun yang dinonaktifkan admin, dan alasannya perlu
+        // sampai ke layar login — bukan disembunyikan seperti token kedaluwarsa.
+        if (error.statusCode == 403) _sessionMessage = error.message;
       } else {
         _status = AuthStatus.unauthenticated;
         _sessionMessage = error.message;
