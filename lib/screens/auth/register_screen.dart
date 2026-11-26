@@ -20,9 +20,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _name = TextEditingController();
   final _email = TextEditingController();
-  final _phone = TextEditingController();
+  final _phone = TextEditingController(text: '+62');
   final _password = TextEditingController();
-  final _confirm = TextEditingController();
   bool _obscure = true;
   String _role = 'tenant';
 
@@ -32,7 +31,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _email.dispose();
     _phone.dispose();
     _password.dispose();
-    _confirm.dispose();
     super.dispose();
   }
 
@@ -63,22 +61,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
       child: Form(
         key: _formKey,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const AuthTabs(isRegister: true),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             _RoleSelector(
               value: _role,
               onChanged: (value) => setState(() => _role = value),
             ),
             if (auth.fieldErrors['role'] != null) ...[
-              const SizedBox(height: 6),
-              Text(
-                auth.fieldErrors['role']!,
-                style: AppFonts.label(12, weight: FontWeight.w600, color: AppColors.dangerText),
+              const SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.only(left: 4),
+                child: Text(
+                  auth.fieldErrors['role']!,
+                  style: AppFonts.label(11, weight: FontWeight.w600, color: AppColors.dangerText),
+                ),
               ),
             ],
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             AuthField(
               controller: _name,
               label: 'Nama lengkap',
@@ -88,7 +90,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               serverError: auth.fieldErrors['full_name'],
               textInputAction: TextInputAction.next,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             AuthField(
               controller: _email,
               label: 'Alamat email',
@@ -99,18 +101,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
               serverError: auth.fieldErrors['email'],
               textInputAction: TextInputAction.next,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             AuthField(
               controller: _phone,
-              label: 'Nomor telepon (opsional)',
-              hint: '08123456789',
+              label: 'Nomor telepon',
+              hint: '+6281234567890',
               icon: Icons.phone_outlined,
               keyboardType: TextInputType.phone,
-              validator: Validators.phoneNumber,
+              maxLength: 15,
+              validator: Validators.phoneNumberRequired,
               serverError: auth.fieldErrors['phone_number'],
-              textInputAction: TextInputAction.next,
+              onSubmitted: null,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             AuthField(
               controller: _password,
               label: 'Password',
@@ -120,51 +123,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
               onToggleObscure: () => setState(() => _obscure = !_obscure),
               validator: Validators.password,
               serverError: auth.fieldErrors['password'],
-              textInputAction: TextInputAction.next,
-            ),
-            const SizedBox(height: 10),
-            AuthField(
-              controller: _confirm,
-              label: 'Ulangi password',
-              hint: 'Ketik ulang password',
-              icon: Icons.lock_outline,
-              obscureText: _obscure,
-              validator: (value) =>
-                  Validators.passwordConfirmation(value, _password.text),
               textInputAction: TextInputAction.done,
               onSubmitted: _submit,
             ),
             if (auth.error != null && auth.fieldErrors.isEmpty) ...[
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               Text(
                 auth.error!,
-                style: AppFonts.label(12.5, weight: FontWeight.w600, color: AppColors.dangerText),
+                style: AppFonts.label(12, weight: FontWeight.w600, color: AppColors.dangerText),
               ),
             ],
-            const SizedBox(height: 18),
+            const SizedBox(height: 16),
             FilledButton(
               onPressed: auth.isSubmitting ? null : _submit,
+              style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(48)),
               child: auth.isSubmitting
                   ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white),
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2.2, color: Colors.white),
                     )
                   : const Text('Daftar'),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Sudah punya akun?',
-                  style: AppFonts.label(13, color: AppColors.textSecondary),
-                ),
-                TextButton(
-                  onPressed: () => context.go('/login'),
-                  child: const Text('Masuk'),
-                ),
-              ],
             ),
           ],
         ),
@@ -184,27 +163,30 @@ class _RoleSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Saya mendaftar sebagai',
-          style: AppFonts.label(11.5, weight: FontWeight.w500, color: AppColors.textSecondary),
+        Padding(
+          padding: const EdgeInsets.only(left: 4),
+          child: Text(
+            'Saya mendaftar sebagai',
+            style: AppFonts.label(10.5, weight: FontWeight.w500, color: AppColors.textSecondary),
+          ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         Row(
           children: [
             Expanded(
               child: _RoleOption(
                 label: 'Penyewa',
-                description: 'Mencari dan menyewa kos',
+                description: 'Mencari kos',
                 icon: Icons.person_outline,
                 selected: value == 'tenant',
                 onTap: () => onChanged('tenant'),
               ),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 8),
             Expanded(
               child: _RoleOption(
                 label: 'Pemilik',
-                description: 'Mengelola kos sendiri',
+                description: 'Mengelola kos',
                 icon: Icons.storefront_outlined,
                 selected: value == 'owner',
                 onTap: () => onChanged('owner'),
@@ -238,38 +220,45 @@ class _RoleOption extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
           color: selected ? AppColors.paperSoft : AppColors.paper,
-          borderRadius: BorderRadius.circular(16),
-          // Kartu terpilih ditandai garis hitam tebal, bukan warna aksen,
-          // supaya tetap tenang seperti sisa aplikasi.
+          borderRadius: BorderRadius.circular(13),
           border: Border.all(
             color: selected ? AppColors.ink : AppColors.border,
-            width: selected ? 1.8 : 1,
+            width: selected ? 1.6 : 1,
           ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
             Icon(
               icon,
-              size: 20,
+              size: 17,
               color: selected ? AppColors.ink : AppColors.textSecondary,
             ),
-            const SizedBox(height: 8),
-            Text(
-              label,
-              style: AppFonts.label(
-                13.5,
-                weight: FontWeight.w700,
-                color: AppColors.textPrimary,
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppFonts.label(12, weight: FontWeight.w700, color: AppColors.textPrimary),
+                  ),
+                  Text(
+                    description,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppFonts.label(
+                      10,
+                      weight: FontWeight.w500,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              description,
-              style: AppFonts.label(11, weight: FontWeight.w500, color: AppColors.textSecondary),
             ),
           ],
         ),

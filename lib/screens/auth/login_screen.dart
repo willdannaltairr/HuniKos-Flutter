@@ -6,6 +6,7 @@ import '../../core/role_home.dart';
 import '../../core/theme.dart';
 import '../../core/validators.dart';
 import '../../providers/auth_provider.dart';
+import '../../widgets/feedback.dart';
 import 'auth_field.dart';
 import 'auth_shell.dart';
 
@@ -72,17 +73,18 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Form(
         key: _formKey,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const AuthTabs(isRegister: false),
             if (_sessionMessage != null) ...[
-              const SizedBox(height: 14),
+              const SizedBox(height: 12),
               _InfoBanner(
                 message: _sessionMessage!,
                 onDismiss: () => setState(() => _sessionMessage = null),
               ),
             ],
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
             AuthField(
               controller: _email,
               label: 'Alamat email',
@@ -93,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
               serverError: auth.fieldErrors['email'],
               textInputAction: TextInputAction.next,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             AuthField(
               controller: _password,
               label: 'Password',
@@ -108,49 +110,65 @@ class _LoginScreenState extends State<LoginScreen> {
               onSubmitted: _submit,
             ),
             if (auth.error != null && auth.fieldErrors.isEmpty) ...[
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               Text(
                 auth.error!,
-                style: AppFonts.label(12.5, weight: FontWeight.w600, color: AppColors.dangerText),
+                style: AppFonts.label(12, weight: FontWeight.w600, color: AppColors.dangerText),
               ),
             ],
-            const SizedBox(height: 18),
+            const SizedBox(height: 16),
             FilledButton(
               onPressed: auth.isSubmitting ? null : _submit,
+              style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(48)),
               child: auth.isSubmitting
                   ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white),
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2.2, color: Colors.white),
                     )
-                  : const Text('Masuk'),
+                  : const Text('Login'),
             ),
-            const SizedBox(height: 14),
-            Center(
-              child: Text(
-                'Akun demo untuk pengujian',
-                style: AppFonts.label(11.5, weight: FontWeight.w600, color: AppColors.textSecondary),
-              ),
-            ),
-            const SizedBox(height: 8),
-            const _DemoAccounts(),
             const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Belum punya akun?',
-                  style: AppFonts.label(13, color: AppColors.textSecondary),
-                ),
-                TextButton(
-                  onPressed: () => context.go('/register'),
-                  child: const Text('Daftar'),
-                ),
-              ],
-            ),
+            const _DividerLabel(text: 'Atau lanjutkan dengan'),
+            const SizedBox(height: 12),
+            AuthSocialButtons(onPressed: _social),
+            const SizedBox(height: 12),
+            const _DemoAccounts(),
           ],
         ),
       ),
+    );
+  }
+
+  /// Backend belum menyediakan OAuth, jadi tombol sosial hanya menjelaskan
+  /// bahwa jalurnya belum tersedia alih-alih gagal diam-diam.
+  void _social(String provider) {
+    showError(
+      context,
+      'Masuk dengan $provider belum tersedia. Gunakan email dan password.',
+    );
+  }
+}
+
+class _DividerLabel extends StatelessWidget {
+  const _DividerLabel({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const Expanded(child: Divider(color: AppColors.border, height: 1)),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Text(
+            text,
+            style: AppFonts.label(11, weight: FontWeight.w500, color: AppColors.textSecondary),
+          ),
+        ),
+        const Expanded(child: Divider(color: AppColors.border, height: 1)),
+      ],
     );
   }
 }
@@ -163,20 +181,21 @@ class _DemoAccounts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+      padding: const EdgeInsets.fromLTRB(12, 9, 12, 9),
       decoration: BoxDecoration(
         color: AppColors.paperSoft,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
-        'Penyewa   tenant1@hunikos.test / Tenant123!\n'
-        'Pemilik     owner1@hunikos.test / Owner123!\n'
-        'Admin       admin@hunikos.test / Admin123!',
+        'Akun uji\n'
+        'tenant1@hunikos.test · Tenant123!\n'
+        'owner1@hunikos.test · Owner123!\n'
+        'admin@hunikos.test · Admin123!',
         style: AppFonts.label(
-          11.5,
+          10.5,
           weight: FontWeight.w500,
           color: AppColors.textSecondary,
-        ).copyWith(height: 1.7, fontFeatures: const [FontFeature.tabularFigures()]),
+        ).copyWith(height: 1.55),
       ),
     );
   }
@@ -191,26 +210,28 @@ class _InfoBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(12, 10, 4, 10),
+      padding: const EdgeInsets.fromLTRB(12, 8, 4, 8),
       decoration: BoxDecoration(
         color: AppColors.paperSoft,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.border),
       ),
       child: Row(
         children: [
-          const Icon(Icons.info_outline, size: 18, color: AppColors.inkSoft),
+          const Icon(Icons.info_outline, size: 17, color: AppColors.inkSoft),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               message,
-              style: AppFonts.label(12.5, weight: FontWeight.w600, color: AppColors.inkSoft),
+              style: AppFonts.label(12, weight: FontWeight.w600, color: AppColors.inkSoft),
             ),
           ),
           IconButton(
             onPressed: onDismiss,
-            icon: const Icon(Icons.close, size: 16),
+            icon: const Icon(Icons.close, size: 15),
             visualDensity: VisualDensity.compact,
+            constraints: const BoxConstraints(),
+            padding: const EdgeInsets.all(4),
           ),
         ],
       ),
