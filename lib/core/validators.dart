@@ -49,6 +49,20 @@ class Validators {
     return null;
   }
 
+  /// Nomor seluler Indonesia untuk pendaftaran: wajib diisi, diawali +62,
+  /// lalu angka 8 dan 8-11 angka berikutnya (contoh +6281234567890).
+  static String? phoneNumberRequired(String? value) {
+    final text = (value ?? '').replaceAll(RegExp(r'[\s\-()]'), '');
+    if (text.isEmpty || text == '+62') return 'Nomor telepon wajib diisi';
+    if (!text.startsWith('+62')) {
+      return 'Awali dengan +62, contoh +6281234567890';
+    }
+    if (!RegExp(r'^\+628\d{8,11}$').hasMatch(text)) {
+      return 'Nomor tidak valid, contoh +6281234567890';
+    }
+    return null;
+  }
+
   static String? requiredText(String? value, String label) {
     if ((value ?? '').trim().isEmpty) return '$label wajib diisi';
     return null;
