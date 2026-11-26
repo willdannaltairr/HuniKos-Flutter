@@ -134,6 +134,26 @@ class AdminProvider extends ChangeNotifier {
     }
   }
 
+  /// Dikosongkan saat sesi berakhir. Daftar pengguna dan properti yang menunggu
+  /// verifikasi tidak boleh tetap terlihat oleh akun berikutnya.
+  void reset() {
+    _dashboard = null;
+    _loadingDashboard = false;
+    _dashboardError = null;
+    _properties.clear();
+    _verificationFilter = 'pending';
+    _loadingProperties = false;
+    _propertiesError = null;
+    _users.clear();
+    _usersMeta = const ApiMeta(page: 1, limit: 10, total: 0, totalPages: 0);
+    _roleFilter = null;
+    _statusFilter = null;
+    _userQuery = '';
+    _loadingUsers = false;
+    _usersError = null;
+    notifyListeners();
+  }
+
   Future<String?> changeUserStatus(String userId, String status) async {
     try {
       final updated = await _service.changeUserStatus(userId, status);

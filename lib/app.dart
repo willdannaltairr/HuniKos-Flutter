@@ -45,12 +45,29 @@ class _HuniKosAppState extends State<HuniKosApp> {
     _admin = AdminProvider(AdminService(_api));
     _router = buildRouter(_auth);
 
+    // Provider di bawah hidup selama aplikasi terbuka. Begitu sesi berakhir,
+    // isinya dikosongkan supaya akun berikutnya tidak melihat data akun lama.
+    _auth.addListener(_kosongkanStateAkunSaatLogout);
+
     // Auto-login: token tersimpan langsung dipakai saat aplikasi dibuka.
     _auth.bootstrap();
   }
 
+  bool _sebelumnyaLogin = false;
+
+  void _kosongkanStateAkunSaatLogout() {
+    final login = _auth.isLoggedIn;
+    if (_sebelumnyaLogin && !login) {
+      _tenant.reset();
+      _owner.reset();
+      _admin.reset();
+    }
+    _sebelumnyaLogin = login;
+  }
+
   @override
   void dispose() {
+    _auth.removeListener(_kosongkanStateAkunSaatLogout);
     _router.dispose();
     super.dispose();
   }

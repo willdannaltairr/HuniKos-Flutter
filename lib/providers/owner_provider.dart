@@ -325,6 +325,33 @@ class OwnerProvider extends ChangeNotifier {
     }
   }
 
+  /// Dikosongkan saat sesi berakhir supaya properti, kamar, dan pembayaran
+  /// milik pemilik sebelumnya tidak terbawa ke akun berikutnya.
+  void reset() {
+    _dashboard = null;
+    _loadingDashboard = false;
+    _dashboardError = null;
+    _properties.clear();
+    _loadingProperties = false;
+    _propertiesError = null;
+    _rooms.clear();
+    _loadingRooms = false;
+    _roomsError = null;
+    _bookings.clear();
+    _bookingFilter = null;
+    _loadingBookings = false;
+    _bookingsError = null;
+    _payments.clear();
+    _paymentFilter = null;
+    _loadingPayments = false;
+    _paymentsError = null;
+    _maintenance.clear();
+    _maintenanceFilter = null;
+    _loadingMaintenance = false;
+    _maintenanceError = null;
+    notifyListeners();
+  }
+
   void clearRooms() {
     _rooms.clear();
     _roomsError = null;

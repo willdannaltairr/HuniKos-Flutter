@@ -174,6 +174,22 @@ class TenantProvider extends ChangeNotifier {
     }
   }
 
+  /// Dikosongkan saat sesi berakhir. Tanpa ini, akun berikutnya di perangkat
+  /// yang sama masih melihat booking dan laporan milik akun sebelumnya.
+  void reset() {
+    _bookings.clear();
+    _statusFilter = null;
+    _loadingBookings = false;
+    _bookingsError = null;
+    _detail = null;
+    _loadingDetail = false;
+    _detailError = null;
+    _maintenance.clear();
+    _loadingMaintenance = false;
+    _maintenanceError = null;
+    notifyListeners();
+  }
+
   Payment? latestPendingPayment(BookingDetail detail) {
     for (final payment in detail.payments) {
       if (payment.isPending) return payment;
