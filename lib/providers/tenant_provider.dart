@@ -51,9 +51,16 @@ class TenantProvider extends ChangeNotifier {
 
   /// Dipakai ringkasan keuangan di profil: total yang sudah lunas dan yang
   /// dibayar bulan berjalan.
+  ///
+  /// Midtrans menyimpan harga sewa di [Payment.amount] dan jumlah yang benar-
+  /// benar dibayar penyewa (termasuk biaya layanan) di `total_tenant_payment`.
+  /// Data lama belum punya field itu, jadi nol berarti memakai `amount`.
+  double _amountPaid(Payment payment) =>
+      payment.totalTenantPayment > 0 ? payment.totalTenantPayment : payment.amount;
+
   double get totalSpent => _payments
       .where((payment) => payment.status == 'VERIFIED')
-      .fold(0, (sum, payment) => sum + payment.amount);
+      .fold(0, (sum, payment) => sum + _amountPaid(payment));
 
   double get spentThisMonth {
     final now = DateTime.now();
@@ -63,7 +70,7 @@ class TenantProvider extends ChangeNotifier {
             payment.verifiedAt != null &&
             payment.verifiedAt!.year == now.year &&
             payment.verifiedAt!.month == now.month)
-        .fold(0, (sum, payment) => sum + payment.amount);
+        .fold(0, (sum, payment) => sum + _amountPaid(payment));
   }
 
   int get activeBookingCount => _bookings
